@@ -67,7 +67,7 @@ Publish a **public English** build-journey post and add the URL to the Devpost s
 - [ ] Public URL (Medium, Dev.to, personal site, etc.)
 - [ ] English throughout
 - [ ] Code snippets omit secrets
-- [ ] Link back to `{{GITHUB_REPO_URL}}/hackathon/SUBMISSION.md`
+- [ ] Link back to `{{GITHUB_REPO_URL}}/docs/14-submission-pack-index.md`
 - [ ] Verify link in Devpost after publish
 
 ## Entrant-Owned

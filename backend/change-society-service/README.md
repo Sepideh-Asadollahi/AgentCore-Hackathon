@@ -1,43 +1,27 @@
-# Change Society Service
+# Change Society service (AgentCore demo backend)
 
-Path: `hackathon/backend/change-society-service`
+Path: `backend/change-society-service/`
 
 ## Purpose
 
-Implements the Agent Society submission as a vendor-neutral agent control plane: managed-agent registry, capability routing, durable tickets, model and signed-webhook adapters, Universal Agent JSON, shared evidence, bounded rebuttal, fail-closed human approval, and single-agent comparison.
+**AgentCore** control-plane API for this repository’s **Change Society** demo: managed agents, capability routing, durable tickets, model and webhook adapters, Universal Agent JSON, evidence-backed negotiation, fail-closed human approval, baseline comparison.
 
-## Owner
+## Public API
 
-Hackathon Agent Society team.
+`/api/v1/projects/{project_id}/managed-agents`, `/agent-tickets`, `/society-runs`, `/demo-scenarios`, org policy intake routes. OpenAPI at `/docs` when the server is running.
 
-## Modular Boundary
+## Layout
 
-Owns ManagedAgent, AgentTicket, SocietyRun, AgentMessage, ConflictRecord, ApprovalDecision, control-plane orchestration, and evaluation. It does not own agent execution loops or existing AgentCore core-data or memory-service stores.
+Domain, application, infrastructure, interfaces, contracts, and bootstrap are separate. Constructor injection, typed errors, idempotent versioned writes, bounded Qwen calls (replaceable with `fake` model).
 
-## Public Interfaces
+## Config
 
-FastAPI endpoints under `/api/v1/projects/{project_id}/managed-agents`, `/agent-tickets`, `/society-runs`, and `/demo-scenarios`. OpenAPI uses stable operation IDs, snake_case DTOs, structured errors, scope headers, correlation IDs, pagination, and idempotency.
+`config/change-society.example.env`, `config/managed-agents.json`, migrations under `migrations/`, deployments [../../deployments/README.md](../../deployments/README.md).
 
-## Engineering Standards
+## Tests
 
-Domain, application, infrastructure, interfaces, contracts, and bootstrap are separate. Dependencies use constructor injection. Expected failures are typed. Run writes are idempotent and versioned. Qwen calls are bounded, observable, validated, and replaceable by a fake.
+When present in your checkout: `bash scripts/run-pytest.sh` (see repository `tests/backend/change-society-service/` in full development trees).
 
-## Dependencies
+## Judges
 
-Allowed: FastAPI/Pydantic at transport and contract boundaries, httpx in the Qwen adapter, psycopg in the PostgreSQL adapter.
-
-Forbidden: provider or persistence clients in domain/application logic; direct reads from another service database; browser-owned business state.
-
-## Testing
-
-Executable tests live at `tests/backend/change-society-service/`.
-
-## Operational Notes
-
-See `config/change-society.example.env`, `config/managed-agents.json`, migrations `0001` and `0002`, and `hackathon/deployments/README.md`.
-
-Judge/API overview: [../../SUBMISSION.md](../../SUBMISSION.md), OpenAPI at `/docs` when server is running.
-
-## Status
-
-Active MVP implementation.
+[docs/14-submission-pack-index.md](../../docs/14-submission-pack-index.md) · [docs/02-architecture.md](../../docs/02-architecture.md)

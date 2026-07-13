@@ -1,14 +1,14 @@
-# Change Society Web
+# AgentCore web UI (Change Society demo)
 
-Path: `hackathon/frontend`
+Path: `frontend/`
 
 ## Purpose
 
-Next.js and TypeScript judged control surface for starting a society run, inspecting directed Universal Agent JSON messages, reviewing conflict evidence, making a human approval decision, and comparing the society with a single-agent baseline.
+Next.js judged UI: start a society run, inspect Universal Agent JSON, review conflicts, approve or reject, compare with single-agent baseline.
 
 ## Boundary
 
-Owns presentation and browser interaction only. All authorization, state transitions, policy, persistence, and approval enforcement remain in the backend.
+Presentation only — policy and persistence stay in the backend.
 
 ## Configuration
 
@@ -26,18 +26,12 @@ npm run build
 npm run dev
 ```
 
-The configured development port is 32501, not the Next.js default.
+Dev server: [http://localhost:32501](http://localhost:32501) (API default [http://localhost:32500](http://localhost:32500)).
 
-## Judge Demo Flow
+## Demo flow
 
-1. Backend at `NEXT_PUBLIC_CHANGE_SOCIETY_API_URL` (default `http://localhost:32500`).
-2. `npm run dev` → `http://localhost:32501`.
-3. **Cinematic demo** (default): pick any of **seven domain scenarios**, review governance rules, click **Run live test** (real `POST .../society-runs`). While the backend runs, the UI animates orchestration stages; with **Auto-play all stages** enabled it walks all eight beats (intro → outcome) using live tickets and messages. Approve from the approval beat when the run pauses.
-4. **Inspector mode**: tab switch for full tickets, raw protocol expansion, and manual exploration.
-5. See [../docs/17-video-storyboard-and-recording-guide.md](../docs/17-video-storyboard-and-recording-guide.md).
+1. Start API (see [docs/01-quickstart.md](../docs/01-quickstart.md)).
+2. **Cinematic demo:** choose a scenario → **Run live test** → optional approve at human gate.
+3. **Inspector mode:** raw protocol and tickets.
 
-Keyboard in cinematic mode: `→` / `←` change beat, `Esc` returns to inspector. Animations respect `prefers-reduced-motion`. The UI uses a **glassmorphism** layer (`app/glass.css`: translucent panels, backdrop blur, mint-tinted borders); `prefers-reduced-transparency` falls back to opaque surfaces.
-
-## Status
-
-Active hackathon demo UI.
+See [docs/17-video-storyboard-and-recording-guide.md](../docs/17-video-storyboard-and-recording-guide.md).

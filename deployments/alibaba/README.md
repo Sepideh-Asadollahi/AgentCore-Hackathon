@@ -1,5 +1,7 @@
 # Alibaba Cloud Deployment
 
-This directory is the repository-visible proof template for Alibaba Cloud use. See [ADR-001-minimum-topology.md](ADR-001-minimum-topology.md) for the frozen deployment decision. `deploy-ecs.sh` uses the official Alibaba Cloud CLI to verify ECS access and deploy the Compose stack to an existing entrant-owned ECS host. It is intentionally not executed without credentials and a selected instance.
+Repository-visible proof template for Alibaba Cloud. See [ADR-001-minimum-topology.md](ADR-001-minimum-topology.md).
 
-Required environment: `ALIBABA_REGION_ID`, `ALIBABA_ECS_INSTANCE_ID`, and Alibaba CLI authentication. The target host must have Docker Compose, Git access, TLS/network configuration, and an entrant-approved secret delivery mechanism.
+`deploy-ecs.sh` uses the Alibaba Cloud CLI to verify ECS access and deploy the Compose stack to **your** ECS host. It is not run automatically without credentials and a selected instance.
+
+**Environment:** `ALIBABA_REGION_ID`, `ALIBABA_ECS_INSTANCE_ID`, Alibaba CLI auth. The host needs Docker Compose, Git, TLS/network setup, and a secure way to deliver secrets.

@@ -1,8 +1,8 @@
-# Submission Pack Index
+# Submission Pack Index (AgentCore)
 
-Central navigation for Qwen Cloud hackathon **Track 3** submission readiness. All formal text is English. Secrets never belong in these documents.
+Central navigation for Qwen Cloud hackathon **Track 3** submission readiness for **AgentCore** (primary demo: **Change Society**). All formal text is English. Secrets never belong in these documents.
 
-## Before You Submit (entrant)
+## Before you submit
 
 1. Complete [15-devpost-field-guide-and-checklist.md](15-devpost-field-guide-and-checklist.md).
 2. Run [21-release-candidate-and-smoke-checklist.md](21-release-candidate-and-smoke-checklist.md).
@@ -13,24 +13,7 @@ Central navigation for Qwen Cloud hackathon **Track 3** submission readiness. Al
 
 ## Document Map
 
-### Competition strategy (local / entrant workspace — not in public publish)
-
-These paths are **gitignored** in the monorepo and omitted from the public [AgentCore-Hackathon](https://github.com/Sepideh-Asadollahi/AgentCore-Hackathon) rsync. Use **`docs/`** below for the published judge narrative.
-
-| Doc (local only) | Purpose |
-|---|---|
-| `../SUBMISSION.md` | Optional entrant notes (not required on public repo) |
-| `../01-competition-rules-and-compliance.md` | Rules, eligibility, compliance gates |
-| `../02-idea-and-track-decision.md` | Track 3 rationale |
-| `../03-mvp-product-specification.md` | Golden scenario and role behavior |
-| `../04-hackathon-architecture-hld.md` | High-level design (see also [02-architecture.md](02-architecture.md)) |
-| `../05-delivery-and-scope-plan.md` | Schedule and scope cuts |
-| `../06-judging-demo-and-submission-plan.md` | Pitch, video outline, judging map |
-| `../08-risks-decisions-and-open-questions.md` | Go/No-Go and risks |
-| `../phases/README.md` | Implementation phase sequence |
-| `../phases/09-release-demo-and-submission.md` | Phase 9 engineering gate |
-
-### Engineering (published under `docs/`)
+### Engineering (`docs/`)
 
 | Doc | Purpose |
 |---|---|
@@ -83,11 +66,11 @@ These paths are **gitignored** in the monorepo and omitted from the public [Agen
 From repository root:
 
 ```bash
-bash hackathon/scripts/run-real-test-suite.sh
-bash hackathon/scripts/run-real-test.sh
-bash hackathon/scripts/run-real-qwen-suite.sh   # live Qwen → evidence/live/
-bash hackathon/scripts/run-qwen-judge-seven-scenarios.sh   # 7 scenarios, in-process Qwen
-bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh   # 7 scenarios, LangGraph worker + SDK
+bash scripts/run-real-test-suite.sh
+bash scripts/run-real-test.sh
+bash scripts/run-real-qwen-suite.sh   # live Qwen → evidence/live/
+bash scripts/run-qwen-judge-seven-scenarios.sh   # 7 scenarios, in-process Qwen
+bash scripts/run-langgraph-sdk-live-seven-scenarios.sh   # 7 scenarios, LangGraph worker + SDK
 ```
 
 See [19-evidence-artifact-index.md](19-evidence-artifact-index.md) and [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md).

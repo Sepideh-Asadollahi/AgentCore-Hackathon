@@ -1,12 +1,12 @@
 [Unit]
-Description=Change Society Web UI (AgentCore hackathon)
+Description=Change Society Web UI (AgentCore)
 After=network-online.target change-society-api.service
 Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=@REPO_ROOT@/hackathon/frontend
-EnvironmentFile=@REPO_ROOT@/hackathon/.env
+WorkingDirectory=@PACK_ROOT@/frontend
+EnvironmentFile=@PACK_ROOT@/.env
 ExecStart=@NPM@ run start
 Restart=on-failure
 RestartSec=3

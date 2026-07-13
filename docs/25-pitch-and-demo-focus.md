@@ -4,7 +4,7 @@ English copy for Devpost, judges, and the **under-3-minute** video. Recording st
 
 ## One-line thesis
 
-> **Change Society is a governed multi-agent decision system that turns ambiguous software changes into auditable, negotiated, human-approved decisions.**
+> **AgentCore** with the **Change Society** demo: a governed multi-agent decision system that turns ambiguous software changes into auditable, negotiated, human-approved decisions.
 
 Supporting line: the same control-plane pattern is exercised on **seven organizational scenarios** (not seven unrelated demos).
 

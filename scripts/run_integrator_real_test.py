@@ -11,17 +11,18 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [
-    str(ROOT / "hackathon" / "backend" / "change-society-service" / "src"),
-    str(ROOT / "hackathon" / "sdk" / "python"),
-]
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import init_script  # noqa: E402
+
+PACK = init_script(__file__)
 
 import httpx
 
 from change_society_sdk import ChangeSocietyClient, Scope
 
-VERIFY = ROOT / "hackathon" / "scripts" / "verify_society_run.py"
+VERIFY = PACK / "scripts" / "verify_society_run.py"
 
 
 def wait_http(url: str, timeout: float = 30.0) -> None:
@@ -80,7 +81,7 @@ def export_trace(client: ChangeSocietyClient, run_id: str, tickets: list[dict]) 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify society run with LangGraph change analyst worker.")
     parser.add_argument("--base-url", required=True)
-    parser.add_argument("--output-dir", default=str(ROOT / "hackathon" / "evidence" / "real" / "integrator-langgraph"))
+    parser.add_argument("--output-dir", default=str(PACK / "evidence" / "real" / "integrator-langgraph"))
     parser.add_argument("--scenario", default="checkout-api-refactor")
     parser.add_argument("--live-all-roles", action="store_true")
     args = parser.parse_args()
@@ -124,8 +125,8 @@ def main() -> int:
         "verification_profile": "integrator-live-all" if args.live_all_roles else "integrator-langgraph",
         "scenario_id": args.scenario,
         "run_id": run_id,
-        "report_path": str(report_path.relative_to(ROOT)),
-        "interaction_trace_path": str(trace_path.relative_to(ROOT)),
+        "report_path": str(report_path.relative_to(PACK)),
+        "interaction_trace_path": str(trace_path.relative_to(PACK)),
         "langgraph_integrator": json.loads(report_path.read_text()).get("langgraph_integrator"),
         "secrets_included": False,
     }

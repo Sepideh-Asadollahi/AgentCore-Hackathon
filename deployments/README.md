@@ -1,14 +1,14 @@
-# Change Society Deployments
+# AgentCore deployments
+
+Deployment assets for the **Change Society** demo on **AgentCore** (Compose, Alibaba ECS templates).
 
 | Path | Purpose |
 |---|---|
-| [compose.yaml](compose.yaml) | Reproducible local/integration topology (API, web, PostgreSQL) |
-| [alibaba/](alibaba/) | Competition cloud proof: ADR, README, `deploy-ecs.sh` |
+| [compose.yaml](compose.yaml) | Local/integration stack (API, web, PostgreSQL) |
+| [alibaba/](alibaba/) | Alibaba Cloud proof: ADR, `deploy-ecs.sh` |
 
-## Quick Reference
+- **Topology:** [alibaba/ADR-001-minimum-topology.md](alibaba/ADR-001-minimum-topology.md)
+- **Operations:** [docs/07-deployment-and-operations.md](../docs/07-deployment-and-operations.md), [docs/22-operations-runbook.md](../docs/22-operations-runbook.md)
+- **Competition proof file:** `deployments/alibaba/deploy-ecs.sh` on the default branch
 
-- **Architecture decision:** [alibaba/ADR-001-minimum-topology.md](alibaba/ADR-001-minimum-topology.md)
-- **Operations:** [../docs/07-deployment-and-operations.md](../docs/07-deployment-and-operations.md), [../docs/22-operations-runbook.md](../docs/22-operations-runbook.md)
-- **Devpost Alibaba file link:** `hackathon/deployments/alibaba/deploy-ecs.sh` on public default branch
-
-Real deployment requires entrant-owned Alibaba credentials, region, domain/TLS, Qwen API key, and cost approval. The repository provides templates and scripts only; it does not deploy without entrant action.
+Production deploy needs your own Alibaba account, ECS instance, TLS, and Qwen credentials. This repository ships templates and scripts only.

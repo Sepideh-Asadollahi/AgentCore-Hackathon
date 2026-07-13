@@ -11,18 +11,19 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [
-    str(ROOT / "hackathon" / "backend" / "change-society-service" / "src"),
-    str(ROOT / "hackathon" / "sdk" / "python"),
-]
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import init_script  # noqa: E402
+
+PACK = init_script(__file__)
 
 import httpx
 
 from change_society.infrastructure.evidence_catalog import DEMO_SCENARIO_IDS, SCENARIOS
 from change_society_sdk import ChangeSocietyClient, Scope
 
-VERIFY = ROOT / "hackathon" / "scripts" / "verify_society_run.py"
+VERIFY = PACK / "scripts" / "verify_society_run.py"
 SCENARIO_CATALOG = {item.scenario_id: item for item in SCENARIOS}
 
 
@@ -79,7 +80,7 @@ def run_verify(base_url: str, scenario_id: str, output: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", required=True)
-    parser.add_argument("--output-dir", default=str(ROOT / "hackathon" / "evidence" / "live" / "integrator-langgraph-qwen"))
+    parser.add_argument("--output-dir", default=str(PACK / "evidence" / "live" / "integrator-langgraph-qwen"))
     parser.add_argument("--scenarios", default=",".join(DEMO_SCENARIO_IDS))
     args = parser.parse_args()
 
@@ -105,8 +106,8 @@ def main() -> int:
                 "scenario_id": scenario_id,
                 "domain": SCENARIO_CATALOG[scenario_id].domain,
                 "run_id": run_id,
-                "report_path": str(report_path.relative_to(ROOT)),
-                "interaction_trace_path": str(trace_path.relative_to(ROOT)),
+                "report_path": str(report_path.relative_to(PACK)),
+                "interaction_trace_path": str(trace_path.relative_to(PACK)),
                 "langgraph_integrator": report.get("langgraph_integrator"),
                 "rebuttal_response_count": report.get("rebuttal_response_count"),
                 "final_state": report.get("final_state"),

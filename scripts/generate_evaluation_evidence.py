@@ -7,9 +7,12 @@ import json
 from pathlib import Path
 import sys
 
-ROOT = Path(__file__).resolve().parents[2]
-SRC = ROOT / "hackathon/backend/change-society-service/src"
-sys.path.insert(0, str(SRC))
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import init_script  # noqa: E402
+
+PACK = init_script(__file__)
 
 from change_society.application.control_plane import AgentControlPlane, AgentTemplate, CapabilityRouter  # noqa: E402
 from change_society.application.ablation import aggregate_benchmark_rows  # noqa: E402
@@ -21,8 +24,8 @@ from change_society.infrastructure.evidence_catalog import DEMO_SCENARIO_IDS, Sc
 from change_society.infrastructure.fake_model import DeterministicModelClient  # noqa: E402
 from change_society.infrastructure.repositories import InMemoryRunRepository  # noqa: E402
 
-OUTPUT = ROOT / "hackathon/evidence/real/evaluation-scenarios.json"
-SUMMARY = ROOT / "hackathon/evidence/real/benchmark-summary.json"
+OUTPUT = PACK / "evidence/real/evaluation-scenarios.json"
+SUMMARY = PACK / "evidence/real/benchmark-summary.json"
 
 
 class FixedClock:

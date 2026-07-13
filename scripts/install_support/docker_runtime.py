@@ -19,7 +19,7 @@ def docker_available() -> bool:
         return False
 
 
-def compose_cmd(_repo_root: Path) -> list[str] | None:
+def compose_cmd(_pack: Path) -> list[str] | None:
     if shutil.which("docker"):
         try:
             subprocess.run(
@@ -35,9 +35,9 @@ def compose_cmd(_repo_root: Path) -> list[str] | None:
     return None
 
 
-def start_docker_postgres(root: Path, *, dry_run: bool) -> None:
-    compose_file = root / "hackathon" / "deployments" / "compose.dev-postgres.yaml"
-    cmd_base = compose_cmd(root)
+def start_docker_postgres(pack: Path, *, dry_run: bool) -> None:
+    compose_file = pack / "deployments" / "compose.dev-postgres.yaml"
+    cmd_base = compose_cmd(pack)
     if not cmd_base:
         print("WARNING: docker compose not available; skipping dev PostgreSQL container.")
         return
@@ -45,7 +45,7 @@ def start_docker_postgres(root: Path, *, dry_run: bool) -> None:
     env.setdefault("AGENTCORE_POSTGRES_PASSWORD", "change-society-dev-local")
     print("Starting optional PostgreSQL (Docker) for local development…")
     print("  Example connect: postgresql://agentcore:change-society-dev-local@127.0.0.1:32232/agentcore")
-    env_path = root / "hackathon" / ".env"
+    env_path = pack / ".env"
     env_file_args: tuple[str, ...] = ()
     if env_path.is_file():
         env_file_args = ("--env-file", str(env_path))
@@ -53,29 +53,29 @@ def start_docker_postgres(root: Path, *, dry_run: bool) -> None:
     print(f"→ {' '.join(full)}")
     if dry_run:
         return
-    subprocess.run(full, cwd=root / "hackathon" / "deployments", check=True, env=env)
+    subprocess.run(full, cwd=pack / "deployments", check=True, env=env)
 
 
-def _compose_file(root: Path) -> Path:
+def _compose_file(pack: Path) -> Path:
     override = os.environ.get("CHANGE_SOCIETY_COMPOSE_FILE", "").strip()
     if override:
         path = Path(override)
-        return path if path.is_absolute() else root / path
-    return root / "hackathon" / "deployments" / "compose.yaml"
+        return path if path.is_absolute() else pack / path
+    return pack / "deployments" / "compose.yaml"
 
 
-def start_docker_compose_stack(root: Path, *, dry_run: bool) -> None:
-    compose_file = _compose_file(root)
-    cmd_base = compose_cmd(root)
+def start_docker_compose_stack(pack: Path, *, dry_run: bool) -> None:
+    compose_file = _compose_file(pack)
+    cmd_base = compose_cmd(pack)
     if not cmd_base:
         raise SystemExit(
             "Docker runtime selected but docker compose is not available. "
             "Example fix: sudo apt install docker.io docker-compose-v2 && sudo systemctl start docker"
         )
-    env_path = root / "hackathon" / ".env"
+    env_path = pack / ".env"
     if not env_path.is_file():
         raise SystemExit(
-            f"Docker stack needs {env_path}. Copy hackathon/.env.example and set "
+            f"Docker stack needs {env_path}. Copy .env.example and set "
             "QWEN_API_KEY and AGENTCORE_POSTGRES_PASSWORD."
         )
     text = env_path.read_text(encoding="utf-8")
@@ -87,7 +87,7 @@ def start_docker_compose_stack(root: Path, *, dry_run: bool) -> None:
             missing.append(key)
     if missing:
         raise SystemExit(
-            f"Docker runtime requires non-empty {', '.join(missing)} in hackathon/.env. "
+            f"Docker runtime requires non-empty {', '.join(missing)} in .env. "
             "Example: QWEN_API_KEY=sk-... and AGENTCORE_POSTGRES_PASSWORD=choose-a-strong-password"
         )
     full = [
@@ -103,4 +103,4 @@ def start_docker_compose_stack(root: Path, *, dry_run: bool) -> None:
     print(f"→ {' '.join(full)}")
     if dry_run:
         return
-    subprocess.run(full, cwd=root / "hackathon" / "deployments", check=True)
+    subprocess.run(full, cwd=pack / "deployments", check=True)

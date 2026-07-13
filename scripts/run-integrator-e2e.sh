@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Full integrator smoke: LangGraph worker (32510) + society API (32500) + checkout-api-refactor run.
 set -euo pipefail
+# shellcheck source=pack-env.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pack-env.sh"
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-WORKER_DIR="$ROOT/hackathon/examples/external-change-analyst-worker"
-INTEGRATOR_JSON="$ROOT/hackathon/backend/change-society-service/config/managed-agents.integrator.example.json"
+WORKER_DIR="${PACK_ROOT}/examples/external-change-analyst-worker"
+INTEGRATOR_JSON="${PACK_ROOT}/backend/change-society-service/config/managed-agents.integrator.example.json"
 SECRET="${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-integrator-demo-secret-change-me}"
 WORKER_PORT="${WORKER_PORT:-32510}"
 API_PORT="${CHANGE_SOCIETY_PORT:-32500}"
-PY="${ROOT}/.venv/bin/python"
 
 export AGENTCORE_WEBHOOK_SHARED_SECRET="$SECRET"
 export CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET="$SECRET"
@@ -17,7 +17,6 @@ export CHANGE_SOCIETY_MODEL_PROVIDER="${CHANGE_SOCIETY_MODEL_PROVIDER:-fake}"
 
 WORKER_PID=""
 API_PID=""
-
 cleanup() {
   [[ -n "$WORKER_PID" ]] && kill "$WORKER_PID" 2>/dev/null || true
   [[ -n "$API_PID" ]] && kill "$API_PID" 2>/dev/null || true
@@ -25,11 +24,11 @@ cleanup() {
 trap cleanup EXIT
 
 echo "==> Worker contract tests"
-export PYTHONPATH="$WORKER_DIR/src:$ROOT/hackathon/sdk/python"
-"$PY" -m pytest "$WORKER_DIR/tests" -q
+export PYTHONPATH="${WORKER_DIR}/src:${PACK_ROOT}/sdk/python"
+"$PACK_PYTHON" -m pytest "$WORKER_DIR/tests" -q
 
 echo "==> Starting LangGraph worker on :$WORKER_PORT"
-"$PY" "$WORKER_DIR/src/run_worker.py" &
+"$PACK_PYTHON" "$WORKER_DIR/src/run_worker.py" &
 WORKER_PID=$!
 for _ in $(seq 1 30); do
   if curl -sf "http://127.0.0.1:${WORKER_PORT}/ready" >/dev/null; then break; fi
@@ -41,8 +40,8 @@ curl -sf "http://127.0.0.1:${WORKER_PORT}/ready" >/dev/null || {
 }
 
 echo "==> Starting change-society-service on :$API_PORT"
-export PYTHONPATH="$ROOT/hackathon/backend/change-society-service/src:$ROOT/hackathon/sdk/python"
-"$PY" -m uvicorn change_society.bootstrap.container:build_app --factory --host 127.0.0.1 --port "$API_PORT" &
+export PYTHONPATH="${PACK_ROOT}/backend/change-society-service/src:${PACK_ROOT}/sdk/python"
+"$PACK_PYTHON" -m uvicorn change_society.bootstrap.container:build_app --factory --host 127.0.0.1 --port "$API_PORT" &
 API_PID=$!
 for _ in $(seq 1 60); do
   if curl -sf "http://127.0.0.1:${API_PORT}/health" >/dev/null 2>&1; then break; fi
@@ -50,8 +49,8 @@ for _ in $(seq 1 60); do
 done
 
 echo "==> Creating society run (checkout-api-refactor)"
-export PYTHONPATH="$ROOT/hackathon/sdk/python"
-"$PY" <<PY
+export PYTHONPATH="${PACK_ROOT}/sdk/python"
+"$PACK_PYTHON" <<PY
 import sys
 import time
 from change_society_sdk import ChangeSocietyClient, Scope

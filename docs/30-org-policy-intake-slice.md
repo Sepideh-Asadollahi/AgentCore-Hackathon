@@ -56,20 +56,20 @@ Recommended judge path:
 
 | Layer | Location |
 | --- | --- |
-| Heuristics + challenge builder | `hackathon/backend/change-society-service/src/change_society/application/org_policy_intake.py` |
-| Session + org evidence store | `hackathon/backend/change-society-service/src/change_society/infrastructure/evidence_catalog.py` |
+| Heuristics + challenge builder | `backend/change-society-service/src/change_society/application/org_policy_intake.py` |
+| Session + org evidence store | `backend/change-society-service/src/change_society/infrastructure/evidence_catalog.py` |
 | Service façade | `change_society/application/service.py` |
 | HTTP | `change_society/interfaces/api.py`, `schemas.py` |
-| UI | `hackathon/frontend/components/OrgPolicyIntakePanel.tsx` |
+| UI | `frontend/components/OrgPolicyIntakePanel.tsx` |
 | Tests | `tests/backend/change-society-service/test_org_policy_intake.py` |
 | Frontend tests | `tests/frontend/change-society/org-policy-intake.test.mjs` |
-| UI helpers | `hackathon/frontend/lib/org-policy-intake.ts` |
+| UI helpers | `frontend/lib/org-policy-intake.ts` |
 
 ## Related documents
 
 - Platform vision: `docs/04-rule-engine-orchestration/07-custom-rule-authoring-and-suggestion-workflows.md`
-- Architecture: `hackathon/docs/02-architecture.md` (governance + evidence)
-- Pitch framing: `hackathon/docs/25-pitch-and-demo-focus.md` (introduce after golden scenario, not in first 20 seconds)
+- Architecture: `docs/02-architecture.md` (governance + evidence)
+- Pitch framing: `docs/25-pitch-and-demo-focus.md` (introduce after golden scenario, not in first 20 seconds)
 
 ## Acceptance (hackathon)
 
@@ -83,7 +83,7 @@ Recommended judge path:
 Run the dedicated suite:
 
 ```bash
-bash hackathon/scripts/run-pytest.sh tests/backend/change-society-service/test_org_policy_intake.py -q
+bash scripts/run-pytest.sh tests/backend/change-society-service/test_org_policy_intake.py -q
 node --experimental-strip-types --test tests/frontend/change-society/org-policy-intake.test.mjs
 ```
 

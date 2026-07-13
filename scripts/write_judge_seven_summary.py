@@ -6,8 +6,14 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 
-ROOT = Path(__file__).resolve().parents[2]
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import init_script  # noqa: E402
+
+PACK = init_script(__file__)
 
 
 def main() -> int:
@@ -52,13 +58,13 @@ def main() -> int:
         "qwen_provider": model.get("provider"),
         "scenario_count": len(rows),
         "scenarios": rows,
-        "manifest_path": str(manifest_path.relative_to(ROOT)),
+        "manifest_path": str(manifest_path.resolve().relative_to(PACK.resolve())),
         "secrets_included": False,
         "judge_hint": data.get("suite") or "Live multi-scenario society evidence.",
     }
     out = Path(args.out) if args.out else manifest_path.parent / "judge-summary.json"
     out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({"status": summary["status"], "summary": str(out.relative_to(ROOT))}, indent=2))
+    print(json.dumps({"status": summary["status"], "summary": str(out.resolve().relative_to(PACK.resolve()))}, indent=2))
     return 0 if all_ok else 1
 
 

@@ -11,6 +11,6 @@
 | 6 | FastAPI plus Next.js demo states, protocol timeline, resume | ASGI test, typecheck, production build, frontend state tests |
 | 7 | three scenarios and single-agent evaluation | reproducible metric tests and `evaluation-scenarios.json` |
 | 8 | PostgreSQL migration, containers, Alibaba ADR and deploy script | local artifacts; live cloud evidence pending credentials |
-| 9 | submission doc pack (14–22), SUBMISSION.md, checklists | Devpost, video, blog, public URLs remain entrant-owned |
+| 9 | submission doc pack (14–22), README + checklists | Devpost, video, blog, public URLs as applicable |
 
 No code can prove entrant eligibility, publish the video/blog, or create a paid cloud deployment without account authorization. Those phase items remain explicit external gates.

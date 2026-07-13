@@ -1,23 +1,23 @@
 # Devpost Field Guide and Submission Checklist
 
-Use this when completing https://qwencloud-hackathon.devpost.com/ . Replace every `{{PLACEHOLDER}}` before submit (see [../ENTRANT_SUBMISSION_URLS.example.md](../ENTRANT_SUBMISSION_URLS.example.md)). Keep all public text in English.
+Use this when completing https://qwencloud-hackathon.devpost.com/ . Replace every `{{PLACEHOLDER}}` in the tables below before submit. Keep all public text in English.
 
 ## Track and Product
 
 | Field | Value |
 |---|---|
 | Grand prize track | **Track 3 — Agent Society** |
-| Project name | AgentCore Agent Control Plane — Change Society Demo |
-| One-line summary | **Change Society** — a governed multi-agent decision system that turns ambiguous software changes into auditable, negotiated, human-approved decisions (AgentCore control plane + Qwen). |
+| Project name | **AgentCore** (Change Society demo for Track 3) |
+| One-line summary | **AgentCore** — governed multi-agent control plane; this repo’s **Change Society** demo turns ambiguous software changes into auditable, negotiated, human-approved decisions (Qwen-backed roles). |
 
 ## Repository and Links (fill before submit)
 
 | Devpost / judging need | Placeholder | Verification |
 |---|---|---|
 | Public GitHub repository | `{{GITHUB_REPO_URL}}` | Opens logged out; default branch visible |
-| Submission entry point | `{{GITHUB_REPO_URL}}/tree/main/hackathon/SUBMISSION.md` | Judge path documented |
-| Alibaba Cloud proof (direct file) | `{{GITHUB_REPO_URL}}/blob/main/hackathon/deployments/alibaba/deploy-ecs.sh` | Shows Alibaba CLI usage |
-| Architecture diagram | `{{GITHUB_REPO_URL}}/blob/main/hackathon/docs/02-architecture.md` | Mermaid renders on GitHub |
+| Submission entry point | `{{GITHUB_REPO_URL}}/tree/main/docs/14-submission-pack-index.md` | Judge path documented |
+| Alibaba Cloud proof (direct file) | `{{GITHUB_REPO_URL}}/blob/main/deployments/alibaba/deploy-ecs.sh` | Shows Alibaba CLI usage |
+| Architecture diagram | `{{GITHUB_REPO_URL}}/blob/main/docs/02-architecture.md` | Diagrams render on GitHub |
 | Live demo (API + UI) | `{{PUBLIC_DEMO_URL}}` | Golden path without payment |
 | API health (optional) | `{{PUBLIC_API_URL}}/health` | Returns JSON liveness |
 | Demo video | `{{VIDEO_URL}}` | Under 3 minutes; allowed platform |
@@ -25,7 +25,7 @@ Use this when completing https://qwencloud-hackathon.devpost.com/ . Replace ever
 
 ## Description Template (paste into Devpost)
 
-Use sections in this order (from [../06-judging-demo-and-submission-plan.md](../06-judging-demo-and-submission-plan.md)):
+Use sections in this order (see [25-pitch-and-demo-focus.md](25-pitch-and-demo-focus.md)):
 
 1. **Outcome** — Thesis from [25-pitch-and-demo-focus.md](25-pitch-and-demo-focus.md).
 2. **Problem** — Hidden API contract break in `checkout-api-refactor` (primary demo scenario).
@@ -43,7 +43,7 @@ Use sections in this order (from [../06-judging-demo-and-submission-plan.md](../
 
 ### Compliance
 
-- [ ] Eligibility personally confirmed per [../01-competition-rules-and-compliance.md](../01-competition-rules-and-compliance.md)
+- [ ] Eligibility confirmed per official Devpost rules and FAQ
 - [ ] Track 3 selected (single grand-prize track)
 - [ ] No secrets in repo, video, or screenshots
 - [ ] All submission text English (or full English translation)
@@ -52,7 +52,7 @@ Use sections in this order (from [../06-judging-demo-and-submission-plan.md](../
 
 ### Technical proof
 
-- [ ] `bash hackathon/scripts/run-real-test.sh` passes from clean clone
+- [ ] `bash scripts/run-real-test.sh` passes from clean clone
 - [ ] `pytest tests/backend/change-society-service` passes
 - [ ] Frontend `npm run typecheck` and `npm run build` pass
 - [ ] Live path: `run-live-test.sh` passed once before claiming Alibaba/Qwen production demo (entrant)

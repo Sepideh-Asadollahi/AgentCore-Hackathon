@@ -1,0 +1,85 @@
+{
+  "executed_at": "2026-07-12T09:03:39.112784+00:00",
+  "judge_hint": "change-society-real-multi-domain",
+  "manifest_path": "evidence/real/suite/manifest.json",
+  "qwen_model": null,
+  "qwen_provider": "deterministic_fake",
+  "scenario_count": 7,
+  "scenarios": [
+    {
+      "domain": "revenue_and_billing",
+      "external_worker": null,
+      "messages": 21,
+      "passed": false,
+      "rebuttals": 2,
+      "run_id": "run_49c6e752abe94d84ac39fe539038f004",
+      "scenario_id": "pricing-refactor",
+      "tickets": 8
+    },
+    {
+      "domain": "security_and_identity",
+      "external_worker": null,
+      "messages": 21,
+      "passed": false,
+      "rebuttals": 2,
+      "run_id": "run_20fb0456a12f4504b81c7f1ba2d462d1",
+      "scenario_id": "password-migration",
+      "tickets": 8
+    },
+    {
+      "domain": "payments_and_reliability",
+      "external_worker": null,
+      "messages": 21,
+      "passed": false,
+      "rebuttals": 2,
+      "run_id": "run_ef61bdb2c1094b8f8d2292ad1a43d143",
+      "scenario_id": "payment-memory",
+      "tickets": 8
+    },
+    {
+      "domain": "software_engineering_api",
+      "external_worker": null,
+      "messages": 21,
+      "passed": false,
+      "rebuttals": 2,
+      "run_id": "run_62cd27c8d8d44f619d4c31abd94af5d4",
+      "scenario_id": "checkout-api-refactor",
+      "tickets": 8
+    },
+    {
+      "domain": "human_resources",
+      "external_worker": null,
+      "messages": 21,
+      "passed": false,
+      "rebuttals": 2,
+      "run_id": "run_d0d45d3788024c0d8dc6d9e19368e820",
+      "scenario_id": "hr-compensation-export",
+      "tickets": 8
+    },
+    {
+      "domain": "privacy_and_compliance",
+      "external_worker": null,
+      "messages": 21,
+      "passed": false,
+      "rebuttals": 2,
+      "run_id": "run_8850916c78c04f52b88bb55253813f51",
+      "scenario_id": "gdpr-erasure-automation",
+      "tickets": 8
+    },
+    {
+      "domain": "human_resources_and_security",
+      "external_worker": null,
+      "messages": 21,
+      "passed": false,
+      "rebuttals": 2,
+      "run_id": "run_3807d434ee0c490aba90607bc46adb50",
+      "scenario_id": "vendor-access-offboarding",
+      "tickets": 8
+    }
+  ],
+  "secrets_included": false,
+  "status": "failed",
+  "test_family": "real_deterministic",
+  "title": "Change Society \u2014 live seven-scenario judge smoke",
+  "verification_profile": "deterministic"
+}

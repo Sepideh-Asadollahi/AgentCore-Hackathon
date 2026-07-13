@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Smoke three society roles against the external LangGraph worker (signed webhook)."""
+
+from __future__ import annotations
+
 import hashlib
 import hmac
 import json
@@ -6,13 +10,19 @@ import os
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import pack_root  # noqa: E402
+
+PACK = pack_root(__file__)
+WORKER_SRC = PACK / "examples" / "external-change-analyst-worker" / "src"
 sys.path[:0] = [
-    str(ROOT / "hackathon/examples/external-change-analyst-worker/src"),
-    str(ROOT / "hackathon/backend/change-society-service/src"),
-    str(ROOT / "hackathon/sdk/python"),
+    str(WORKER_SRC),
+    str(PACK / "backend" / "change-society-service" / "src"),
+    str(PACK / "sdk" / "python"),
 ]
-env = ROOT / "hackathon/.env"
+env = PACK / ".env"
 if env.is_file():
     for line in env.read_text().splitlines():
         if line.strip() and not line.startswith("#") and "=" in line:

@@ -7,11 +7,11 @@ def production_hints() -> None:
     print(
         """
 Production profile (manual — not auto-configured):
-  • Copy hackathon/.env.example to hackathon/.env and set QWEN_API_KEY.
+  • Copy .env.example to .env and set QWEN_API_KEY.
   • Set CHANGE_SOCIETY_MODEL_PROVIDER=qwen and CHANGE_SOCIETY_STORE=postgresql.
-  • Apply SQL migrations under hackathon/backend/change-society-service/migrations/.
-  • Use hackathon/deployments/compose.yaml or hackathon/deployments/alibaba/.
-  • Verify: bash hackathon/scripts/run-live-test.sh compose|remote
+  • Apply SQL migrations under backend/change-society-service/migrations/.
+  • Use deployments/compose.yaml or deployments/alibaba/.
+  • Verify: bash scripts/run-live-test.sh compose|remote
   • Example full Docker install: bash install.sh --non-interactive --runtime docker --install-os-deps
 """
     )
@@ -28,28 +28,28 @@ After install (systemd user units):
     if runtime == "docker":
         return """
 After install (Docker Compose):
-  • Example: docker compose -f hackathon/deployments/compose.yaml ps
+  • Example: docker compose -f deployments/compose.yaml ps
   • API:  http://127.0.0.1:32500/health
   • UI:   http://127.0.0.1:32501
 """
     if runtime == "none":
         return """
 Dependencies installed; no services were started.
-  • Example manual API: see hackathon/docs/01-quickstart.md
-  • Example proof:      bash hackathon/scripts/run-real-test.sh
+  • Example manual API: see docs/01-quickstart.md
+  • Example proof:      bash scripts/run-real-test.sh
 """
     return """
-After install — two terminals from the repository root:
+After install — two terminals from the pack root (directory with install.sh):
 
   Terminal 1 (API):
-    set -a && source hackathon/.env && set +a
-    PYTHONPATH=hackathon/backend/change-society-service/src \\
+    set -a && source .env && set +a
+    PYTHONPATH=backend/change-society-service/src \\
       .venv/bin/python -m uvicorn change_society.main:app --host 127.0.0.1 --port 32500
 
   Terminal 2 (demo UI):
-    cd hackathon/frontend && npm run dev
+    cd frontend && npm run dev
     Open http://localhost:32501
 
   Automated proof (no browser):
-    bash hackathon/scripts/run-real-test.sh
+    bash scripts/run-real-test.sh
 """

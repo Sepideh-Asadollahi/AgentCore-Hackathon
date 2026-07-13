@@ -11,11 +11,12 @@ import subprocess
 import sys
 import time
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [
-    str(ROOT / "hackathon" / "backend" / "change-society-service" / "src"),
-    str(ROOT / "hackathon" / "sdk" / "python"),
-]
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import init_script  # noqa: E402
+
+PACK = init_script(__file__)
 
 import httpx
 
@@ -24,7 +25,7 @@ from change_society.infrastructure.evidence_catalog import DEMO_SCENARIO_IDS, SC
 SCENARIO_CATALOG = {item.scenario_id: item for item in SCENARIOS}
 from change_society_sdk import ChangeSocietyClient, Scope
 
-VERIFY = ROOT / "hackathon" / "scripts" / "verify_society_run.py"
+VERIFY = PACK / "scripts" / "verify_society_run.py"
 
 
 def wait_ready(base_url: str, timeout: int) -> dict:
@@ -116,7 +117,7 @@ def run_verify(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Execute multi-domain real society tests with interaction traces.")
     parser.add_argument("--base-url", required=True)
-    parser.add_argument("--output-dir", default=str(ROOT / "hackathon/evidence/real/suite"))
+    parser.add_argument("--output-dir", default=str(PACK / "evidence/real/suite"))
     parser.add_argument("--profile", choices=("deterministic", "auto", "live-qwen"), default="auto")
     parser.add_argument("--expect-production", action="store_true")
     parser.add_argument(
@@ -164,8 +165,8 @@ def main() -> int:
                 "governance_rules": list(SCENARIO_CATALOG[scenario_id].governance_rules),
                 "feature_demonstrations": list(SCENARIO_CATALOG[scenario_id].feature_demonstrations),
                 "run_id": run_id,
-                "report_path": str(report_path.relative_to(ROOT)),
-                "interaction_trace_path": str(trace_path.relative_to(ROOT)),
+                "report_path": str(report_path.relative_to(PACK)),
+                "interaction_trace_path": str(trace_path.relative_to(PACK)),
                 "roles": summary.get("roles", []),
                 "agent_ticket_count": trace["ticket_count"],
                 "message_count": trace["message_count"],

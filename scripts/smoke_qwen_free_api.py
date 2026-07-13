@@ -5,10 +5,10 @@ Verifies:
   1) Raw chat/completions reachability (minimal tokens).
   2) Same path Change Society uses: structured RoleOutput via QwenCloudClient.
 
-Loads hackathon/.env when present (do not commit keys). Writes redacted evidence JSON.
+Loads `.env` in the pack root when present (do not commit keys). Writes redacted evidence JSON.
 
-Usage (repository root):
-  .venv/bin/python hackathon/scripts/smoke_qwen_free_api.py
+Usage:
+  bash scripts/smoke-qwen-free-api.sh
 """
 
 from __future__ import annotations
@@ -23,19 +23,23 @@ from urllib.parse import urlparse
 
 import httpx
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "hackathon" / "backend" / "change-society-service" / "src"))
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import init_script  # noqa: E402
+
+PACK = init_script(__file__)
 
 from change_society.contracts.messages import RoleOutput  # noqa: E402
 from change_society.infrastructure.qwen_client import QwenCloudClient  # noqa: E402
 
 DEFAULT_BASE = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 DEFAULT_MODEL = "qwen-flash"
-EVIDENCE_PATH = ROOT / "hackathon" / "evidence" / "live" / "qwen-free-api-smoke.json"
+EVIDENCE_PATH = PACK / "evidence" / "live" / "qwen-free-api-smoke.json"
 
 
-def load_hackathon_env() -> None:
-    env_file = ROOT / "hackathon" / ".env"
+def load_pack_env() -> None:
+    env_file = PACK / ".env"
     if not env_file.is_file():
         return
     for line in env_file.read_text(encoding="utf-8").splitlines():
@@ -47,10 +51,10 @@ def load_hackathon_env() -> None:
 
 
 def require_config() -> tuple[str, str, str]:
-    load_hackathon_env()
+    load_pack_env()
     api_key = os.getenv("QWEN_API_KEY", "").strip()
     if not api_key:
-        raise SystemExit("QWEN_API_KEY is missing. Set it in hackathon/.env or the environment.")
+        raise SystemExit("QWEN_API_KEY is missing. Set it in .env or the environment.")
     base_url = os.getenv("QWEN_BASE_URL", DEFAULT_BASE).strip()
     model = os.getenv("QWEN_FREE_API_MODEL", os.getenv("QWEN_MODEL", DEFAULT_MODEL)).strip()
     return api_key, base_url, model
@@ -151,7 +155,7 @@ def main() -> int:
         json.dumps(
             {
                 "status": "passed",
-                "evidence": str(EVIDENCE_PATH.relative_to(ROOT)),
+                "evidence": str(EVIDENCE_PATH.relative_to(PACK)),
                 "model": model,
                 "host": host,
                 "tokens": {

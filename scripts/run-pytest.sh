@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-# Backend tests for Change Society (correct PYTHONPATH; avoids broken .venv/bin/pytest shebang on relocated trees).
+# Backend tests (pack-relative PYTHONPATH; avoids broken .venv/bin/pytest shebang on relocated trees).
 set -euo pipefail
+# shellcheck source=pack-env.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/pack-env.sh"
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-export PYTHONPATH="${ROOT}/hackathon/backend/change-society-service/src:${ROOT}/hackathon/sdk/python"
-
-PY="${ROOT}/.venv/bin/python"
-if [[ ! -x "$PY" ]]; then
-  echo "Missing ${ROOT}/.venv — run: bash install.sh" >&2
+TEST_DIR="$(pack_pytest_dir)" || {
+  echo "No tests/backend/change-society-service under ${PACK_ROOT} or parent." >&2
   exit 1
-fi
+}
 
-exec "$PY" -m pytest "${ROOT}/tests/backend/change-society-service" "$@"
+exec "$PACK_PYTHON" -m pytest "$TEST_DIR" "$@"

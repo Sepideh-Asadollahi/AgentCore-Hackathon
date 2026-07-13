@@ -9,11 +9,12 @@ import sys
 import time
 from uuid import uuid4
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [
-    str(ROOT / "hackathon" / "backend" / "change-society-service" / "src"),
-    str(ROOT / "hackathon" / "sdk" / "python"),
-]
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from pack_paths import init_script  # noqa: E402
+
+PACK = init_script(__file__)
 
 import httpx
 

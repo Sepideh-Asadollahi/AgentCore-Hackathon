@@ -1,6 +1,6 @@
 # Quickstart
 
-Judges: see [SUBMISSION.md](../SUBMISSION.md) for the fast review path.
+Judges: see [14-submission-pack-index.md](14-submission-pack-index.md) for the fast review path.
 
 ## One-Command Install (recommended for judges and demo)
 

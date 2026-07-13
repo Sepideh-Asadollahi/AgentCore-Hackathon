@@ -13,22 +13,24 @@ Central navigation for Qwen Cloud hackathon **Track 3** submission readiness. Al
 
 ## Document Map
 
-### Competition strategy (parent `hackathon/`)
+### Competition strategy (local / entrant workspace — not in public publish)
 
-| Doc | Purpose |
+These paths are **gitignored** in the monorepo and omitted from the public [AgentCore-Hackathon](https://github.com/Sepideh-Asadollahi/AgentCore-Hackathon) rsync. Use **`docs/`** below for the published judge narrative.
+
+| Doc (local only) | Purpose |
 |---|---|
-| [../SUBMISSION.md](../SUBMISSION.md) | Single entry for judges and Devpost repository link |
-| [../01-competition-rules-and-compliance.md](../01-competition-rules-and-compliance.md) | Rules, eligibility, compliance gates |
-| [../02-idea-and-track-decision.md](../02-idea-and-track-decision.md) | Track 3 rationale |
-| [../03-mvp-product-specification.md](../03-mvp-product-specification.md) | Golden scenario and role behavior |
-| [../04-hackathon-architecture-hld.md](../04-hackathon-architecture-hld.md) | High-level design |
-| [../05-delivery-and-scope-plan.md](../05-delivery-and-scope-plan.md) | Schedule and scope cuts |
-| [../06-judging-demo-and-submission-plan.md](../06-judging-demo-and-submission-plan.md) | Pitch, video outline, judging map |
-| [../08-risks-decisions-and-open-questions.md](../08-risks-decisions-and-open-questions.md) | Go/No-Go and risks |
-| [../phases/README.md](../phases/README.md) | Implementation phase sequence |
-| [../phases/09-release-demo-and-submission.md](../phases/09-release-demo-and-submission.md) | Phase 9 engineering gate |
+| `../SUBMISSION.md` | Optional entrant notes (not required on public repo) |
+| `../01-competition-rules-and-compliance.md` | Rules, eligibility, compliance gates |
+| `../02-idea-and-track-decision.md` | Track 3 rationale |
+| `../03-mvp-product-specification.md` | Golden scenario and role behavior |
+| `../04-hackathon-architecture-hld.md` | High-level design (see also [02-architecture.md](02-architecture.md)) |
+| `../05-delivery-and-scope-plan.md` | Schedule and scope cuts |
+| `../06-judging-demo-and-submission-plan.md` | Pitch, video outline, judging map |
+| `../08-risks-decisions-and-open-questions.md` | Go/No-Go and risks |
+| `../phases/README.md` | Implementation phase sequence |
+| `../phases/09-release-demo-and-submission.md` | Phase 9 engineering gate |
 
-### Engineering (this folder)
+### Engineering (published under `docs/`)
 
 | Doc | Purpose |
 |---|---|

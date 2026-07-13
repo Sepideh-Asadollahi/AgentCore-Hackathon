@@ -2,7 +2,7 @@
 
 ## Publish to public GitHub (entrant-local)
 
-The script **`push-github-hackathon.local.sh`** is **gitignored** (personal clone path / confirm prompts). It rsyncs `hackathon/` to [AgentCore-Hackathon](https://github.com/Sepideh-Asadollahi/AgentCore-Hackathon) without `.env`, `node_modules`, or `evidence/live/`.
+The script **`push-github-hackathon.local.sh`** is **gitignored**. It rsyncs **only** `hackathon/` to the allowlisted repo **[AgentCore-Hackathon](https://github.com/Sepideh-Asadollahi/AgentCore-Hackathon)** (`main` branch). Any other `GITHUB_REMOTE_URL` is **rejected**; `git push` uses the explicit allowlisted URL.
 
 ```bash
 cp hackathon/scripts/push-github-hackathon.local.env.example hackathon/scripts/push-github-hackathon.local.env

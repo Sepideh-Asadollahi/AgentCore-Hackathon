@@ -19,6 +19,7 @@ project_docs/
 06-judging-demo-and-submission-plan.md
 08-risks-decisions-and-open-questions.md
 ENTRANT_SUBMISSION_URLS.example.md
+SUBMISSION.md
 phases/
 
 .cursor/

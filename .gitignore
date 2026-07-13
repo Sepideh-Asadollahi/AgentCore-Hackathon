@@ -64,7 +64,8 @@ next-env.d.ts
 # --- Local doc mirror / entrant workspace (not for public hackathon repo) ---
 project_docs/
 
-# --- Root-level planning copies (use docs/, phases/, SUBMISSION.md in repo) ---
+# --- Root-level planning copies (use docs/ for public narrative) ---
+SUBMISSION.md
 phases/
 
 # --- Cursor workspace (local IDE only) ---

@@ -1,0 +1,327 @@
+/* Glass / transparent surfaces — layered over the dark control-plane theme */
+
+:root {
+  --glass-blur: 20px;
+  --glass-saturate: 160%;
+  --glass-bg: rgba(12, 26, 23, 0.38);
+  --glass-bg-strong: rgba(8, 18, 16, 0.55);
+  --glass-bg-input: rgba(6, 14, 12, 0.45);
+  --glass-border: rgba(112, 240, 183, 0.22);
+  --glass-border-soft: rgba(255, 255, 255, 0.09);
+  --glass-highlight: rgba(255, 255, 255, 0.11);
+  --glass-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  --glass-inner: inset 0 1px 0 var(--glass-highlight);
+}
+
+body.glass-ui {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 90% 55% at 12% -8%, rgba(112, 240, 183, 0.14), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 88% 5%, rgba(244, 200, 106, 0.09), transparent 50%),
+    radial-gradient(circle at 50% 110%, rgba(23, 49, 41, 0.65), transparent 45%),
+    var(--bg);
+}
+
+body.glass-ui::before,
+body.glass-ui::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+body.glass-ui::before {
+  width: min(480px, 55vw);
+  height: min(480px, 55vw);
+  top: -120px;
+  left: -80px;
+  background: rgba(112, 240, 183, 0.18);
+}
+
+body.glass-ui::after {
+  width: min(400px, 45vw);
+  height: min(400px, 45vw);
+  bottom: 8%;
+  right: -60px;
+  background: rgba(90, 160, 220, 0.1);
+}
+
+body.glass-ui main {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-surface {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+body.glass-ui .panel,
+body.glass-ui .status,
+body.glass-ui .error,
+body.glass-ui .banner,
+body.glass-ui .empty {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-inner);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+body.glass-ui .panel {
+  background: linear-gradient(
+    145deg,
+    rgba(22, 40, 36, 0.42) 0%,
+    rgba(10, 20, 18, 0.32) 100%
+  );
+}
+
+body.glass-ui .status {
+  background: rgba(8, 16, 15, 0.35);
+}
+
+body.glass-ui .warn-banner {
+  background: rgba(58, 49, 24, 0.45);
+  border-color: rgba(244, 200, 106, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body.glass-ui .error {
+  background: rgba(64, 31, 28, 0.55);
+  border: 1px solid rgba(255, 127, 117, 0.25);
+}
+
+body.glass-ui .empty {
+  background: rgba(8, 16, 15, 0.25);
+  border-color: var(--glass-border-soft);
+}
+
+body.glass-ui select,
+body.glass-ui textarea {
+  background: var(--glass-bg-input);
+  border-color: var(--glass-border-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body.glass-ui .metrics div {
+  background: rgba(8, 16, 15, 0.4);
+  border: 1px solid var(--glass-border-soft);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--glass-inner);
+}
+
+body.glass-ui pre {
+  background: rgba(6, 12, 11, 0.55);
+  border: 1px solid var(--glass-border-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.glass-ui .secondary {
+  background: rgba(8, 16, 15, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.glass-ui .mode-toggle {
+  background: rgba(8, 16, 15, 0.35);
+  border-color: var(--glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--glass-inner);
+}
+
+body.glass-ui .mode-toggle button.active {
+  box-shadow: 0 0 20px rgba(112, 240, 183, 0.35);
+}
+
+body.glass-ui mark {
+  background: rgba(30, 60, 51, 0.65);
+  border: 1px solid rgba(112, 240, 183, 0.2);
+}
+
+body.glass-ui details {
+  border-bottom-color: rgba(41, 64, 58, 0.45);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body.glass-ui .panel,
+  body.glass-ui .cinematic-stage {
+    background: rgba(17, 28, 26, 0.94);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  body.glass-ui .panel,
+  body.glass-ui .status,
+  body.glass-ui .cinematic-stage,
+  body.glass-ui .message-card,
+  body.glass-ui .agent-node {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(17, 28, 26, 0.92);
+  }
+}
+
+.negotiation-panel {
+  margin: 18px 0;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border, var(--line));
+  background: rgba(9, 20, 16, 0.42);
+}
+
+.negotiation-panel h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.negotiation-lead {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.negotiation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.negotiation-grid article {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border-soft, var(--line));
+  background: rgba(7, 16, 14, 0.35);
+  font-size: 13px;
+}
+
+.negotiation-grid h4 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+
+.negotiation-grid ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.negotiation-grid li {
+  margin-bottom: 10px;
+}
+
+.negotiation-grid li span {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 10px;
+  color: var(--amber);
+}
+
+.conflict-claims {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.approval-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.approval-chips li {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(112, 240, 183, 0.35);
+  font-size: 11px;
+}
+
+.ablation-table-wrap {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border-soft, var(--line));
+  background: rgba(8, 16, 15, 0.45);
+}
+
+.ablation-table-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--mint);
+}
+
+.ablation-scenario {
+  margin: 0 0 10px;
+}
+
+.ablation-table-scroll {
+  overflow-x: auto;
+}
+
+.ablation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ablation-table th,
+.ablation-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--glass-border-soft, var(--line));
+}
+
+.ablation-table thead th {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ablation-table tbody th {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.ablation-table tbody th small {
+  display: block;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.ablation-table tr.highlight {
+  background: rgba(112, 240, 183, 0.08);
+}
+
+.ablation-tradeoffs {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.ablation-efficiency,
+.ablation-caveat {
+  margin: 8px 0 0;
+  line-height: 1.45;
+}
+
+.ablation-raw {
+  margin-top: 10px;
+}

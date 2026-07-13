@@ -1,0 +1,411 @@
+{
+  "message_count": 21,
+  "roles_observed": [
+    "change_analyst",
+    "context_scout",
+    "coordinator",
+    "frontend_delivery_lead",
+    "impact_analyst",
+    "policy_guardian"
+  ],
+  "ticket_count": 8,
+  "timeline": [
+    {
+      "assigned_agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capability": "retrieve_scoped_project_truth",
+      "evidence_refs": [],
+      "message_id": "msg_d6f1f37b29db4cfcb038cb927c01a6a5",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "context_scout",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 1,
+      "task_ref": "ticket_7482ced8b2a24d21921bb290194d741c",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capability": "retrieve_scoped_project_truth",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_a4630e7fe49445afaa8e733322d681a6",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic context_scout analysis (pricing-refactor)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "medium",
+      "sender_role": "context_scout",
+      "status": "completed",
+      "step": 2,
+      "task_ref": "ticket_7482ced8b2a24d21921bb290194d741c",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [],
+      "message_id": "msg_11093706d72b4345a59ea133b328f896",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 3,
+      "task_ref": "ticket_3118ce4c66c648098fbf7b290779737c",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_d1b7ca526e0d4f3190943a2050e25f78",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "This initially appears to be a low-risk refactor.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "change_analyst",
+      "status": "completed",
+      "step": 4,
+      "task_ref": "ticket_3118ce4c66c648098fbf7b290779737c",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capability": "analyze_cross_boundary_impact",
+      "evidence_refs": [],
+      "message_id": "msg_e22f4582275a4aa0a8b48a77b7d70027",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "impact_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 5,
+      "task_ref": "ticket_ae6ddb5b96b14a7a8f15e5a8bbc6e7b9",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capability": "analyze_cross_boundary_impact",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_f3c0a96bf82d4a3e8d05e0f055aae665",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic impact_analyst analysis (pricing-refactor)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "impact_analyst",
+      "status": "completed",
+      "step": 6,
+      "task_ref": "ticket_ae6ddb5b96b14a7a8f15e5a8bbc6e7b9",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [],
+      "message_id": "msg_498e47ff361f4f879b8b80667bea45e2",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 7,
+      "task_ref": "ticket_d8be61faa7104bb281ac61fbda09f774",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_9b4cdc53484d482991f41b3bf3120268",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic policy_guardian analysis (pricing-refactor)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "policy_guardian",
+      "status": "completed",
+      "step": 8,
+      "task_ref": "ticket_d8be61faa7104bb281ac61fbda09f774",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_decision_price",
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_70280d06950c414b970560629fb8c037",
+      "message_type": "rebuttal_request",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 9,
+      "task_ref": "rebuttal:change_analyst",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [],
+      "message_id": "msg_e5cca6be772c4e85bd12173cd128a85c",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 10,
+      "task_ref": "ticket_622e3805a736440ba827139dea70ffe8",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_c3bd4c878a91452998f480551c12dbf4",
+      "message_type": "rebuttal_response",
+      "payload_excerpt": "I revise my position: base_price evidence makes this high risk.",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "change_analyst",
+      "status": "completed",
+      "step": 11,
+      "task_ref": "ticket_622e3805a736440ba827139dea70ffe8",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_decision_price",
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_0197bedda296437fa3496727722b6430",
+      "message_type": "rebuttal_request",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 12,
+      "task_ref": "rebuttal:policy_guardian",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [],
+      "message_id": "msg_0d692e82460b454f927300844475e40f",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 13,
+      "task_ref": "ticket_3af0bd5b29914c718d83e4cdb43a7a80",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_7b13d305c0d745eca5a2bed0872cc04a",
+      "message_type": "rebuttal_response",
+      "payload_excerpt": "Deterministic policy_guardian analysis (pricing-refactor)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "policy_guardian",
+      "status": "completed",
+      "step": 14,
+      "task_ref": "ticket_3af0bd5b29914c718d83e4cdb43a7a80",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_5fb47332078c4adbbd9fc0349f39ce02",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 15,
+      "task_ref": "ticket_91b5ab7a9f0e419c835e01113addc5ab",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_50b9ed31a3a94775beb45ed8532eeb08",
+      "message_type": "coordinator_decision",
+      "payload_excerpt": "Specialist conflict on pricing-refactor resolved using cited evidence.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 16,
+      "task_ref": "ticket_91b5ab7a9f0e419c835e01113addc5ab",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capability": "coordinate_frontend_ui_delivery",
+      "evidence_refs": [],
+      "message_id": "msg_ce253a79450b4ed6883d0bea614a5f2c",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "frontend_delivery_lead",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 17,
+      "task_ref": "ticket_9816ff3fd2d744a1bd15243fbaeafd54",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capability": "coordinate_frontend_ui_delivery",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price"
+      ],
+      "message_id": "msg_65ec8afee4e14aa8a7a2e5710c38395c",
+      "message_type": "frontend_delivery_handoff",
+      "payload_excerpt": "Frontend team must implement UI/UX/API client updates for pricing-refactor.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "frontend_delivery_lead",
+      "status": "completed",
+      "step": 18,
+      "task_ref": "ticket_9816ff3fd2d744a1bd15243fbaeafd54",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_1e74d728f3d84384a7fde4649b856e26",
+      "message_type": "approval_requested",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "pending",
+      "step": 19,
+      "task_ref": "approval_requested",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_7d17186f63b446cdba1e8ec057e2f993",
+      "message_type": "approval_decided",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 20,
+      "task_ref": "approval_decided",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [
+        "ev_decision_price",
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_tests_billing"
+      ],
+      "message_id": "msg_f52eb4b9a9fc45119ef3e1615dc3ce7c",
+      "message_type": "run_completed",
+      "payload_excerpt": "",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 21,
+      "task_ref": "run_completed",
+      "ticket_state": null
+    }
+  ]
+}

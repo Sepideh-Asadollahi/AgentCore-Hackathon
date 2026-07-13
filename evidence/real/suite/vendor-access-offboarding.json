@@ -1,0 +1,424 @@
+{
+  "agent_ticket_count": 8,
+  "approval_state_before": "awaiting_approval",
+  "baseline_comparison": {
+    "baseline": {
+      "critical_impact_recall": 0.25,
+      "duration_ms": 25,
+      "input_tokens": 120,
+      "output_tokens": 80,
+      "policy_match_recall": 0.0,
+      "raw": {
+        "impact_found": 1,
+        "impact_total": 4,
+        "policy_found": 0,
+        "policy_total": 2,
+        "task_found": 1,
+        "task_total": 3
+      },
+      "task_completeness": 0.3333333333333333,
+      "unsupported_claim_count": 0
+    },
+    "baseline_output": {
+      "assumptions": [],
+      "confidence": 0.91,
+      "evidence_refs": [
+        "ev_offboard_change"
+      ],
+      "findings": [
+        "The change has evidence-backed downstream effects."
+      ],
+      "impacts": [
+        "SSO groups"
+      ],
+      "policies": [],
+      "recommended_action": "Escalate for evidence-backed human approval.",
+      "risk_level": "medium",
+      "summary": "Deterministic single_agent_baseline analysis (vendor-access-offboarding)",
+      "tasks": [
+        "revoke SSO within four hours"
+      ],
+      "unresolved_questions": []
+    },
+    "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant.",
+    "scenario_id": "vendor-access-offboarding",
+    "society": {
+      "agent_message_count": 16,
+      "conflict_count": 1,
+      "critical_impact_recall": 1.0,
+      "frontend_delivery_ticket_count": 1,
+      "frontend_handoff_message_id": "msg_16aa43bd636141c880d26bf383973718",
+      "frontend_work_required": true,
+      "model_duration_ms": 200,
+      "policy_match_recall": 1.0,
+      "raw": {
+        "impact_found": 4,
+        "impact_total": 4,
+        "policy_found": 2,
+        "policy_total": 2,
+        "task_found": 3,
+        "task_total": 3
+      },
+      "task_completeness": 1.0,
+      "total_tokens": 1400,
+      "unsupported_claim_count": 0
+    },
+    "tradeoffs": {
+      "impact_recall_delta": 0.75,
+      "policy_recall_delta": 1.0,
+      "token_delta": 1200
+    }
+  },
+  "correlation_id": "corr_233f578685ab4818b567688d82c31622",
+  "cross_session_memory_recalled": true,
+  "data_classification": "synthetic",
+  "environment": "local_test",
+  "executed_at": "2026-07-12T09:03:39.018512+00:00",
+  "final_state": "completed",
+  "frontend_delivery": {
+    "frontend_work_required": true,
+    "handoff_message": {
+      "assumptions": [],
+      "capability": "coordinate_frontend_ui_delivery",
+      "causation_id": "msg_be4d14589a084f6b94d67decc6fc4f64",
+      "confidence": 0.9,
+      "conflicts": [],
+      "correlation_id": "corr_233f578685ab4818b567688d82c31622",
+      "created_at": "2026-07-12T09:03:38.567368+00:00",
+      "evidence_refs": [
+        "ev_offboard_change",
+        "ev_security_policy",
+        "ev_hr_offboard_policy"
+      ],
+      "idempotency_key": "run_3807d434ee0c490aba90607bc46adb50:ticket_ed8516312e7945aba5144f1545a8983c:17",
+      "intent": "notify_frontend_team",
+      "message_id": "msg_16aa43bd636141c880d26bf383973718",
+      "message_type": "frontend_delivery_handoff",
+      "payload": {
+        "api_client_updates": [],
+        "confidence": 0.9,
+        "design_artifacts_needed": [
+          "Offboarding operator console mockups"
+        ],
+        "evidence_refs": [
+          "ev_offboard_change",
+          "ev_security_policy",
+          "ev_hr_offboard_policy"
+        ],
+        "frontend_tasks": [
+          "E2E offboarding dashboard state"
+        ],
+        "priority": "high",
+        "recommended_action": "Open frontend team queue items before release.",
+        "signals": {
+          "frontend_work_required": true,
+          "matched_keywords": [
+            "api",
+            "hr",
+            "offboarding",
+            "sso",
+            "ui",
+            "vendor"
+          ],
+          "scenario_ui_hints": [
+            "SSO offboarding admin UI",
+            "HR-Security joint workflow screens"
+          ],
+          "team_queue": "frontend"
+        },
+        "summary": "Frontend team must implement UI/UX/API client updates for vendor-access-offboarding.",
+        "team_queue": "frontend",
+        "ui_changes": [
+          "Admin SSO group revocation checklist tied to HR termination."
+        ],
+        "ux_review_items": [
+          "Vendor offboarding timeline vs four-hour security rule."
+        ]
+      },
+      "protocol_version": "1.0",
+      "recipient_role": "coordinator",
+      "requested_next_action": "notify_frontend_team",
+      "risk_level": "high",
+      "run_id": "run_3807d434ee0c490aba90607bc46adb50",
+      "scope": {
+        "project_id": "live-test-project",
+        "tenant_id": "live-test-tenant",
+        "workspace_id": "live-test-workspace"
+      },
+      "sender_role": "frontend_delivery_lead",
+      "status": "completed",
+      "task_ref": "ticket_ed8516312e7945aba5144f1545a8983c",
+      "token_usage": {
+        "input_tokens": 120,
+        "output_tokens": 80
+      },
+      "unresolved_questions": []
+    },
+    "metrics": {
+      "frontend_delivery_ticket_count": 1,
+      "frontend_handoff_message_id": "msg_16aa43bd636141c880d26bf383973718"
+    },
+    "run_id": "run_3807d434ee0c490aba90607bc46adb50",
+    "scenario_id": "vendor-access-offboarding",
+    "signals": {
+      "frontend_work_required": true,
+      "matched_keywords": [
+        "api",
+        "hr",
+        "offboarding",
+        "sso",
+        "ui",
+        "vendor"
+      ],
+      "scenario_ui_hints": [
+        "SSO offboarding admin UI",
+        "HR-Security joint workflow screens"
+      ],
+      "team_queue": "frontend"
+    },
+    "team_queue": "frontend",
+    "tickets": [
+      {
+        "acceptance_criteria": [
+          "return schema-valid frontend handoff",
+          "list actionable UI/UX/API client work"
+        ],
+        "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+        "capability": "coordinate_frontend_ui_delivery",
+        "claimed_at": "2026-07-12T09:03:38.566521+00:00",
+        "correlation_id": "corr_233f578685ab4818b567688d82c31622",
+        "created_at": "2026-07-12T09:03:38.565985+00:00",
+        "created_by": "agentcore-frontend-router",
+        "error": null,
+        "events": [
+          {
+            "actor_id": "agentcore-router",
+            "details": {
+              "agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+              "routing_reason": "capability_match_lowest_active_load"
+            },
+            "event_id": "event_23c97157eb724a05a5845659d61eec8c",
+            "event_type": "ticket_state_changed",
+            "from_state": "created",
+            "occurred_at": "2026-07-12T09:03:38.566154+00:00",
+            "to_state": "assigned"
+          },
+          {
+            "actor_id": "agent_54ea13659e144649b5ace5796577c79f",
+            "details": {},
+            "event_id": "event_24030882fb4141118a43cdff75bf4e3f",
+            "event_type": "ticket_state_changed",
+            "from_state": "assigned",
+            "occurred_at": "2026-07-12T09:03:38.566521+00:00",
+            "to_state": "claimed"
+          },
+          {
+            "actor_id": "agent_54ea13659e144649b5ace5796577c79f",
+            "details": {},
+            "event_id": "event_5b2eca7cc3f1416192a5df562c759bbd",
+            "event_type": "ticket_state_changed",
+            "from_state": "claimed",
+            "occurred_at": "2026-07-12T09:03:38.566565+00:00",
+            "to_state": "in_progress"
+          },
+          {
+            "actor_id": "agentcore-dispatcher",
+            "details": {},
+            "event_id": "event_76f73670dcbe48f9ae3332dce76f4285",
+            "event_type": "ticket_state_changed",
+            "from_state": "in_progress",
+            "occurred_at": "2026-07-12T09:03:38.566922+00:00",
+            "to_state": "review"
+          },
+          {
+            "actor_id": "agentcore-schema-review",
+            "details": {
+              "acceptance": "schema_validated"
+            },
+            "event_id": "event_134eb3328d024a8fa04e777373794916",
+            "event_type": "ticket_state_changed",
+            "from_state": "review",
+            "occurred_at": "2026-07-12T09:03:38.566965+00:00",
+            "to_state": "completed"
+          }
+        ],
+        "execution_metrics": {
+          "duration_ms": 25,
+          "external_execution_id": "model:ticket_ed8516312e7945aba5144f1545a8983c",
+          "input_tokens": 120,
+          "output_tokens": 80,
+          "runtime": "deterministic-test-model"
+        },
+        "input_payload": {
+          "schema": "FrontendDeliveryOutput",
+          "signals": {
+            "frontend_work_required": true,
+            "matched_keywords": [
+              "api",
+              "hr",
+              "offboarding",
+              "sso",
+              "ui",
+              "vendor"
+            ],
+            "scenario_ui_hints": [
+              "SSO offboarding admin UI",
+              "HR-Security joint workflow screens"
+            ],
+            "team_queue": "frontend"
+          },
+          "team_queue": "frontend"
+        },
+        "output_payload": {
+          "api_client_updates": [],
+          "confidence": 0.9,
+          "design_artifacts_needed": [
+            "Offboarding operator console mockups"
+          ],
+          "evidence_refs": [
+            "ev_offboard_change",
+            "ev_security_policy",
+            "ev_hr_offboard_policy"
+          ],
+          "frontend_tasks": [
+            "E2E offboarding dashboard state"
+          ],
+          "priority": "high",
+          "recommended_action": "Open frontend team queue items before release.",
+          "summary": "Frontend team must implement UI/UX/API client updates for vendor-access-offboarding.",
+          "team_queue": "frontend",
+          "ui_changes": [
+            "Admin SSO group revocation checklist tied to HR termination."
+          ],
+          "ux_review_items": [
+            "Vendor offboarding timeline vs four-hour security rule."
+          ]
+        },
+        "priority": 50,
+        "project_id": "live-test-project",
+        "run_id": "run_3807d434ee0c490aba90607bc46adb50",
+        "state": "completed",
+        "tenant_id": "live-test-tenant",
+        "ticket_id": "ticket_ed8516312e7945aba5144f1545a8983c",
+        "title": "Frontend team delivery handoff",
+        "updated_at": "2026-07-12T09:03:38.566965+00:00",
+        "version": 6,
+        "workspace_id": "live-test-workspace"
+      }
+    ]
+  },
+  "managed_agent_count": 6,
+  "managed_agents": [
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capabilities": [
+        "retrieve_scoped_project_truth"
+      ],
+      "name": "Context Scout Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capabilities": [
+        "interpret_ambiguous_software_change"
+      ],
+      "name": "Change Analyst Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capabilities": [
+        "analyze_cross_boundary_impact"
+      ],
+      "name": "Impact Analyst Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capabilities": [
+        "evaluate_policy_and_approval_risk"
+      ],
+      "name": "Policy Guardian Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capabilities": [
+        "decompose_route_reconcile"
+      ],
+      "name": "Conflict Judge Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capabilities": [
+        "coordinate_frontend_ui_delivery"
+      ],
+      "name": "Frontend Delivery Coordinator",
+      "state": "online"
+    }
+  ],
+  "message_count": 19,
+  "mutation_policy": "isolated_test_project_writes",
+  "negotiation_event_count": 5,
+  "readiness": {
+    "checks": {
+      "model": {
+        "configured": true,
+        "production_ready": false,
+        "provider": "deterministic_fake",
+        "run_token_budget": 16000,
+        "run_tokens_used": 1600
+      },
+      "store": {
+        "production_ready": false,
+        "ready": true,
+        "store": "in_memory_test_fake"
+      }
+    },
+    "service": "change-society-service",
+    "status": "degraded"
+  },
+  "rebuttal_response_count": 2,
+  "roles": [
+    "change_analyst",
+    "context_scout",
+    "coordinator",
+    "frontend_delivery_lead",
+    "impact_analyst",
+    "policy_guardian"
+  ],
+  "run_id": "run_3807d434ee0c490aba90607bc46adb50",
+  "secrets_included": false,
+  "society_metrics": {
+    "agent_message_count": 16,
+    "conflict_count": 1,
+    "critical_impact_recall": 1.0,
+    "frontend_delivery_ticket_count": 1,
+    "frontend_handoff_message_id": "msg_16aa43bd636141c880d26bf383973718",
+    "frontend_work_required": true,
+    "model_duration_ms": 200,
+    "policy_match_recall": 1.0,
+    "raw": {
+      "impact_found": 4,
+      "impact_total": 4,
+      "policy_found": 2,
+      "policy_total": 2,
+      "task_found": 3,
+      "task_total": 3
+    },
+    "task_completeness": 1.0,
+    "total_tokens": 1400,
+    "unsupported_claim_count": 0
+  },
+  "strict_negotiation_assertions": true,
+  "test_family": "real_deterministic",
+  "ticket_lifecycle_verified": true,
+  "verification_profile": "deterministic"
+}

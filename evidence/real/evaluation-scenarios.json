@@ -1,0 +1,1195 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "pricing-refactor",
+      "run_id": "run_1",
+      "society_metrics": {
+        "critical_impact_recall": 1.0,
+        "policy_match_recall": 1.0,
+        "task_completeness": 1.0,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 4,
+          "impact_total": 4,
+          "policy_found": 1,
+          "policy_total": 1,
+          "task_found": 3,
+          "task_total": 3
+        },
+        "total_tokens": 1400,
+        "agent_message_count": 16,
+        "conflict_count": 1,
+        "model_duration_ms": 200,
+        "frontend_delivery_ticket_count": 1,
+        "frontend_work_required": true,
+        "frontend_handoff_message_id": "msg_74"
+      },
+      "baseline_metrics": {
+        "critical_impact_recall": 0.25,
+        "policy_match_recall": 0.0,
+        "task_completeness": 0.3333333333333333,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 1,
+          "impact_total": 4,
+          "policy_found": 0,
+          "policy_total": 1,
+          "task_found": 1,
+          "task_total": 3
+        },
+        "input_tokens": 120,
+        "output_tokens": 80,
+        "duration_ms": 25
+      },
+      "tradeoffs": {
+        "impact_recall_delta": 0.75,
+        "policy_recall_delta": 1.0,
+        "token_delta": 1200
+      },
+      "ablation": {
+        "variants": [
+          {
+            "variant_id": "single_agent",
+            "label": "Single agent baseline",
+            "description": "One generic reviewer with the same evidence bundle and JSON schema.",
+            "metrics": {
+              "critical_impact_recall": 0.25,
+              "policy_match_recall": 0.0,
+              "task_completeness": 0.3333333333333333,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 1,
+                "impact_total": 4,
+                "policy_found": 0,
+                "policy_total": 1,
+                "task_found": 1,
+                "task_total": 3
+              },
+              "input_tokens": 120,
+              "output_tokens": 80,
+              "duration_ms": 25
+            }
+          },
+          {
+            "variant_id": "society_without_negotiation",
+            "label": "Multi-agent without negotiation",
+            "description": "Pre-rebuttal specialist payloads only (no bounded rebuttal round).",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            },
+            "note": "Compare with full society; rebuttal may change reconciled risk and tasks."
+          },
+          {
+            "variant_id": "society_without_policy_guardian",
+            "label": "Multi-agent without Policy Guardian",
+            "description": "Change and Impact outputs only; policy role omitted from scoring.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            }
+          },
+          {
+            "variant_id": "full_change_society",
+            "label": "Full Change Society",
+            "description": "Measured society run including negotiation, policy, coordinator, and human gate.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              },
+              "total_tokens": 1400,
+              "agent_message_count": 16,
+              "conflict_count": 1,
+              "model_duration_ms": 200
+            }
+          }
+        ],
+        "operational_signals": {
+          "stale_memory_exclusions": 1,
+          "restricted_memory_exclusions": 1,
+          "conflict_count": 1,
+          "required_approvers_identified": [
+            "product",
+            "finance"
+          ],
+          "human_gate_state": "awaiting_approval"
+        },
+        "efficiency": {
+          "society_total_tokens": 1400,
+          "baseline_total_tokens": 200,
+          "token_delta": 1200,
+          "critical_risks_per_10k_tokens_society": 7.14,
+          "critical_risks_per_10k_tokens_baseline": 12.5,
+          "impact_recall_delta": 0.75,
+          "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+        },
+        "methodology": "Same scenario, evidence retrieval budget, and model client for baseline and society. Ablation variants re-score stored specialist payloads (counterfactuals). Repeat runs with the same Qwen model and temperature for statistical claims."
+      },
+      "efficiency": {
+        "society_total_tokens": 1400,
+        "baseline_total_tokens": 200,
+        "token_delta": 1200,
+        "critical_risks_per_10k_tokens_society": 7.14,
+        "critical_risks_per_10k_tokens_baseline": 12.5,
+        "impact_recall_delta": 0.75,
+        "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+      },
+      "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant."
+    },
+    {
+      "scenario_id": "password-migration",
+      "run_id": "run_77",
+      "society_metrics": {
+        "critical_impact_recall": 1.0,
+        "policy_match_recall": 1.0,
+        "task_completeness": 1.0,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 3,
+          "impact_total": 3,
+          "policy_found": 1,
+          "policy_total": 1,
+          "task_found": 3,
+          "task_total": 3
+        },
+        "total_tokens": 1400,
+        "agent_message_count": 16,
+        "conflict_count": 1,
+        "model_duration_ms": 200,
+        "frontend_delivery_ticket_count": 1,
+        "frontend_work_required": true,
+        "frontend_handoff_message_id": "msg_144"
+      },
+      "baseline_metrics": {
+        "critical_impact_recall": 0.3333333333333333,
+        "policy_match_recall": 0.0,
+        "task_completeness": 0.3333333333333333,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 1,
+          "impact_total": 3,
+          "policy_found": 0,
+          "policy_total": 1,
+          "task_found": 1,
+          "task_total": 3
+        },
+        "input_tokens": 120,
+        "output_tokens": 80,
+        "duration_ms": 25
+      },
+      "tradeoffs": {
+        "impact_recall_delta": 0.6666666666666667,
+        "policy_recall_delta": 1.0,
+        "token_delta": 1200
+      },
+      "ablation": {
+        "variants": [
+          {
+            "variant_id": "single_agent",
+            "label": "Single agent baseline",
+            "description": "One generic reviewer with the same evidence bundle and JSON schema.",
+            "metrics": {
+              "critical_impact_recall": 0.3333333333333333,
+              "policy_match_recall": 0.0,
+              "task_completeness": 0.3333333333333333,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 1,
+                "impact_total": 3,
+                "policy_found": 0,
+                "policy_total": 1,
+                "task_found": 1,
+                "task_total": 3
+              },
+              "input_tokens": 120,
+              "output_tokens": 80,
+              "duration_ms": 25
+            }
+          },
+          {
+            "variant_id": "society_without_negotiation",
+            "label": "Multi-agent without negotiation",
+            "description": "Pre-rebuttal specialist payloads only (no bounded rebuttal round).",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 3,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            },
+            "note": "Compare with full society; rebuttal may change reconciled risk and tasks."
+          },
+          {
+            "variant_id": "society_without_policy_guardian",
+            "label": "Multi-agent without Policy Guardian",
+            "description": "Change and Impact outputs only; policy role omitted from scoring.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 3,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            }
+          },
+          {
+            "variant_id": "full_change_society",
+            "label": "Full Change Society",
+            "description": "Measured society run including negotiation, policy, coordinator, and human gate.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 3,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              },
+              "total_tokens": 1400,
+              "agent_message_count": 16,
+              "conflict_count": 1,
+              "model_duration_ms": 200
+            }
+          }
+        ],
+        "operational_signals": {
+          "stale_memory_exclusions": 0,
+          "restricted_memory_exclusions": 0,
+          "conflict_count": 1,
+          "required_approvers_identified": [
+            "hr",
+            "legal",
+            "privacy"
+          ],
+          "human_gate_state": "awaiting_approval"
+        },
+        "efficiency": {
+          "society_total_tokens": 1400,
+          "baseline_total_tokens": 200,
+          "token_delta": 1200,
+          "critical_risks_per_10k_tokens_society": 7.14,
+          "critical_risks_per_10k_tokens_baseline": 16.67,
+          "impact_recall_delta": 0.6667,
+          "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+        },
+        "methodology": "Same scenario, evidence retrieval budget, and model client for baseline and society. Ablation variants re-score stored specialist payloads (counterfactuals). Repeat runs with the same Qwen model and temperature for statistical claims."
+      },
+      "efficiency": {
+        "society_total_tokens": 1400,
+        "baseline_total_tokens": 200,
+        "token_delta": 1200,
+        "critical_risks_per_10k_tokens_society": 7.14,
+        "critical_risks_per_10k_tokens_baseline": 16.67,
+        "impact_recall_delta": 0.6667,
+        "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+      },
+      "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant."
+    },
+    {
+      "scenario_id": "payment-memory",
+      "run_id": "run_147",
+      "society_metrics": {
+        "critical_impact_recall": 1.0,
+        "policy_match_recall": 1.0,
+        "task_completeness": 1.0,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 3,
+          "impact_total": 3,
+          "policy_found": 1,
+          "policy_total": 1,
+          "task_found": 3,
+          "task_total": 3
+        },
+        "total_tokens": 1400,
+        "agent_message_count": 16,
+        "conflict_count": 1,
+        "model_duration_ms": 200,
+        "frontend_delivery_ticket_count": 1,
+        "frontend_work_required": true,
+        "frontend_handoff_message_id": "msg_214"
+      },
+      "baseline_metrics": {
+        "critical_impact_recall": 0.3333333333333333,
+        "policy_match_recall": 0.0,
+        "task_completeness": 0.3333333333333333,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 1,
+          "impact_total": 3,
+          "policy_found": 0,
+          "policy_total": 1,
+          "task_found": 1,
+          "task_total": 3
+        },
+        "input_tokens": 120,
+        "output_tokens": 80,
+        "duration_ms": 25
+      },
+      "tradeoffs": {
+        "impact_recall_delta": 0.6666666666666667,
+        "policy_recall_delta": 1.0,
+        "token_delta": 1200
+      },
+      "ablation": {
+        "variants": [
+          {
+            "variant_id": "single_agent",
+            "label": "Single agent baseline",
+            "description": "One generic reviewer with the same evidence bundle and JSON schema.",
+            "metrics": {
+              "critical_impact_recall": 0.3333333333333333,
+              "policy_match_recall": 0.0,
+              "task_completeness": 0.3333333333333333,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 1,
+                "impact_total": 3,
+                "policy_found": 0,
+                "policy_total": 1,
+                "task_found": 1,
+                "task_total": 3
+              },
+              "input_tokens": 120,
+              "output_tokens": 80,
+              "duration_ms": 25
+            }
+          },
+          {
+            "variant_id": "society_without_negotiation",
+            "label": "Multi-agent without negotiation",
+            "description": "Pre-rebuttal specialist payloads only (no bounded rebuttal round).",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 3,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            },
+            "note": "Compare with full society; rebuttal may change reconciled risk and tasks."
+          },
+          {
+            "variant_id": "society_without_policy_guardian",
+            "label": "Multi-agent without Policy Guardian",
+            "description": "Change and Impact outputs only; policy role omitted from scoring.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 3,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            }
+          },
+          {
+            "variant_id": "full_change_society",
+            "label": "Full Change Society",
+            "description": "Measured society run including negotiation, policy, coordinator, and human gate.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 3,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              },
+              "total_tokens": 1400,
+              "agent_message_count": 16,
+              "conflict_count": 1,
+              "model_duration_ms": 200
+            }
+          }
+        ],
+        "operational_signals": {
+          "stale_memory_exclusions": 1,
+          "restricted_memory_exclusions": 0,
+          "conflict_count": 1,
+          "required_approvers_identified": [
+            "product",
+            "finance"
+          ],
+          "human_gate_state": "awaiting_approval"
+        },
+        "efficiency": {
+          "society_total_tokens": 1400,
+          "baseline_total_tokens": 200,
+          "token_delta": 1200,
+          "critical_risks_per_10k_tokens_society": 7.14,
+          "critical_risks_per_10k_tokens_baseline": 16.67,
+          "impact_recall_delta": 0.6667,
+          "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+        },
+        "methodology": "Same scenario, evidence retrieval budget, and model client for baseline and society. Ablation variants re-score stored specialist payloads (counterfactuals). Repeat runs with the same Qwen model and temperature for statistical claims."
+      },
+      "efficiency": {
+        "society_total_tokens": 1400,
+        "baseline_total_tokens": 200,
+        "token_delta": 1200,
+        "critical_risks_per_10k_tokens_society": 7.14,
+        "critical_risks_per_10k_tokens_baseline": 16.67,
+        "impact_recall_delta": 0.6667,
+        "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+      },
+      "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant."
+    },
+    {
+      "scenario_id": "checkout-api-refactor",
+      "run_id": "run_217",
+      "society_metrics": {
+        "critical_impact_recall": 0.75,
+        "policy_match_recall": 1.0,
+        "task_completeness": 1.0,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 3,
+          "impact_total": 4,
+          "policy_found": 1,
+          "policy_total": 1,
+          "task_found": 3,
+          "task_total": 3
+        },
+        "total_tokens": 1400,
+        "agent_message_count": 16,
+        "conflict_count": 1,
+        "model_duration_ms": 200,
+        "frontend_delivery_ticket_count": 1,
+        "frontend_work_required": true,
+        "frontend_handoff_message_id": "msg_284"
+      },
+      "baseline_metrics": {
+        "critical_impact_recall": 0.25,
+        "policy_match_recall": 0.0,
+        "task_completeness": 0.3333333333333333,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 1,
+          "impact_total": 4,
+          "policy_found": 0,
+          "policy_total": 1,
+          "task_found": 1,
+          "task_total": 3
+        },
+        "input_tokens": 120,
+        "output_tokens": 80,
+        "duration_ms": 25
+      },
+      "tradeoffs": {
+        "impact_recall_delta": 0.5,
+        "policy_recall_delta": 1.0,
+        "token_delta": 1200
+      },
+      "ablation": {
+        "variants": [
+          {
+            "variant_id": "single_agent",
+            "label": "Single agent baseline",
+            "description": "One generic reviewer with the same evidence bundle and JSON schema.",
+            "metrics": {
+              "critical_impact_recall": 0.25,
+              "policy_match_recall": 0.0,
+              "task_completeness": 0.3333333333333333,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 1,
+                "impact_total": 4,
+                "policy_found": 0,
+                "policy_total": 1,
+                "task_found": 1,
+                "task_total": 3
+              },
+              "input_tokens": 120,
+              "output_tokens": 80,
+              "duration_ms": 25
+            }
+          },
+          {
+            "variant_id": "society_without_negotiation",
+            "label": "Multi-agent without negotiation",
+            "description": "Pre-rebuttal specialist payloads only (no bounded rebuttal round).",
+            "metrics": {
+              "critical_impact_recall": 0.75,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 4,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            },
+            "note": "Compare with full society; rebuttal may change reconciled risk and tasks."
+          },
+          {
+            "variant_id": "society_without_policy_guardian",
+            "label": "Multi-agent without Policy Guardian",
+            "description": "Change and Impact outputs only; policy role omitted from scoring.",
+            "metrics": {
+              "critical_impact_recall": 0.75,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 4,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              }
+            }
+          },
+          {
+            "variant_id": "full_change_society",
+            "label": "Full Change Society",
+            "description": "Measured society run including negotiation, policy, coordinator, and human gate.",
+            "metrics": {
+              "critical_impact_recall": 0.75,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 3,
+                "impact_total": 4,
+                "policy_found": 1,
+                "policy_total": 1,
+                "task_found": 3,
+                "task_total": 3
+              },
+              "total_tokens": 1400,
+              "agent_message_count": 16,
+              "conflict_count": 1,
+              "model_duration_ms": 200
+            }
+          }
+        ],
+        "operational_signals": {
+          "stale_memory_exclusions": 0,
+          "restricted_memory_exclusions": 0,
+          "conflict_count": 1,
+          "required_approvers_identified": [
+            "platform",
+            "mobile"
+          ],
+          "human_gate_state": "awaiting_approval"
+        },
+        "efficiency": {
+          "society_total_tokens": 1400,
+          "baseline_total_tokens": 200,
+          "token_delta": 1200,
+          "critical_risks_per_10k_tokens_society": 5.36,
+          "critical_risks_per_10k_tokens_baseline": 12.5,
+          "impact_recall_delta": 0.5,
+          "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+        },
+        "methodology": "Same scenario, evidence retrieval budget, and model client for baseline and society. Ablation variants re-score stored specialist payloads (counterfactuals). Repeat runs with the same Qwen model and temperature for statistical claims."
+      },
+      "efficiency": {
+        "society_total_tokens": 1400,
+        "baseline_total_tokens": 200,
+        "token_delta": 1200,
+        "critical_risks_per_10k_tokens_society": 5.36,
+        "critical_risks_per_10k_tokens_baseline": 12.5,
+        "impact_recall_delta": 0.5,
+        "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+      },
+      "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant."
+    },
+    {
+      "scenario_id": "hr-compensation-export",
+      "run_id": "run_287",
+      "society_metrics": {
+        "critical_impact_recall": 1.0,
+        "policy_match_recall": 1.0,
+        "task_completeness": 1.0,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 4,
+          "impact_total": 4,
+          "policy_found": 2,
+          "policy_total": 2,
+          "task_found": 3,
+          "task_total": 3
+        },
+        "total_tokens": 1400,
+        "agent_message_count": 16,
+        "conflict_count": 1,
+        "model_duration_ms": 200,
+        "frontend_delivery_ticket_count": 1,
+        "frontend_work_required": true,
+        "frontend_handoff_message_id": "msg_354"
+      },
+      "baseline_metrics": {
+        "critical_impact_recall": 0.25,
+        "policy_match_recall": 0.0,
+        "task_completeness": 0.3333333333333333,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 1,
+          "impact_total": 4,
+          "policy_found": 0,
+          "policy_total": 2,
+          "task_found": 1,
+          "task_total": 3
+        },
+        "input_tokens": 120,
+        "output_tokens": 80,
+        "duration_ms": 25
+      },
+      "tradeoffs": {
+        "impact_recall_delta": 0.75,
+        "policy_recall_delta": 1.0,
+        "token_delta": 1200
+      },
+      "ablation": {
+        "variants": [
+          {
+            "variant_id": "single_agent",
+            "label": "Single agent baseline",
+            "description": "One generic reviewer with the same evidence bundle and JSON schema.",
+            "metrics": {
+              "critical_impact_recall": 0.25,
+              "policy_match_recall": 0.0,
+              "task_completeness": 0.3333333333333333,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 1,
+                "impact_total": 4,
+                "policy_found": 0,
+                "policy_total": 2,
+                "task_found": 1,
+                "task_total": 3
+              },
+              "input_tokens": 120,
+              "output_tokens": 80,
+              "duration_ms": 25
+            }
+          },
+          {
+            "variant_id": "society_without_negotiation",
+            "label": "Multi-agent without negotiation",
+            "description": "Pre-rebuttal specialist payloads only (no bounded rebuttal round).",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              }
+            },
+            "note": "Compare with full society; rebuttal may change reconciled risk and tasks."
+          },
+          {
+            "variant_id": "society_without_policy_guardian",
+            "label": "Multi-agent without Policy Guardian",
+            "description": "Change and Impact outputs only; policy role omitted from scoring.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              }
+            }
+          },
+          {
+            "variant_id": "full_change_society",
+            "label": "Full Change Society",
+            "description": "Measured society run including negotiation, policy, coordinator, and human gate.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              },
+              "total_tokens": 1400,
+              "agent_message_count": 16,
+              "conflict_count": 1,
+              "model_duration_ms": 200
+            }
+          }
+        ],
+        "operational_signals": {
+          "stale_memory_exclusions": 1,
+          "restricted_memory_exclusions": 0,
+          "conflict_count": 1,
+          "required_approvers_identified": [
+            "hr",
+            "legal",
+            "privacy"
+          ],
+          "human_gate_state": "awaiting_approval"
+        },
+        "efficiency": {
+          "society_total_tokens": 1400,
+          "baseline_total_tokens": 200,
+          "token_delta": 1200,
+          "critical_risks_per_10k_tokens_society": 7.14,
+          "critical_risks_per_10k_tokens_baseline": 12.5,
+          "impact_recall_delta": 0.75,
+          "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+        },
+        "methodology": "Same scenario, evidence retrieval budget, and model client for baseline and society. Ablation variants re-score stored specialist payloads (counterfactuals). Repeat runs with the same Qwen model and temperature for statistical claims."
+      },
+      "efficiency": {
+        "society_total_tokens": 1400,
+        "baseline_total_tokens": 200,
+        "token_delta": 1200,
+        "critical_risks_per_10k_tokens_society": 7.14,
+        "critical_risks_per_10k_tokens_baseline": 12.5,
+        "impact_recall_delta": 0.75,
+        "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+      },
+      "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant."
+    },
+    {
+      "scenario_id": "gdpr-erasure-automation",
+      "run_id": "run_357",
+      "society_metrics": {
+        "critical_impact_recall": 1.0,
+        "policy_match_recall": 1.0,
+        "task_completeness": 1.0,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 4,
+          "impact_total": 4,
+          "policy_found": 2,
+          "policy_total": 2,
+          "task_found": 3,
+          "task_total": 3
+        },
+        "total_tokens": 1400,
+        "agent_message_count": 16,
+        "conflict_count": 1,
+        "model_duration_ms": 200,
+        "frontend_delivery_ticket_count": 1,
+        "frontend_work_required": true,
+        "frontend_handoff_message_id": "msg_424"
+      },
+      "baseline_metrics": {
+        "critical_impact_recall": 0.25,
+        "policy_match_recall": 0.0,
+        "task_completeness": 0.3333333333333333,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 1,
+          "impact_total": 4,
+          "policy_found": 0,
+          "policy_total": 2,
+          "task_found": 1,
+          "task_total": 3
+        },
+        "input_tokens": 120,
+        "output_tokens": 80,
+        "duration_ms": 25
+      },
+      "tradeoffs": {
+        "impact_recall_delta": 0.75,
+        "policy_recall_delta": 1.0,
+        "token_delta": 1200
+      },
+      "ablation": {
+        "variants": [
+          {
+            "variant_id": "single_agent",
+            "label": "Single agent baseline",
+            "description": "One generic reviewer with the same evidence bundle and JSON schema.",
+            "metrics": {
+              "critical_impact_recall": 0.25,
+              "policy_match_recall": 0.0,
+              "task_completeness": 0.3333333333333333,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 1,
+                "impact_total": 4,
+                "policy_found": 0,
+                "policy_total": 2,
+                "task_found": 1,
+                "task_total": 3
+              },
+              "input_tokens": 120,
+              "output_tokens": 80,
+              "duration_ms": 25
+            }
+          },
+          {
+            "variant_id": "society_without_negotiation",
+            "label": "Multi-agent without negotiation",
+            "description": "Pre-rebuttal specialist payloads only (no bounded rebuttal round).",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              }
+            },
+            "note": "Compare with full society; rebuttal may change reconciled risk and tasks."
+          },
+          {
+            "variant_id": "society_without_policy_guardian",
+            "label": "Multi-agent without Policy Guardian",
+            "description": "Change and Impact outputs only; policy role omitted from scoring.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              }
+            }
+          },
+          {
+            "variant_id": "full_change_society",
+            "label": "Full Change Society",
+            "description": "Measured society run including negotiation, policy, coordinator, and human gate.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              },
+              "total_tokens": 1400,
+              "agent_message_count": 16,
+              "conflict_count": 1,
+              "model_duration_ms": 200
+            }
+          }
+        ],
+        "operational_signals": {
+          "stale_memory_exclusions": 0,
+          "restricted_memory_exclusions": 0,
+          "conflict_count": 1,
+          "required_approvers_identified": [
+            "hr",
+            "legal",
+            "privacy"
+          ],
+          "human_gate_state": "awaiting_approval"
+        },
+        "efficiency": {
+          "society_total_tokens": 1400,
+          "baseline_total_tokens": 200,
+          "token_delta": 1200,
+          "critical_risks_per_10k_tokens_society": 7.14,
+          "critical_risks_per_10k_tokens_baseline": 12.5,
+          "impact_recall_delta": 0.75,
+          "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+        },
+        "methodology": "Same scenario, evidence retrieval budget, and model client for baseline and society. Ablation variants re-score stored specialist payloads (counterfactuals). Repeat runs with the same Qwen model and temperature for statistical claims."
+      },
+      "efficiency": {
+        "society_total_tokens": 1400,
+        "baseline_total_tokens": 200,
+        "token_delta": 1200,
+        "critical_risks_per_10k_tokens_society": 7.14,
+        "critical_risks_per_10k_tokens_baseline": 12.5,
+        "impact_recall_delta": 0.75,
+        "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+      },
+      "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant."
+    },
+    {
+      "scenario_id": "vendor-access-offboarding",
+      "run_id": "run_427",
+      "society_metrics": {
+        "critical_impact_recall": 1.0,
+        "policy_match_recall": 1.0,
+        "task_completeness": 1.0,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 4,
+          "impact_total": 4,
+          "policy_found": 2,
+          "policy_total": 2,
+          "task_found": 3,
+          "task_total": 3
+        },
+        "total_tokens": 1400,
+        "agent_message_count": 16,
+        "conflict_count": 1,
+        "model_duration_ms": 200,
+        "frontend_delivery_ticket_count": 1,
+        "frontend_work_required": true,
+        "frontend_handoff_message_id": "msg_494"
+      },
+      "baseline_metrics": {
+        "critical_impact_recall": 0.25,
+        "policy_match_recall": 0.0,
+        "task_completeness": 0.3333333333333333,
+        "unsupported_claim_count": 0,
+        "raw": {
+          "impact_found": 1,
+          "impact_total": 4,
+          "policy_found": 0,
+          "policy_total": 2,
+          "task_found": 1,
+          "task_total": 3
+        },
+        "input_tokens": 120,
+        "output_tokens": 80,
+        "duration_ms": 25
+      },
+      "tradeoffs": {
+        "impact_recall_delta": 0.75,
+        "policy_recall_delta": 1.0,
+        "token_delta": 1200
+      },
+      "ablation": {
+        "variants": [
+          {
+            "variant_id": "single_agent",
+            "label": "Single agent baseline",
+            "description": "One generic reviewer with the same evidence bundle and JSON schema.",
+            "metrics": {
+              "critical_impact_recall": 0.25,
+              "policy_match_recall": 0.0,
+              "task_completeness": 0.3333333333333333,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 1,
+                "impact_total": 4,
+                "policy_found": 0,
+                "policy_total": 2,
+                "task_found": 1,
+                "task_total": 3
+              },
+              "input_tokens": 120,
+              "output_tokens": 80,
+              "duration_ms": 25
+            }
+          },
+          {
+            "variant_id": "society_without_negotiation",
+            "label": "Multi-agent without negotiation",
+            "description": "Pre-rebuttal specialist payloads only (no bounded rebuttal round).",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              }
+            },
+            "note": "Compare with full society; rebuttal may change reconciled risk and tasks."
+          },
+          {
+            "variant_id": "society_without_policy_guardian",
+            "label": "Multi-agent without Policy Guardian",
+            "description": "Change and Impact outputs only; policy role omitted from scoring.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              }
+            }
+          },
+          {
+            "variant_id": "full_change_society",
+            "label": "Full Change Society",
+            "description": "Measured society run including negotiation, policy, coordinator, and human gate.",
+            "metrics": {
+              "critical_impact_recall": 1.0,
+              "policy_match_recall": 1.0,
+              "task_completeness": 1.0,
+              "unsupported_claim_count": 0,
+              "raw": {
+                "impact_found": 4,
+                "impact_total": 4,
+                "policy_found": 2,
+                "policy_total": 2,
+                "task_found": 3,
+                "task_total": 3
+              },
+              "total_tokens": 1400,
+              "agent_message_count": 16,
+              "conflict_count": 1,
+              "model_duration_ms": 200
+            }
+          }
+        ],
+        "operational_signals": {
+          "stale_memory_exclusions": 0,
+          "restricted_memory_exclusions": 0,
+          "conflict_count": 1,
+          "required_approvers_identified": [
+            "hr",
+            "legal",
+            "privacy"
+          ],
+          "human_gate_state": "awaiting_approval"
+        },
+        "efficiency": {
+          "society_total_tokens": 1400,
+          "baseline_total_tokens": 200,
+          "token_delta": 1200,
+          "critical_risks_per_10k_tokens_society": 7.14,
+          "critical_risks_per_10k_tokens_baseline": 12.5,
+          "impact_recall_delta": 0.75,
+          "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+        },
+        "methodology": "Same scenario, evidence retrieval budget, and model client for baseline and society. Ablation variants re-score stored specialist payloads (counterfactuals). Repeat runs with the same Qwen model and temperature for statistical claims."
+      },
+      "efficiency": {
+        "society_total_tokens": 1400,
+        "baseline_total_tokens": 200,
+        "token_delta": 1200,
+        "critical_risks_per_10k_tokens_society": 7.14,
+        "critical_risks_per_10k_tokens_baseline": 12.5,
+        "impact_recall_delta": 0.75,
+        "interpretation": "Society uses more tokens on fixed scenarios; efficiency is framed as critical-risk recall per 10K tokens."
+      },
+      "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant."
+    }
+  ],
+  "sample_count": 7,
+  "aggregate": {
+    "scenario_count": 7,
+    "aggregate_table": {
+      "critical_impact_recall": {
+        "single_agent": 0.2738,
+        "change_society": 0.9643,
+        "society_raw": "25/26",
+        "baseline_raw": "7/26"
+      },
+      "policy_match_recall": {
+        "single_agent": 0.0,
+        "change_society": 1.0,
+        "society_raw": "10/10",
+        "baseline_raw": "0/10"
+      },
+      "task_completeness": {
+        "single_agent": 0.3333,
+        "change_society": 1.0
+      },
+      "avg_society_tokens": 1400.0,
+      "avg_baseline_tokens": 200.0
+    },
+    "ablation_critical_impact_recall_avg": {
+      "single_agent": 0.2738,
+      "society_without_negotiation": 0.9643,
+      "society_without_policy_guardian": 0.9643,
+      "full_change_society": 0.9643
+    },
+    "caveat": "Fixed-scenario deterministic profile; not statistically significant. Replicate with repeated Qwen runs for production claims."
+  },
+  "caveat": "Fixed-scenario deterministic profile; not statistically significant. Replicate with repeated Qwen runs for production claims."
+}

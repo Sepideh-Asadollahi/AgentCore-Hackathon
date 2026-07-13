@@ -1,0 +1,1 @@
+{"status":"degraded","service":"change-society-service","checks":{"store":{"store":"in_memory_test_fake","ready":true,"production_ready":false},"model":{"provider":"deterministic_fake","configured":true,"production_ready":false,"run_token_budget":16000,"run_tokens_used":0}}}

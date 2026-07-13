@@ -1,0 +1,133 @@
+# =============================================================================
+# Change Society hackathon — local, secret, and generated artifacts
+# (Committed: source, docs, deployments templates, hackathon/evidence/real/*.json)
+# =============================================================================
+
+# --- Secrets and environment (never commit) ---
+.env
+.env.*
+!.env.example
+push-github-hackathon.local.env
+scripts/push-github-hackathon.local.sh
+scripts/push-github-hackathon.local.env
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+.local-secrets/
+**/credentials.json
+**/service-account*.json
+
+# --- Python ---
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/*.egg-info/
+**/.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+*.cover
+
+# --- Node / Next.js (frontend) ---
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+.npm/
+.pnpm-store/
+.yarn/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+next-env.d.ts
+*.tsbuildinfo
+.turbo/
+.vercel/
+
+# --- Frontend env overrides ---
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Local doc mirror / entrant workspace (not for public hackathon repo) ---
+project_docs/
+
+# --- Root-level planning copies (use docs/, phases/, SUBMISSION.md in repo) ---
+phases/
+
+# --- Cursor workspace (local IDE only) ---
+.cursor/
+.cursorrules
+
+# --- Local test / installer artifacts ---
+.pytest-last.txt
+install-state.json
+.install-cache/
+.smoke-temp/
+
+# --- Evidence: local logs and integrator scratch (committed JSON under evidence/real/) ---
+evidence/**/*.log
+evidence/integrator-*.txt
+
+# --- Logs, temp, OS ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+tmp/
+temp/
+.cache/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# --- Installer / demo runtime (local only) ---
+/install-state.json
+.install-cache/
+
+# --- Evidence: commit only redacted deterministic reports under real/ ---
+evidence/private/
+evidence/live/
+evidence/**/*.tmp
+evidence/**/*.partial
+evidence/**/raw-*
+evidence/**/unredacted-*
+
+# --- Docker / local compose overrides ---
+docker-compose.override.yaml
+docker-compose.override.yml
+*.override.yaml
+.docker-data/
+
+# --- Terraform / cloud state (if used under hackathon/) ---
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# --- IDE (optional local; rules in repo stay tracked) ---
+.idea/
+*.iml
+
+# --- Media captures during recording (entrant-owned; do not commit) ---
+recordings/
+screenshots/raw/
+*.mp4
+*.mov
+*.webm

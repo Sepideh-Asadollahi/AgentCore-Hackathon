@@ -1,0 +1,411 @@
+{
+  "message_count": 21,
+  "roles_observed": [
+    "change_analyst",
+    "context_scout",
+    "coordinator",
+    "frontend_delivery_lead",
+    "impact_analyst",
+    "policy_guardian"
+  ],
+  "ticket_count": 8,
+  "timeline": [
+    {
+      "assigned_agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capability": "retrieve_scoped_project_truth",
+      "evidence_refs": [],
+      "message_id": "msg_e74b1c72e51244bf9f2f3d19d6d8c749",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "context_scout",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 1,
+      "task_ref": "ticket_43e379c6df1a447abd5bfaa976a2a6d1",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capability": "retrieve_scoped_project_truth",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_80d138910abf4329956fb9f1f243d187",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic context_scout analysis (checkout-api-refactor)",
+      "policies": [
+        "api-breaking-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "medium",
+      "sender_role": "context_scout",
+      "status": "completed",
+      "step": 2,
+      "task_ref": "ticket_43e379c6df1a447abd5bfaa976a2a6d1",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [],
+      "message_id": "msg_391002f1e3b440268d71053af0f13fa1",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 3,
+      "task_ref": "ticket_4e1ea742a07740e4b8f705ead10cb827",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_4a486eb47f5148ba9fad0a035dcb1232",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Handler refactor is internal; response shape should stay compatible.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "change_analyst",
+      "status": "completed",
+      "step": 4,
+      "task_ref": "ticket_4e1ea742a07740e4b8f705ead10cb827",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capability": "analyze_cross_boundary_impact",
+      "evidence_refs": [],
+      "message_id": "msg_7be59e8412af42aaad05615009bfcd18",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "impact_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 5,
+      "task_ref": "ticket_461263c398934fed96e805dd33e30fab",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capability": "analyze_cross_boundary_impact",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_01e1fb69450c44dbbde389ad3ba7d1a3",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic impact_analyst analysis (checkout-api-refactor)",
+      "policies": [
+        "api-breaking-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "impact_analyst",
+      "status": "completed",
+      "step": 6,
+      "task_ref": "ticket_461263c398934fed96e805dd33e30fab",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [],
+      "message_id": "msg_180bc81cc910402d8723d5513f78dd27",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 7,
+      "task_ref": "ticket_8ea361716a904db7991245fa562b35dd",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_2cde3bd1c5f949e0a18217fdafe36f13",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic policy_guardian analysis (checkout-api-refactor)",
+      "policies": [
+        "api-breaking-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "policy_guardian",
+      "status": "completed",
+      "step": 8,
+      "task_ref": "ticket_8ea361716a904db7991245fa562b35dd",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_7a74e48712b5473cb67bb24e3b9a4a6e",
+      "message_type": "rebuttal_request",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 9,
+      "task_ref": "rebuttal:change_analyst",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [],
+      "message_id": "msg_656b32b2cbee433887feb12cc2916227",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 10,
+      "task_ref": "ticket_f069a5bdf7154966b783ba358ef4a650",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_341022795d0e4624971457ccc7a8f0b4",
+      "message_type": "rebuttal_response",
+      "payload_excerpt": "Removing taxIncluded breaks the documented OpenAPI contract for mobile v3.",
+      "policies": [
+        "api-breaking-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "change_analyst",
+      "status": "completed",
+      "step": 11,
+      "task_ref": "ticket_f069a5bdf7154966b783ba358ef4a650",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_535afbe8bcab47b181fe1dd71192c0dc",
+      "message_type": "rebuttal_request",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 12,
+      "task_ref": "rebuttal:policy_guardian",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [],
+      "message_id": "msg_ff865664abfd48388cbbd3d3aa2e0e0f",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 13,
+      "task_ref": "ticket_245628a45fa547919eb973d1746b8b60",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_fc386f95eda745a0a36100c83ec1b5ad",
+      "message_type": "rebuttal_response",
+      "payload_excerpt": "Deterministic policy_guardian analysis (checkout-api-refactor)",
+      "policies": [
+        "api-breaking-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "policy_guardian",
+      "status": "completed",
+      "step": 14,
+      "task_ref": "ticket_245628a45fa547919eb973d1746b8b60",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_0d1e0fa5263c45acb2b1c2ce5a8d0b3b",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 15,
+      "task_ref": "ticket_39158d4277054c06be95a67819e53fc0",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_daf6a6d619ea4f07872882932374f42a",
+      "message_type": "coordinator_decision",
+      "payload_excerpt": "Specialist conflict on checkout-api-refactor resolved using cited evidence.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 16,
+      "task_ref": "ticket_39158d4277054c06be95a67819e53fc0",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capability": "coordinate_frontend_ui_delivery",
+      "evidence_refs": [],
+      "message_id": "msg_40d0bbf0f9e24e3a94b5c94ca0ac49a6",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "frontend_delivery_lead",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 17,
+      "task_ref": "ticket_959d23abbe4a4f15ba0a8361dd777d87",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capability": "coordinate_frontend_ui_delivery",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api"
+      ],
+      "message_id": "msg_c874b5fc75114edcbda1cc7ee8ab1b98",
+      "message_type": "frontend_delivery_handoff",
+      "payload_excerpt": "Frontend team must implement UI/UX/API client updates for checkout-api-refactor.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "frontend_delivery_lead",
+      "status": "completed",
+      "step": 18,
+      "task_ref": "ticket_959d23abbe4a4f15ba0a8361dd777d87",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_803732fc7cba4151a4eb0fcd28c7e213",
+      "message_type": "approval_requested",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "pending",
+      "step": 19,
+      "task_ref": "approval_requested",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_5397ac1496c646498e482c6f4b972bc4",
+      "message_type": "approval_decided",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 20,
+      "task_ref": "approval_decided",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [
+        "ev_api_diff",
+        "ev_openapi",
+        "ev_policy_api",
+        "ev_tests_mobile"
+      ],
+      "message_id": "msg_9bbbac81c0c845659fa3c50f145bc33c",
+      "message_type": "run_completed",
+      "payload_excerpt": "",
+      "policies": [
+        "api-breaking-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 21,
+      "task_ref": "run_completed",
+      "ticket_state": null
+    }
+  ]
+}

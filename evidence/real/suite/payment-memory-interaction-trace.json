@@ -1,0 +1,402 @@
+{
+  "message_count": 21,
+  "roles_observed": [
+    "change_analyst",
+    "context_scout",
+    "coordinator",
+    "frontend_delivery_lead",
+    "impact_analyst",
+    "policy_guardian"
+  ],
+  "ticket_count": 8,
+  "timeline": [
+    {
+      "assigned_agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capability": "retrieve_scoped_project_truth",
+      "evidence_refs": [],
+      "message_id": "msg_0a010cd9ff314659bf9d0c9879d89a03",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "context_scout",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 1,
+      "task_ref": "ticket_e27cb7fc90e74666b1973d884679e94e",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capability": "retrieve_scoped_project_truth",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "message_id": "msg_8076dc9e1a944ffeb3786e659909318d",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic context_scout analysis (payment-memory)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "medium",
+      "sender_role": "context_scout",
+      "status": "completed",
+      "step": 2,
+      "task_ref": "ticket_e27cb7fc90e74666b1973d884679e94e",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [],
+      "message_id": "msg_62be2ddfc195448eb8a0011854a6b1b0",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 3,
+      "task_ref": "ticket_b79a4f8aafde4d59a0c662486fce0f59",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "message_id": "msg_de954b9f8d0344709846daba157e8328",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Timeout retry tuning should be low risk.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "change_analyst",
+      "status": "completed",
+      "step": 4,
+      "task_ref": "ticket_b79a4f8aafde4d59a0c662486fce0f59",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capability": "analyze_cross_boundary_impact",
+      "evidence_refs": [],
+      "message_id": "msg_8e3dce3a271b486ca6be738428be15f9",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "impact_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 5,
+      "task_ref": "ticket_7fdec43291644fedae740f95ca5ea0a8",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capability": "analyze_cross_boundary_impact",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "message_id": "msg_ebfe9d9e0bc94a958c7f2eb03eae58c3",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic impact_analyst analysis (payment-memory)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "impact_analyst",
+      "status": "completed",
+      "step": 6,
+      "task_ref": "ticket_7fdec43291644fedae740f95ca5ea0a8",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [],
+      "message_id": "msg_6a7514436dc3479a9e1719f8e146953b",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 7,
+      "task_ref": "ticket_cfa39422426b48b992b626e127f3f70e",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "message_id": "msg_c7145c19dec54cf98719c6c1df5842cb",
+      "message_type": "specialist_finding",
+      "payload_excerpt": "Deterministic policy_guardian analysis (payment-memory)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "policy_guardian",
+      "status": "completed",
+      "step": 8,
+      "task_ref": "ticket_cfa39422426b48b992b626e127f3f70e",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_duplicate_incident",
+        "ev_paypal_current",
+        "ev_retry_policy"
+      ],
+      "message_id": "msg_125e5b6f44904001bd5895deb5101ad2",
+      "message_type": "rebuttal_request",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 9,
+      "task_ref": "rebuttal:change_analyst",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [],
+      "message_id": "msg_822be245ae3143d3ab29704842b96855",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "change_analyst",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 10,
+      "task_ref": "ticket_6ab451118f314f3dbb8f07dba7c3de2c",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capability": "interpret_ambiguous_software_change",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "message_id": "msg_01e3512f50c548e290f49afd9caa325c",
+      "message_type": "rebuttal_response",
+      "payload_excerpt": "Missing idempotency keys can duplicate charges per incident evidence.",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "change_analyst",
+      "status": "completed",
+      "step": 11,
+      "task_ref": "ticket_6ab451118f314f3dbb8f07dba7c3de2c",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_duplicate_incident",
+        "ev_paypal_current",
+        "ev_retry_policy"
+      ],
+      "message_id": "msg_8dd48c2c11ec410b9571db39e1417918",
+      "message_type": "rebuttal_request",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 12,
+      "task_ref": "rebuttal:policy_guardian",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [],
+      "message_id": "msg_1dc5b54d15974f279c85d833db74899e",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "policy_guardian",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 13,
+      "task_ref": "ticket_28d5335020114981a73b5941c7536094",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capability": "evaluate_policy_and_approval_risk",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "message_id": "msg_0a94ae6e489840d1859761098362f01c",
+      "message_type": "rebuttal_response",
+      "payload_excerpt": "Deterministic policy_guardian analysis (payment-memory)",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "policy_guardian",
+      "status": "completed",
+      "step": 14,
+      "task_ref": "ticket_28d5335020114981a73b5941c7536094",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_033a0a3750884190b2940201872003f4",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 15,
+      "task_ref": "ticket_a0851c7d10954a2aaec89348e0cf878b",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_66f95988730d41cb9cd847a2f6d9748a",
+      "message_type": "coordinator_decision",
+      "payload_excerpt": "Specialist conflict on payment-memory resolved using cited evidence.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 16,
+      "task_ref": "ticket_a0851c7d10954a2aaec89348e0cf878b",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capability": "coordinate_frontend_ui_delivery",
+      "evidence_refs": [],
+      "message_id": "msg_e44b0729e387446c83889d19137b6340",
+      "message_type": "task_assignment",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "frontend_delivery_lead",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 17,
+      "task_ref": "ticket_ffb8d543c7b0476fbbdb97ceb03e7e42",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capability": "coordinate_frontend_ui_delivery",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "message_id": "msg_fc7ebacd192f487da72a479ac1932b1e",
+      "message_type": "frontend_delivery_handoff",
+      "payload_excerpt": "Frontend team must implement UI/UX/API client updates for payment-memory.",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "frontend_delivery_lead",
+      "status": "completed",
+      "step": 18,
+      "task_ref": "ticket_ffb8d543c7b0476fbbdb97ceb03e7e42",
+      "ticket_state": "completed"
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_18cb28f0d394401082fde59d9f6081fc",
+      "message_type": "approval_requested",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "pending",
+      "step": 19,
+      "task_ref": "approval_requested",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [],
+      "message_id": "msg_0072dfd032c84503b1176a19f26ae09a",
+      "message_type": "approval_decided",
+      "payload_excerpt": "",
+      "policies": [],
+      "recipient_role": "coordinator",
+      "risk_level": "high",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 20,
+      "task_ref": "approval_decided",
+      "ticket_state": null
+    },
+    {
+      "assigned_agent_id": null,
+      "capability": "decompose_route_reconcile",
+      "evidence_refs": [
+        "ev_duplicate_incident",
+        "ev_paypal_current",
+        "ev_retry_policy"
+      ],
+      "message_id": "msg_2e94e7de8d124eff859f945ed6d1c1a0",
+      "message_type": "run_completed",
+      "payload_excerpt": "",
+      "policies": [
+        "revenue-impacting-change"
+      ],
+      "recipient_role": "coordinator",
+      "risk_level": "low",
+      "sender_role": "coordinator",
+      "status": "completed",
+      "step": 21,
+      "task_ref": "run_completed",
+      "ticket_state": null
+    }
+  ]
+}

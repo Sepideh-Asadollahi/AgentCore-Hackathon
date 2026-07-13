@@ -1,0 +1,66 @@
+{
+  "contract_version": "1.0",
+  "_comment": "All managed agents dispatch to the external LangGraph+Qwen society worker (live integrator profile).",
+  "agents": [
+    {
+      "key": "context-scout",
+      "name": "External Context Scout (Live Qwen)",
+      "provider": "langgraph-sdk-society-worker",
+      "adapter_type": "webhook",
+      "role": "context_scout",
+      "capabilities": ["retrieve_scoped_project_truth"],
+      "description": "Live Qwen via signed webhook worker.",
+      "endpoint": "http://localhost:32510"
+    },
+    {
+      "key": "change-analyst",
+      "name": "External Change Analyst (LangGraph + Qwen)",
+      "provider": "langgraph-sdk-society-worker",
+      "adapter_type": "webhook",
+      "role": "change_analyst",
+      "capabilities": ["interpret_ambiguous_software_change"],
+      "description": "LangGraph pipeline refined by live Qwen.",
+      "endpoint": "http://localhost:32510"
+    },
+    {
+      "key": "impact-analyst",
+      "name": "External Impact Analyst (Live Qwen)",
+      "provider": "langgraph-sdk-society-worker",
+      "adapter_type": "webhook",
+      "role": "impact_analyst",
+      "capabilities": ["analyze_cross_boundary_impact"],
+      "description": "Live Qwen via webhook.",
+      "endpoint": "http://localhost:32510"
+    },
+    {
+      "key": "policy-guardian",
+      "name": "External Policy Guardian (Live Qwen)",
+      "provider": "langgraph-sdk-society-worker",
+      "adapter_type": "webhook",
+      "role": "policy_guardian",
+      "capabilities": ["evaluate_policy_and_approval_risk"],
+      "description": "Live Qwen via webhook.",
+      "endpoint": "http://localhost:32510"
+    },
+    {
+      "key": "conflict-judge",
+      "name": "External Conflict Judge (Live Qwen)",
+      "provider": "langgraph-sdk-society-worker",
+      "adapter_type": "webhook",
+      "role": "coordinator_judge",
+      "capabilities": ["decompose_route_reconcile"],
+      "description": "Live Qwen JudgeOutput via webhook.",
+      "endpoint": "http://localhost:32510"
+    },
+    {
+      "key": "frontend-delivery-lead",
+      "name": "External Frontend Delivery Lead (Live Qwen)",
+      "provider": "langgraph-sdk-society-worker",
+      "adapter_type": "webhook",
+      "role": "frontend_delivery_lead",
+      "capabilities": ["coordinate_frontend_ui_delivery"],
+      "description": "Live Qwen FrontendDeliveryOutput via webhook.",
+      "endpoint": "http://localhost:32510"
+    }
+  ]
+}

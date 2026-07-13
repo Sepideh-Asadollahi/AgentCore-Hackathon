@@ -1,0 +1,415 @@
+{
+  "agent_ticket_count": 8,
+  "approval_state_before": "awaiting_approval",
+  "baseline_comparison": {
+    "baseline": {
+      "critical_impact_recall": 0.25,
+      "duration_ms": 25,
+      "input_tokens": 120,
+      "output_tokens": 80,
+      "policy_match_recall": 0.0,
+      "raw": {
+        "impact_found": 1,
+        "impact_total": 4,
+        "policy_found": 0,
+        "policy_total": 1,
+        "task_found": 1,
+        "task_total": 3
+      },
+      "task_completeness": 0.3333333333333333,
+      "unsupported_claim_count": 0
+    },
+    "baseline_output": {
+      "assumptions": [],
+      "confidence": 0.91,
+      "evidence_refs": [
+        "ev_diff_price"
+      ],
+      "findings": [
+        "The change has evidence-backed downstream effects."
+      ],
+      "impacts": [
+        "customer price"
+      ],
+      "policies": [],
+      "recommended_action": "Escalate for evidence-backed human approval.",
+      "risk_level": "medium",
+      "summary": "Deterministic single_agent_baseline analysis (pricing-refactor)",
+      "tasks": [
+        "add billing regression tests"
+      ],
+      "unresolved_questions": []
+    },
+    "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant.",
+    "scenario_id": "pricing-refactor",
+    "society": {
+      "agent_message_count": 16,
+      "conflict_count": 1,
+      "critical_impact_recall": 1.0,
+      "frontend_delivery_ticket_count": 1,
+      "frontend_handoff_message_id": "msg_65ec8afee4e14aa8a7a2e5710c38395c",
+      "frontend_work_required": true,
+      "model_duration_ms": 200,
+      "policy_match_recall": 1.0,
+      "raw": {
+        "impact_found": 4,
+        "impact_total": 4,
+        "policy_found": 1,
+        "policy_total": 1,
+        "task_found": 3,
+        "task_total": 3
+      },
+      "task_completeness": 1.0,
+      "total_tokens": 1400,
+      "unsupported_claim_count": 0
+    },
+    "tradeoffs": {
+      "impact_recall_delta": 0.75,
+      "policy_recall_delta": 1.0,
+      "token_delta": 1200
+    }
+  },
+  "correlation_id": "corr_94b44ac3934b4e58b1dadad334a01a34",
+  "cross_session_memory_recalled": true,
+  "data_classification": "synthetic",
+  "environment": "local_test",
+  "executed_at": "2026-07-12T09:03:32.005818+00:00",
+  "final_state": "completed",
+  "frontend_delivery": {
+    "frontend_work_required": true,
+    "handoff_message": {
+      "assumptions": [],
+      "capability": "coordinate_frontend_ui_delivery",
+      "causation_id": "msg_ce253a79450b4ed6883d0bea614a5f2c",
+      "confidence": 0.9,
+      "conflicts": [],
+      "correlation_id": "corr_94b44ac3934b4e58b1dadad334a01a34",
+      "created_at": "2026-07-12T09:03:31.720435+00:00",
+      "evidence_refs": [
+        "ev_diff_price",
+        "ev_policy_revenue",
+        "ev_decision_price"
+      ],
+      "idempotency_key": "run_49c6e752abe94d84ac39fe539038f004:ticket_9816ff3fd2d744a1bd15243fbaeafd54:17",
+      "intent": "notify_frontend_team",
+      "message_id": "msg_65ec8afee4e14aa8a7a2e5710c38395c",
+      "message_type": "frontend_delivery_handoff",
+      "payload": {
+        "api_client_updates": [],
+        "confidence": 0.9,
+        "design_artifacts_needed": [
+          "Pricing copy review checklist"
+        ],
+        "evidence_refs": [
+          "ev_diff_price",
+          "ev_policy_revenue",
+          "ev_decision_price"
+        ],
+        "frontend_tasks": [
+          "Add UI regression for checkout totals"
+        ],
+        "priority": "high",
+        "recommended_action": "Open frontend team queue items before release.",
+        "signals": {
+          "frontend_work_required": true,
+          "matched_keywords": [
+            "billing",
+            "checkout",
+            "price"
+          ],
+          "scenario_ui_hints": [
+            "checkout totals display",
+            "customer-visible pricing copy"
+          ],
+          "team_queue": "frontend"
+        },
+        "summary": "Frontend team must implement UI/UX/API client updates for pricing-refactor.",
+        "team_queue": "frontend",
+        "ui_changes": [
+          "Verify displayed pre-tax price matches base_price after refactor."
+        ],
+        "ux_review_items": [
+          "Checkout price change messaging for finance approval path."
+        ]
+      },
+      "protocol_version": "1.0",
+      "recipient_role": "coordinator",
+      "requested_next_action": "notify_frontend_team",
+      "risk_level": "high",
+      "run_id": "run_49c6e752abe94d84ac39fe539038f004",
+      "scope": {
+        "project_id": "live-test-project",
+        "tenant_id": "live-test-tenant",
+        "workspace_id": "live-test-workspace"
+      },
+      "sender_role": "frontend_delivery_lead",
+      "status": "completed",
+      "task_ref": "ticket_9816ff3fd2d744a1bd15243fbaeafd54",
+      "token_usage": {
+        "input_tokens": 120,
+        "output_tokens": 80
+      },
+      "unresolved_questions": []
+    },
+    "metrics": {
+      "frontend_delivery_ticket_count": 1,
+      "frontend_handoff_message_id": "msg_65ec8afee4e14aa8a7a2e5710c38395c"
+    },
+    "run_id": "run_49c6e752abe94d84ac39fe539038f004",
+    "scenario_id": "pricing-refactor",
+    "signals": {
+      "frontend_work_required": true,
+      "matched_keywords": [
+        "billing",
+        "checkout",
+        "price"
+      ],
+      "scenario_ui_hints": [
+        "checkout totals display",
+        "customer-visible pricing copy"
+      ],
+      "team_queue": "frontend"
+    },
+    "team_queue": "frontend",
+    "tickets": [
+      {
+        "acceptance_criteria": [
+          "return schema-valid frontend handoff",
+          "list actionable UI/UX/API client work"
+        ],
+        "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+        "capability": "coordinate_frontend_ui_delivery",
+        "claimed_at": "2026-07-12T09:03:31.719505+00:00",
+        "correlation_id": "corr_94b44ac3934b4e58b1dadad334a01a34",
+        "created_at": "2026-07-12T09:03:31.719029+00:00",
+        "created_by": "agentcore-frontend-router",
+        "error": null,
+        "events": [
+          {
+            "actor_id": "agentcore-router",
+            "details": {
+              "agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+              "routing_reason": "capability_match_lowest_active_load"
+            },
+            "event_id": "event_738e14956d934bec9d6c6b75dc6b16a0",
+            "event_type": "ticket_state_changed",
+            "from_state": "created",
+            "occurred_at": "2026-07-12T09:03:31.719167+00:00",
+            "to_state": "assigned"
+          },
+          {
+            "actor_id": "agent_54ea13659e144649b5ace5796577c79f",
+            "details": {},
+            "event_id": "event_94db88e8d52443dc894103557eb21452",
+            "event_type": "ticket_state_changed",
+            "from_state": "assigned",
+            "occurred_at": "2026-07-12T09:03:31.719505+00:00",
+            "to_state": "claimed"
+          },
+          {
+            "actor_id": "agent_54ea13659e144649b5ace5796577c79f",
+            "details": {},
+            "event_id": "event_83fccb74796649928ce3465c606d370b",
+            "event_type": "ticket_state_changed",
+            "from_state": "claimed",
+            "occurred_at": "2026-07-12T09:03:31.719546+00:00",
+            "to_state": "in_progress"
+          },
+          {
+            "actor_id": "agentcore-dispatcher",
+            "details": {},
+            "event_id": "event_b8c999e6ab4c4550a7109b4ada2335b0",
+            "event_type": "ticket_state_changed",
+            "from_state": "in_progress",
+            "occurred_at": "2026-07-12T09:03:31.719944+00:00",
+            "to_state": "review"
+          },
+          {
+            "actor_id": "agentcore-schema-review",
+            "details": {
+              "acceptance": "schema_validated"
+            },
+            "event_id": "event_afa19939ed9f4d588d9aa67a8d0aaaa5",
+            "event_type": "ticket_state_changed",
+            "from_state": "review",
+            "occurred_at": "2026-07-12T09:03:31.719987+00:00",
+            "to_state": "completed"
+          }
+        ],
+        "execution_metrics": {
+          "duration_ms": 25,
+          "external_execution_id": "model:ticket_9816ff3fd2d744a1bd15243fbaeafd54",
+          "input_tokens": 120,
+          "output_tokens": 80,
+          "runtime": "deterministic-test-model"
+        },
+        "input_payload": {
+          "schema": "FrontendDeliveryOutput",
+          "signals": {
+            "frontend_work_required": true,
+            "matched_keywords": [
+              "billing",
+              "checkout",
+              "price"
+            ],
+            "scenario_ui_hints": [
+              "checkout totals display",
+              "customer-visible pricing copy"
+            ],
+            "team_queue": "frontend"
+          },
+          "team_queue": "frontend"
+        },
+        "output_payload": {
+          "api_client_updates": [],
+          "confidence": 0.9,
+          "design_artifacts_needed": [
+            "Pricing copy review checklist"
+          ],
+          "evidence_refs": [
+            "ev_diff_price",
+            "ev_policy_revenue",
+            "ev_decision_price"
+          ],
+          "frontend_tasks": [
+            "Add UI regression for checkout totals"
+          ],
+          "priority": "high",
+          "recommended_action": "Open frontend team queue items before release.",
+          "summary": "Frontend team must implement UI/UX/API client updates for pricing-refactor.",
+          "team_queue": "frontend",
+          "ui_changes": [
+            "Verify displayed pre-tax price matches base_price after refactor."
+          ],
+          "ux_review_items": [
+            "Checkout price change messaging for finance approval path."
+          ]
+        },
+        "priority": 50,
+        "project_id": "live-test-project",
+        "run_id": "run_49c6e752abe94d84ac39fe539038f004",
+        "state": "completed",
+        "tenant_id": "live-test-tenant",
+        "ticket_id": "ticket_9816ff3fd2d744a1bd15243fbaeafd54",
+        "title": "Frontend team delivery handoff",
+        "updated_at": "2026-07-12T09:03:31.719987+00:00",
+        "version": 6,
+        "workspace_id": "live-test-workspace"
+      }
+    ]
+  },
+  "managed_agent_count": 6,
+  "managed_agents": [
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capabilities": [
+        "retrieve_scoped_project_truth"
+      ],
+      "name": "Context Scout Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capabilities": [
+        "interpret_ambiguous_software_change"
+      ],
+      "name": "Change Analyst Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capabilities": [
+        "analyze_cross_boundary_impact"
+      ],
+      "name": "Impact Analyst Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capabilities": [
+        "evaluate_policy_and_approval_risk"
+      ],
+      "name": "Policy Guardian Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capabilities": [
+        "decompose_route_reconcile"
+      ],
+      "name": "Conflict Judge Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capabilities": [
+        "coordinate_frontend_ui_delivery"
+      ],
+      "name": "Frontend Delivery Coordinator",
+      "state": "online"
+    }
+  ],
+  "message_count": 19,
+  "mutation_policy": "isolated_test_project_writes",
+  "negotiation_event_count": 5,
+  "readiness": {
+    "checks": {
+      "model": {
+        "configured": true,
+        "production_ready": false,
+        "provider": "deterministic_fake",
+        "run_token_budget": 16000,
+        "run_tokens_used": 0
+      },
+      "store": {
+        "production_ready": false,
+        "ready": true,
+        "store": "in_memory_test_fake"
+      }
+    },
+    "service": "change-society-service",
+    "status": "degraded"
+  },
+  "rebuttal_response_count": 2,
+  "roles": [
+    "change_analyst",
+    "context_scout",
+    "coordinator",
+    "frontend_delivery_lead",
+    "impact_analyst",
+    "policy_guardian"
+  ],
+  "run_id": "run_49c6e752abe94d84ac39fe539038f004",
+  "secrets_included": false,
+  "society_metrics": {
+    "agent_message_count": 16,
+    "conflict_count": 1,
+    "critical_impact_recall": 1.0,
+    "frontend_delivery_ticket_count": 1,
+    "frontend_handoff_message_id": "msg_65ec8afee4e14aa8a7a2e5710c38395c",
+    "frontend_work_required": true,
+    "model_duration_ms": 200,
+    "policy_match_recall": 1.0,
+    "raw": {
+      "impact_found": 4,
+      "impact_total": 4,
+      "policy_found": 1,
+      "policy_total": 1,
+      "task_found": 3,
+      "task_total": 3
+    },
+    "task_completeness": 1.0,
+    "total_tokens": 1400,
+    "unsupported_claim_count": 0
+  },
+  "strict_negotiation_assertions": true,
+  "test_family": "real_deterministic",
+  "ticket_lifecycle_verified": true,
+  "verification_profile": "deterministic"
+}

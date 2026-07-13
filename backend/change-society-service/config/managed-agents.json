@@ -1,0 +1,59 @@
+{
+  "contract_version": "1.0",
+  "agents": [
+    {
+      "key": "context-scout",
+      "name": "Context Scout Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "context_scout",
+      "capabilities": ["retrieve_scoped_project_truth"],
+      "description": "External evidence retrieval and freshness analysis worker."
+    },
+    {
+      "key": "change-analyst",
+      "name": "Change Analyst Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "change_analyst",
+      "capabilities": ["interpret_ambiguous_software_change"],
+      "description": "External ambiguous change interpretation worker."
+    },
+    {
+      "key": "impact-analyst",
+      "name": "Impact Analyst Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "impact_analyst",
+      "capabilities": ["analyze_cross_boundary_impact"],
+      "description": "External dependency and blast-radius analysis worker."
+    },
+    {
+      "key": "policy-guardian",
+      "name": "Policy Guardian Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "policy_guardian",
+      "capabilities": ["evaluate_policy_and_approval_risk"],
+      "description": "External policy evaluation worker governed by deterministic approval rules."
+    },
+    {
+      "key": "conflict-judge",
+      "name": "Conflict Judge Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "coordinator_judge",
+      "capabilities": ["decompose_route_reconcile"],
+      "description": "External Qwen judge used only after bounded evidence-based rebuttals."
+    },
+    {
+      "key": "frontend-delivery-lead",
+      "name": "Frontend Delivery Coordinator",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "frontend_delivery_lead",
+      "capabilities": ["coordinate_frontend_ui_delivery"],
+      "description": "Translates backend change outcomes into UI/UX/API-client work for the frontend team queue."
+    }
+  ]
+}

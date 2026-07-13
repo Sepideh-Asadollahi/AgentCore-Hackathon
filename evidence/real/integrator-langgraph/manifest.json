@@ -1,0 +1,27 @@
+{
+  "executed_at": "2026-07-12T09:54:04.793412+00:00",
+  "interaction_trace_path": "hackathon/evidence/real/integrator-langgraph/checkout-api-refactor-interaction-trace.json",
+  "langgraph_integrator": {
+    "change_analyst_ticket_runtimes": [
+      {
+        "runtime": "langgraph-change-analyst",
+        "state": "completed",
+        "ticket_id": "ticket_7c94174153024a5d9b67f7f68c49a839"
+      },
+      {
+        "runtime": "langgraph-change-analyst",
+        "state": "completed",
+        "ticket_id": "ticket_b5c8183c15b949b1b45daf46ffddf075"
+      }
+    ],
+    "external_worker_runtime": "langgraph-change-analyst",
+    "worker_integration": "webhook_langgraph"
+  },
+  "report_path": "hackathon/evidence/real/integrator-langgraph/checkout-api-refactor.json",
+  "run_id": "run_f2eebd323e814477a9a681b862e5344b",
+  "scenario_id": "checkout-api-refactor",
+  "secrets_included": false,
+  "suite": "agentcore-langgraph-integrator-real",
+  "test_family": "real_integrator_langgraph",
+  "verification_profile": "integrator-langgraph"
+}

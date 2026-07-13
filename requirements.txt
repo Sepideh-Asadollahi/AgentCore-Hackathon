@@ -1,0 +1,14 @@
+# Change Society — Python dependencies for repo-root .venv (Python 3.12+)
+#
+# Automatic (recommended):
+#   bash install.sh
+#
+# Manual:
+#   python3 -m venv .venv
+#   .venv/bin/pip install --upgrade pip
+#   .venv/bin/pip install -r requirements.txt
+#
+# Tests and ASGI contract checks:
+#   .venv/bin/pip install -r requirements-dev.txt
+#
+-r backend/change-society-service/requirements.txt

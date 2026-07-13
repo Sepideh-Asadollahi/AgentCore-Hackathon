@@ -1,0 +1,422 @@
+{
+  "agent_ticket_count": 8,
+  "approval_state_before": "awaiting_approval",
+  "baseline_comparison": {
+    "baseline": {
+      "critical_impact_recall": 0.3333333333333333,
+      "duration_ms": 25,
+      "input_tokens": 120,
+      "output_tokens": 80,
+      "policy_match_recall": 0.0,
+      "raw": {
+        "impact_found": 1,
+        "impact_total": 3,
+        "policy_found": 0,
+        "policy_total": 1,
+        "task_found": 1,
+        "task_total": 3
+      },
+      "task_completeness": 0.3333333333333333,
+      "unsupported_claim_count": 0
+    },
+    "baseline_output": {
+      "assumptions": [],
+      "confidence": 0.91,
+      "evidence_refs": [
+        "ev_paypal_current"
+      ],
+      "findings": [
+        "The change has evidence-backed downstream effects."
+      ],
+      "impacts": [
+        "duplicate charges"
+      ],
+      "policies": [],
+      "recommended_action": "Escalate for evidence-backed human approval.",
+      "risk_level": "medium",
+      "summary": "Deterministic single_agent_baseline analysis (payment-memory)",
+      "tasks": [
+        "add idempotent retry"
+      ],
+      "unresolved_questions": []
+    },
+    "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant.",
+    "scenario_id": "payment-memory",
+    "society": {
+      "agent_message_count": 16,
+      "conflict_count": 1,
+      "critical_impact_recall": 1.0,
+      "frontend_delivery_ticket_count": 1,
+      "frontend_handoff_message_id": "msg_fc7ebacd192f487da72a479ac1932b1e",
+      "frontend_work_required": true,
+      "model_duration_ms": 200,
+      "policy_match_recall": 1.0,
+      "raw": {
+        "impact_found": 3,
+        "impact_total": 3,
+        "policy_found": 1,
+        "policy_total": 1,
+        "task_found": 3,
+        "task_total": 3
+      },
+      "task_completeness": 1.0,
+      "total_tokens": 1400,
+      "unsupported_claim_count": 0
+    },
+    "tradeoffs": {
+      "impact_recall_delta": 0.6666666666666667,
+      "policy_recall_delta": 1.0,
+      "token_delta": 1200
+    }
+  },
+  "correlation_id": "corr_75aaddc39a9a4c9e996c3450d4c89e90",
+  "cross_session_memory_recalled": true,
+  "data_classification": "synthetic",
+  "environment": "local_test",
+  "executed_at": "2026-07-12T09:03:34.166889+00:00",
+  "final_state": "completed",
+  "frontend_delivery": {
+    "frontend_work_required": true,
+    "handoff_message": {
+      "assumptions": [],
+      "capability": "coordinate_frontend_ui_delivery",
+      "causation_id": "msg_e44b0729e387446c83889d19137b6340",
+      "confidence": 0.9,
+      "conflicts": [],
+      "correlation_id": "corr_75aaddc39a9a4c9e996c3450d4c89e90",
+      "created_at": "2026-07-12T09:03:33.806253+00:00",
+      "evidence_refs": [
+        "ev_paypal_current",
+        "ev_retry_policy",
+        "ev_duplicate_incident"
+      ],
+      "idempotency_key": "run_ef61bdb2c1094b8f8d2292ad1a43d143:ticket_ffb8d543c7b0476fbbdb97ceb03e7e42:17",
+      "intent": "notify_frontend_team",
+      "message_id": "msg_fc7ebacd192f487da72a479ac1932b1e",
+      "message_type": "frontend_delivery_handoff",
+      "payload": {
+        "api_client_updates": [
+          "Send idempotency key header on retry from web client."
+        ],
+        "confidence": 0.9,
+        "design_artifacts_needed": [
+          "Payment error state mockups"
+        ],
+        "evidence_refs": [
+          "ev_paypal_current",
+          "ev_retry_policy",
+          "ev_duplicate_incident"
+        ],
+        "frontend_tasks": [
+          "Client retry integration test"
+        ],
+        "priority": "high",
+        "recommended_action": "Open frontend team queue items before release.",
+        "signals": {
+          "frontend_work_required": true,
+          "matched_keywords": [
+            "api",
+            "duplicate",
+            "payment",
+            "retry"
+          ],
+          "scenario_ui_hints": [
+            "payment retry UX",
+            "duplicate charge messaging"
+          ],
+          "team_queue": "frontend"
+        },
+        "summary": "Frontend team must implement UI/UX/API client updates for payment-memory.",
+        "team_queue": "frontend",
+        "ui_changes": [
+          "Retry spinner must not duplicate charge confirmation."
+        ],
+        "ux_review_items": [
+          "Duplicate charge incident messaging."
+        ]
+      },
+      "protocol_version": "1.0",
+      "recipient_role": "coordinator",
+      "requested_next_action": "notify_frontend_team",
+      "risk_level": "high",
+      "run_id": "run_ef61bdb2c1094b8f8d2292ad1a43d143",
+      "scope": {
+        "project_id": "live-test-project",
+        "tenant_id": "live-test-tenant",
+        "workspace_id": "live-test-workspace"
+      },
+      "sender_role": "frontend_delivery_lead",
+      "status": "completed",
+      "task_ref": "ticket_ffb8d543c7b0476fbbdb97ceb03e7e42",
+      "token_usage": {
+        "input_tokens": 120,
+        "output_tokens": 80
+      },
+      "unresolved_questions": []
+    },
+    "metrics": {
+      "frontend_delivery_ticket_count": 1,
+      "frontend_handoff_message_id": "msg_fc7ebacd192f487da72a479ac1932b1e"
+    },
+    "run_id": "run_ef61bdb2c1094b8f8d2292ad1a43d143",
+    "scenario_id": "payment-memory",
+    "signals": {
+      "frontend_work_required": true,
+      "matched_keywords": [
+        "api",
+        "duplicate",
+        "payment",
+        "retry"
+      ],
+      "scenario_ui_hints": [
+        "payment retry UX",
+        "duplicate charge messaging"
+      ],
+      "team_queue": "frontend"
+    },
+    "team_queue": "frontend",
+    "tickets": [
+      {
+        "acceptance_criteria": [
+          "return schema-valid frontend handoff",
+          "list actionable UI/UX/API client work"
+        ],
+        "assigned_agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+        "capability": "coordinate_frontend_ui_delivery",
+        "claimed_at": "2026-07-12T09:03:33.805347+00:00",
+        "correlation_id": "corr_75aaddc39a9a4c9e996c3450d4c89e90",
+        "created_at": "2026-07-12T09:03:33.804899+00:00",
+        "created_by": "agentcore-frontend-router",
+        "error": null,
+        "events": [
+          {
+            "actor_id": "agentcore-router",
+            "details": {
+              "agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+              "routing_reason": "capability_match_lowest_active_load"
+            },
+            "event_id": "event_d28f2caa8f69468bb69d532c5c78e36f",
+            "event_type": "ticket_state_changed",
+            "from_state": "created",
+            "occurred_at": "2026-07-12T09:03:33.805035+00:00",
+            "to_state": "assigned"
+          },
+          {
+            "actor_id": "agent_54ea13659e144649b5ace5796577c79f",
+            "details": {},
+            "event_id": "event_6eaa3d24a4b142d38d82b9b087dfe2a0",
+            "event_type": "ticket_state_changed",
+            "from_state": "assigned",
+            "occurred_at": "2026-07-12T09:03:33.805347+00:00",
+            "to_state": "claimed"
+          },
+          {
+            "actor_id": "agent_54ea13659e144649b5ace5796577c79f",
+            "details": {},
+            "event_id": "event_672c7993ece64758ba23f4a33ca18a78",
+            "event_type": "ticket_state_changed",
+            "from_state": "claimed",
+            "occurred_at": "2026-07-12T09:03:33.805386+00:00",
+            "to_state": "in_progress"
+          },
+          {
+            "actor_id": "agentcore-dispatcher",
+            "details": {},
+            "event_id": "event_e90687cb53364da9b26ce9822a1db0d6",
+            "event_type": "ticket_state_changed",
+            "from_state": "in_progress",
+            "occurred_at": "2026-07-12T09:03:33.805779+00:00",
+            "to_state": "review"
+          },
+          {
+            "actor_id": "agentcore-schema-review",
+            "details": {
+              "acceptance": "schema_validated"
+            },
+            "event_id": "event_4434be243ade4a328d4153c47d8e49c9",
+            "event_type": "ticket_state_changed",
+            "from_state": "review",
+            "occurred_at": "2026-07-12T09:03:33.805823+00:00",
+            "to_state": "completed"
+          }
+        ],
+        "execution_metrics": {
+          "duration_ms": 25,
+          "external_execution_id": "model:ticket_ffb8d543c7b0476fbbdb97ceb03e7e42",
+          "input_tokens": 120,
+          "output_tokens": 80,
+          "runtime": "deterministic-test-model"
+        },
+        "input_payload": {
+          "schema": "FrontendDeliveryOutput",
+          "signals": {
+            "frontend_work_required": true,
+            "matched_keywords": [
+              "api",
+              "duplicate",
+              "payment",
+              "retry"
+            ],
+            "scenario_ui_hints": [
+              "payment retry UX",
+              "duplicate charge messaging"
+            ],
+            "team_queue": "frontend"
+          },
+          "team_queue": "frontend"
+        },
+        "output_payload": {
+          "api_client_updates": [
+            "Send idempotency key header on retry from web client."
+          ],
+          "confidence": 0.9,
+          "design_artifacts_needed": [
+            "Payment error state mockups"
+          ],
+          "evidence_refs": [
+            "ev_paypal_current",
+            "ev_retry_policy",
+            "ev_duplicate_incident"
+          ],
+          "frontend_tasks": [
+            "Client retry integration test"
+          ],
+          "priority": "high",
+          "recommended_action": "Open frontend team queue items before release.",
+          "summary": "Frontend team must implement UI/UX/API client updates for payment-memory.",
+          "team_queue": "frontend",
+          "ui_changes": [
+            "Retry spinner must not duplicate charge confirmation."
+          ],
+          "ux_review_items": [
+            "Duplicate charge incident messaging."
+          ]
+        },
+        "priority": 50,
+        "project_id": "live-test-project",
+        "run_id": "run_ef61bdb2c1094b8f8d2292ad1a43d143",
+        "state": "completed",
+        "tenant_id": "live-test-tenant",
+        "ticket_id": "ticket_ffb8d543c7b0476fbbdb97ceb03e7e42",
+        "title": "Frontend team delivery handoff",
+        "updated_at": "2026-07-12T09:03:33.805823+00:00",
+        "version": 6,
+        "workspace_id": "live-test-workspace"
+      }
+    ]
+  },
+  "managed_agent_count": 6,
+  "managed_agents": [
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_16eaffbe485f4fe6a203a61589ecce7d",
+      "capabilities": [
+        "retrieve_scoped_project_truth"
+      ],
+      "name": "Context Scout Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_1b1cf8dee12d42b698a1c8524698c3dd",
+      "capabilities": [
+        "interpret_ambiguous_software_change"
+      ],
+      "name": "Change Analyst Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_d651597646224e79840aae4efae2c76d",
+      "capabilities": [
+        "analyze_cross_boundary_impact"
+      ],
+      "name": "Impact Analyst Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_421503f4b2ea4ef9b21a161ca9080a00",
+      "capabilities": [
+        "evaluate_policy_and_approval_risk"
+      ],
+      "name": "Policy Guardian Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_b0f1dafccf0245adbf111dafb65cda90",
+      "capabilities": [
+        "decompose_route_reconcile"
+      ],
+      "name": "Conflict Judge Worker",
+      "state": "online"
+    },
+    {
+      "adapter_type": "model",
+      "agent_id": "agent_54ea13659e144649b5ace5796577c79f",
+      "capabilities": [
+        "coordinate_frontend_ui_delivery"
+      ],
+      "name": "Frontend Delivery Coordinator",
+      "state": "online"
+    }
+  ],
+  "message_count": 19,
+  "mutation_policy": "isolated_test_project_writes",
+  "negotiation_event_count": 5,
+  "readiness": {
+    "checks": {
+      "model": {
+        "configured": true,
+        "production_ready": false,
+        "provider": "deterministic_fake",
+        "run_token_budget": 16000,
+        "run_tokens_used": 1600
+      },
+      "store": {
+        "production_ready": false,
+        "ready": true,
+        "store": "in_memory_test_fake"
+      }
+    },
+    "service": "change-society-service",
+    "status": "degraded"
+  },
+  "rebuttal_response_count": 2,
+  "roles": [
+    "change_analyst",
+    "context_scout",
+    "coordinator",
+    "frontend_delivery_lead",
+    "impact_analyst",
+    "policy_guardian"
+  ],
+  "run_id": "run_ef61bdb2c1094b8f8d2292ad1a43d143",
+  "secrets_included": false,
+  "society_metrics": {
+    "agent_message_count": 16,
+    "conflict_count": 1,
+    "critical_impact_recall": 1.0,
+    "frontend_delivery_ticket_count": 1,
+    "frontend_handoff_message_id": "msg_fc7ebacd192f487da72a479ac1932b1e",
+    "frontend_work_required": true,
+    "model_duration_ms": 200,
+    "policy_match_recall": 1.0,
+    "raw": {
+      "impact_found": 3,
+      "impact_total": 3,
+      "policy_found": 1,
+      "policy_total": 1,
+      "task_found": 3,
+      "task_total": 3
+    },
+    "task_completeness": 1.0,
+    "total_tokens": 1400,
+    "unsupported_claim_count": 0
+  },
+  "strict_negotiation_assertions": true,
+  "test_family": "real_deterministic",
+  "ticket_lifecycle_verified": true,
+  "verification_profile": "deterministic"
+}

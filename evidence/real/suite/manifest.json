@@ -1,0 +1,230 @@
+{
+  "executed_at": "2026-07-12T09:03:39.112784+00:00",
+  "readiness": {
+    "checks": {
+      "model": {
+        "configured": true,
+        "production_ready": false,
+        "provider": "deterministic_fake",
+        "run_token_budget": 16000,
+        "run_tokens_used": 0
+      },
+      "store": {
+        "production_ready": false,
+        "ready": true,
+        "store": "in_memory_test_fake"
+      }
+    },
+    "service": "change-society-service",
+    "status": "degraded"
+  },
+  "scenario_count": 7,
+  "scenarios": [
+    {
+      "agent_ticket_count": 8,
+      "domain": "revenue_and_billing",
+      "feature_demonstrations": [
+        "multi_agent_orchestration",
+        "negotiation_and_rebuttal",
+        "human_approval_gate",
+        "frontend_handoff",
+        "baseline_evaluation"
+      ],
+      "governance_rules": [
+        "Revenue-impacting changes require Product and Finance approval.",
+        "Restricted payroll or billing memory must never enter model context.",
+        "Human approval gate before merge on high revenue risk."
+      ],
+      "interaction_trace_path": "hackathon/evidence/real/suite/pricing-refactor-interaction-trace.json",
+      "message_count": 21,
+      "rebuttal_response_count": 2,
+      "report_path": "hackathon/evidence/real/suite/pricing-refactor.json",
+      "roles": [
+        "change_analyst",
+        "context_scout",
+        "coordinator",
+        "frontend_delivery_lead",
+        "impact_analyst",
+        "policy_guardian"
+      ],
+      "run_id": "run_49c6e752abe94d84ac39fe539038f004",
+      "scenario_id": "pricing-refactor"
+    },
+    {
+      "agent_ticket_count": 8,
+      "domain": "security_and_identity",
+      "feature_demonstrations": [
+        "multi_agent_orchestration",
+        "policy_tag_rules",
+        "human_approval_gate",
+        "frontend_handoff",
+        "cross_session_memory"
+      ],
+      "governance_rules": [
+        "Authentication algorithm changes require Security approval.",
+        "Legacy user migration must be explicit before cutover."
+      ],
+      "interaction_trace_path": "hackathon/evidence/real/suite/password-migration-interaction-trace.json",
+      "message_count": 21,
+      "rebuttal_response_count": 2,
+      "report_path": "hackathon/evidence/real/suite/password-migration.json",
+      "roles": [
+        "change_analyst",
+        "context_scout",
+        "coordinator",
+        "frontend_delivery_lead",
+        "impact_analyst",
+        "policy_guardian"
+      ],
+      "run_id": "run_20fb0456a12f4504b81c7f1ba2d462d1",
+      "scenario_id": "password-migration"
+    },
+    {
+      "agent_ticket_count": 8,
+      "domain": "payments_and_reliability",
+      "feature_demonstrations": [
+        "multi_agent_orchestration",
+        "context_freshness_rules",
+        "human_approval_gate",
+        "frontend_handoff"
+      ],
+      "governance_rules": [
+        "Stale memory evidence must be excluded from context.",
+        "Payment retries require idempotency keys and revenue approval."
+      ],
+      "interaction_trace_path": "hackathon/evidence/real/suite/payment-memory-interaction-trace.json",
+      "message_count": 21,
+      "rebuttal_response_count": 2,
+      "report_path": "hackathon/evidence/real/suite/payment-memory.json",
+      "roles": [
+        "change_analyst",
+        "context_scout",
+        "coordinator",
+        "frontend_delivery_lead",
+        "impact_analyst",
+        "policy_guardian"
+      ],
+      "run_id": "run_ef61bdb2c1094b8f8d2292ad1a43d143",
+      "scenario_id": "payment-memory"
+    },
+    {
+      "agent_ticket_count": 8,
+      "domain": "software_engineering_api",
+      "feature_demonstrations": [
+        "multi_agent_orchestration",
+        "negotiation_and_rebuttal",
+        "frontend_handoff",
+        "human_approval_gate"
+      ],
+      "governance_rules": [
+        "Breaking HTTP contracts require Platform and Mobile approval.",
+        "Backend-only CI must not skip mobile contract suites."
+      ],
+      "interaction_trace_path": "hackathon/evidence/real/suite/checkout-api-refactor-interaction-trace.json",
+      "message_count": 21,
+      "rebuttal_response_count": 2,
+      "report_path": "hackathon/evidence/real/suite/checkout-api-refactor.json",
+      "roles": [
+        "change_analyst",
+        "context_scout",
+        "coordinator",
+        "frontend_delivery_lead",
+        "impact_analyst",
+        "policy_guardian"
+      ],
+      "run_id": "run_62cd27c8d8d44f619d4c31abd94af5d4",
+      "scenario_id": "checkout-api-refactor"
+    },
+    {
+      "agent_ticket_count": 8,
+      "domain": "human_resources",
+      "feature_demonstrations": [
+        "multi_agent_orchestration",
+        "negotiation_and_rebuttal",
+        "governance_rules",
+        "frontend_handoff",
+        "human_approval_gate"
+      ],
+      "governance_rules": [
+        "HR and Legal must approve compensation or identifier exports.",
+        "PII masking and audit logging are mandatory for manager-facing data.",
+        "Restricted HR memory must not bypass context boundaries."
+      ],
+      "interaction_trace_path": "hackathon/evidence/real/suite/hr-compensation-export-interaction-trace.json",
+      "message_count": 21,
+      "rebuttal_response_count": 2,
+      "report_path": "hackathon/evidence/real/suite/hr-compensation-export.json",
+      "roles": [
+        "change_analyst",
+        "context_scout",
+        "coordinator",
+        "frontend_delivery_lead",
+        "impact_analyst",
+        "policy_guardian"
+      ],
+      "run_id": "run_d0d45d3788024c0d8dc6d9e19368e820",
+      "scenario_id": "hr-compensation-export"
+    },
+    {
+      "agent_ticket_count": 8,
+      "domain": "privacy_and_compliance",
+      "feature_demonstrations": [
+        "multi_agent_orchestration",
+        "negotiation_and_rebuttal",
+        "conflicting_policies",
+        "human_approval_gate"
+      ],
+      "governance_rules": [
+        "GDPR erasure must respect finance retention windows.",
+        "Privacy and Legal approval required for automated deletion pipelines."
+      ],
+      "interaction_trace_path": "hackathon/evidence/real/suite/gdpr-erasure-automation-interaction-trace.json",
+      "message_count": 21,
+      "rebuttal_response_count": 2,
+      "report_path": "hackathon/evidence/real/suite/gdpr-erasure-automation.json",
+      "roles": [
+        "change_analyst",
+        "context_scout",
+        "coordinator",
+        "frontend_delivery_lead",
+        "impact_analyst",
+        "policy_guardian"
+      ],
+      "run_id": "run_8850916c78c04f52b88bb55253813f51",
+      "scenario_id": "gdpr-erasure-automation"
+    },
+    {
+      "agent_ticket_count": 8,
+      "domain": "human_resources_and_security",
+      "feature_demonstrations": [
+        "multi_agent_orchestration",
+        "cross_team_routing",
+        "policy_tag_rules",
+        "human_approval_gate",
+        "frontend_handoff"
+      ],
+      "governance_rules": [
+        "HR offboarding and Security access revocation must be orchestrated in one governed change.",
+        "Terminated identities cannot retain SSO beyond four hours."
+      ],
+      "interaction_trace_path": "hackathon/evidence/real/suite/vendor-access-offboarding-interaction-trace.json",
+      "message_count": 21,
+      "rebuttal_response_count": 2,
+      "report_path": "hackathon/evidence/real/suite/vendor-access-offboarding.json",
+      "roles": [
+        "change_analyst",
+        "context_scout",
+        "coordinator",
+        "frontend_delivery_lead",
+        "impact_analyst",
+        "policy_guardian"
+      ],
+      "run_id": "run_3807d434ee0c490aba90607bc46adb50",
+      "scenario_id": "vendor-access-offboarding"
+    }
+  ],
+  "secrets_included": false,
+  "suite": "change-society-real-multi-domain",
+  "test_family": "real_deterministic",
+  "verification_profile": "deterministic"
+}

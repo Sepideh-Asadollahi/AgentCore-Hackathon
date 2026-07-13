@@ -1,0 +1,47 @@
+name: change-society
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.2-pg18-trixie
+    environment:
+      POSTGRES_DB: ${AGENTCORE_POSTGRES_DATABASE:-agentcore}
+      POSTGRES_USER: ${AGENTCORE_POSTGRES_USER:-agentcore}
+      POSTGRES_PASSWORD: ${AGENTCORE_POSTGRES_PASSWORD:?required}
+    ports: ["${AGENTCORE_POSTGRES_PORT:-32232}:5432"]
+    volumes:
+      - change-society-postgres:/var/lib/postgresql
+      - ../backend/change-society-service/migrations/0001_change_society.sql:/docker-entrypoint-initdb.d/0010_change_society.sql:ro
+      - ../backend/change-society-service/migrations/0002_agent_control_plane.sql:/docker-entrypoint-initdb.d/0020_agent_control_plane.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  api:
+    build: {context: ../.., dockerfile: hackathon/backend/change-society-service/Dockerfile}
+    environment:
+      CHANGE_SOCIETY_ENVIRONMENT: production
+      CHANGE_SOCIETY_MODEL_PROVIDER: qwen
+      QWEN_API_KEY: ${QWEN_API_KEY:?required}
+      QWEN_BASE_URL: ${QWEN_BASE_URL:-https://dashscope-intl.aliyuncs.com/compatible-mode/v1}
+      QWEN_MODEL: ${QWEN_MODEL:-qwen-plus}
+      CHANGE_SOCIETY_STORE: postgresql
+      CHANGE_SOCIETY_DATABASE_URL: postgresql://${AGENTCORE_POSTGRES_USER:-agentcore}:${AGENTCORE_POSTGRES_PASSWORD}@postgres:5432/${AGENTCORE_POSTGRES_DATABASE:-agentcore}
+      CHANGE_SOCIETY_ALLOWED_ORIGINS: ${CHANGE_SOCIETY_ALLOWED_ORIGINS:-http://localhost:32501}
+      CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG: ${CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG:-}
+      CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET: ${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-}
+      CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS: ${CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS:-30}
+    ports: ["${CHANGE_SOCIETY_API_PORT:-32500}:32500"]
+    depends_on: {postgres: {condition: service_healthy}}
+    restart: unless-stopped
+  web:
+    build:
+      context: ../..
+      dockerfile: hackathon/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_CHANGE_SOCIETY_API_URL: ${NEXT_PUBLIC_CHANGE_SOCIETY_API_URL:-http://localhost:32500}
+    environment: {PORT: 32501}
+    ports: ["${CHANGE_SOCIETY_WEB_PORT:-32501}:32501"]
+    depends_on: [api]
+    restart: unless-stopped
+volumes:
+  change-society-postgres:

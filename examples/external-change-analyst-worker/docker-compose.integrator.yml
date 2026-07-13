@@ -1,0 +1,36 @@
+# Integrator profile: external LangGraph Change Analyst + in-process society API
+# From repository root:
+#   export CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET=integrator-demo-secret-change-me
+#   docker compose -f hackathon/examples/external-change-analyst-worker/docker-compose.integrator.yml up --build
+
+services:
+  change-analyst-worker:
+    build:
+      context: ../../..
+      dockerfile: hackathon/examples/external-change-analyst-worker/Dockerfile
+    environment:
+      AGENTCORE_WEBHOOK_SHARED_SECRET: ${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-integrator-demo-secret-change-me}
+      WORKER_PORT: "32510"
+      WORKER_USE_LLM: "0"
+    ports:
+      - "32510:32510"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:32510/ready')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Optional: run society API locally with integrator agent registry (uncomment and set paths)
+  # change-society-service:
+  #   image: change-society-service:local
+  #   environment:
+  #     CHANGE_SOCIETY_MODEL_PROVIDER: fake
+  #     CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET: ${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-integrator-demo-secret-change-me}
+  #     CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG: /config/managed-agents.integrator.example.json
+  #   volumes:
+  #     - ../../backend/change-society-service/config/managed-agents.integrator.example.json:/config/managed-agents.integrator.example.json:ro
+  #   ports:
+  #     - "32500:32500"
+  #   depends_on:
+  #     change-analyst-worker:
+  #       condition: service_healthy

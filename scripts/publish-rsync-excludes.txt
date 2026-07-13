@@ -1,0 +1,73 @@
+# Rsync exclude list for push-github-hackathon.local.sh (public publish).
+# Keep in sync with hackathon/.gitignore where paths overlap.
+
+# Secrets and local publish config
+.env
+.env.*
+push-github-hackathon.local.sh
+push-github-hackathon.local.env
+
+# Local workspace mirrors (duplicate of parent hackathon docs)
+project_docs/
+
+# Root planning copies (committed narrative lives under docs/, phases/)
+01-competition-rules-and-compliance.md
+02-idea-and-track-decision.md
+03-mvp-product-specification.md
+04-hackathon-architecture-hld.md
+05-delivery-and-scope-plan.md
+06-judging-demo-and-submission-plan.md
+08-risks-decisions-and-open-questions.md
+ENTRANT_SUBMISSION_URLS.example.md
+phases/
+
+.cursor/
+.cursorrules
+
+# Python / Node build and caches
+node_modules/
+.next/
+out/
+dist/
+build/
+.venv/
+**/__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.tsbuildinfo
+next-env.d.ts
+
+# Installer and smoke temp
+install-state.json
+.install-cache/
+.smoke-temp/
+
+# Test runner scratch
+.pytest-last.txt
+
+# Evidence: never publish live/private; drop local logs and integrator scratch
+evidence/live/
+evidence/private/
+evidence/**/*.log
+evidence/integrator-*.txt
+evidence/**/*.tmp
+evidence/**/*.partial
+
+# Media / recordings
+recordings/
+screenshots/raw/
+*.mp4
+*.mov
+*.webm
+
+# Keys
+*.pem
+*.key
+secrets/
+.local-secrets/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/

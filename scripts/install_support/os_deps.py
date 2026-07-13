@@ -1,0 +1,87 @@
+from __future__ import annotations
+
+import subprocess
+import sys
+
+from .cmd import run_cmd
+from .platform_detect import (
+    command_exists,
+    linux_debian_family,
+    node_major_version,
+    python_has_venv_module,
+)
+from .types import RuntimeMode
+
+
+def try_sudo_apt_install(packages: list[str], *, dry_run: bool) -> bool:
+    if not packages:
+        return True
+    if dry_run:
+        print(f"→ would run: sudo apt-get install -y {' '.join(packages)}")
+        return True
+    if not command_exists("sudo"):
+        print("WARNING: sudo not found; install OS packages manually.")
+        return False
+    if not command_exists("apt-get"):
+        print("WARNING: apt-get not found; install OS packages manually.")
+        return False
+    run_cmd(["sudo", "apt-get", "update"], dry_run=False)
+    run_cmd(["sudo", "apt-get", "install", "-y", *packages], dry_run=False)
+    return True
+
+
+def collect_os_package_wishes(
+    *,
+    need_venv: bool,
+    need_node: bool,
+    need_docker: bool,
+) -> list[str]:
+    pkgs: list[str] = []
+    if need_venv and linux_debian_family():
+        py = f"python{sys.version_info.major}.{sys.version_info.minor}-venv"
+        pkgs.extend([py, "ca-certificates", "curl"])
+    if need_node and linux_debian_family():
+        pkgs.extend(["nodejs", "npm"])
+    if need_docker and linux_debian_family():
+        pkgs.extend(["docker.io", "docker-compose-v2"])
+    seen: set[str] = set()
+    out: list[str] = []
+    for p in pkgs:
+        if p not in seen:
+            seen.add(p)
+            out.append(p)
+    return out
+
+
+def install_os_dependencies(
+    *,
+    install_os_deps: bool,
+    runtime: RuntimeMode,
+    skip_frontend: bool,
+    dry_run: bool,
+) -> None:
+    """Best-effort apt packages on Debian/Ubuntu when requested."""
+    if not install_os_deps:
+        return
+    if not linux_debian_family():
+        print(
+            "NOTE: --install-os-deps is supported on Debian/Ubuntu via apt. "
+            "On this OS, install Python venv, Node 20+, and Docker manually."
+        )
+        return
+
+    need_venv = not python_has_venv_module(sys.executable)
+    need_node = not skip_frontend and (not command_exists("npm") or (node_major_version() or 0) < 18)
+    need_docker = runtime == "docker" and not command_exists("docker")
+
+    pkgs = collect_os_package_wishes(need_venv=need_venv, need_node=need_node, need_docker=need_docker)
+    if not pkgs:
+        print("OS dependency check: nothing extra to install via apt.")
+        return
+    print(f"Installing OS packages: {', '.join(pkgs)}")
+    try_sudo_apt_install(pkgs, dry_run=dry_run)
+    if need_docker and command_exists("docker") and not dry_run:
+        try:
+            run_cmd(["sudo", "systemctl", "enable", "--now", "docker"], dry_run=False)
+        except subprocess.CalledProcessError:
+            print("WARNING: could not enable docker service; you may need: sudo systemctl start docker")

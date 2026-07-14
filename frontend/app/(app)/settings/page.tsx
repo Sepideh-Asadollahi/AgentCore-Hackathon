@@ -379,7 +379,10 @@ export default function SettingsPage() {
         {llmApplyMessage && (
           <div
             className={`mt-4 rounded-lg border px-3 py-2 text-xs leading-relaxed ${
-              llmApplyMessage.toLowerCase().includes("updated") || llmApplyMessage.toLowerCase().includes("applied")
+              llmApplyMessage.toLowerCase().includes("updated") ||
+              llmApplyMessage.toLowerCase().includes("applied") ||
+              llmApplyMessage.toLowerCase().includes("restarted") ||
+              llmApplyMessage.toLowerCase().includes("saved")
                 ? "border-emerald-600/40 bg-emerald-950/30"
                 : wsAlertWarn
             }`}

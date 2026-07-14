@@ -1,9 +1,10 @@
 # Rsync exclude list for push-github-hackathon.local.sh (public publish).
 # Keep in sync with hackathon/.gitignore where paths overlap.
 
-# Secrets and local publish config
+# Secrets and local publish config (keep .env.example for public clone installs)
 .env
-.env.*
+.env.local
+.env.*.local
 scripts/push-github-hackathon.local.sh
 scripts/push-github-hackathon.local.env
 push-github-hackathon.local.env

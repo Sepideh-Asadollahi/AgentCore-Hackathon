@@ -334,9 +334,13 @@ export default function SettingsPage() {
         <h2 className={wsPanelTitle}>LLM API settings</h2>
         <p className={`${wsLead} max-w-none`}>
           Base URL, model, and API key for Qwen-compatible chat completions. Values are saved in this browser only (never
-          committed to Git). Use <strong className="font-medium text-foreground">Apply to running API</strong> when the
-          service started with <code className="text-xs">CHANGE_SOCIETY_MODEL_PROVIDER=qwen</code> in development; otherwise
-          copy the <code className="text-xs">.env</code> snippet and restart the API.
+          committed to Git). On the default hackathon stack (<code className="text-xs">CHANGE_SOCIETY_MODEL_PROVIDER=fake</code>
+          + LangGraph worker), live runs use <code className="text-xs">QWEN_API_KEY</code> from server{" "}
+          <code className="text-xs">hackathon/.env</code> — update that file and{" "}
+          <strong className="font-medium text-foreground">restart the LangGraph worker</strong> (
+          <code className="text-xs">change-society-langgraph-worker.service</code>), not this form alone. Use{" "}
+          <strong className="font-medium text-foreground">Apply to running API</strong> only when the API started with{" "}
+          <code className="text-xs">CHANGE_SOCIETY_MODEL_PROVIDER=qwen</code> (hot-update, no API restart).
         </p>
 
         {llmApplyMessage && (

@@ -3,6 +3,12 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
+if [[ -f .env ]]; then
+  set -a
+  # shellcheck source=/dev/null
+  source .env
+  set +a
+fi
 
 USER_NAME="${SUDO_USER:-${USER:-root}}"
 if [[ "$(id -u)" -eq 0 && -n "${SUDO_USER:-}" ]]; then

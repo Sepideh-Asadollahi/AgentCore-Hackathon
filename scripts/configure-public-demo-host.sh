@@ -13,6 +13,11 @@ fi
 ENV_FILE="${ROOT}/.env"
 [[ -f "$ENV_FILE" ]] || cp .env.example "$ENV_FILE"
 
+set -a
+# shellcheck source=/dev/null
+source "$ENV_FILE"
+set +a
+
 WEB_PORT="${CHANGE_SOCIETY_WEB_PORT:-32501}"
 API_PORT="${CHANGE_SOCIETY_API_PORT:-32500}"
 

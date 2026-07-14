@@ -9,7 +9,11 @@ from .install_log import detail, info, mask_env_value
 BOOT_ENV_KEYS: tuple[str, ...] = (
     "CHANGE_SOCIETY_MODEL_PROVIDER",
     "CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET",
+    "AGENTCORE_WEBHOOK_SHARED_SECRET",
     "WORKER_PORT",
+    "WORKER_LIVE_MODE",
+    "WORKER_USE_LLM",
+    "WORKER_RUNTIME_NAME",
     "QWEN_API_KEY",
     "QWEN_BASE_URL",
     "QWEN_MODEL",

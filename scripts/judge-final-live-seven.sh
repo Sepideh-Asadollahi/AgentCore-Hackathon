@@ -32,6 +32,29 @@ source .env
 set +a
 export CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG="$INTEGRATOR_CFG"
 
+upsert_env() {
+  local key="$1" val="$2"
+  if grep -q "^${key}=" .env; then
+    sed -i "s|^${key}=.*|${key}=${val}|" .env
+  else
+    echo "${key}=${val}" >> .env
+  fi
+}
+
+upsert_env "WORKER_LIVE_MODE" "1"
+upsert_env "WORKER_USE_LLM" "1"
+upsert_env "WORKER_RUNTIME_NAME" "langgraph-sdk-society-worker"
+if [[ -z "${AGENTCORE_WEBHOOK_SHARED_SECRET:-}" ]] && [[ -n "${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-}" ]]; then
+  upsert_env "AGENTCORE_WEBHOOK_SHARED_SECRET" "$CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET"
+fi
+set -a
+source .env
+set +a
+
+status "restart LangGraph worker with live mode env"
+systemctl --user restart change-society-langgraph-worker.service
+sleep 3
+
 status "restart API with integrator-live-all managed agents config"
 systemctl --user restart change-society-api.service
 sleep 4

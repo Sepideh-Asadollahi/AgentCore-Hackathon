@@ -27,8 +27,10 @@ Same as `--runtime systemd` after install. Units: `change-society-langgraph-work
 **Keep services running after logout / reboot:**
 
 ```bash
-bash scripts/ensure-systemd-stack.sh    # enable --now + loginctl enable-linger
+bash scripts/ensure-systemd-stack.sh    # postgres (Docker) + API + UI + worker + linger
 ```
+
+If the UI shows **`API returned non-JSON (500)`** on `/demo-scenarios`, the API is usually down because **PostgreSQL (Docker) stopped**. Check `docker ps` for `change-society-dev-postgres`, then `systemctl --user restart change-society-postgres.service change-society-api.service`.
 
 **Public IP demo** (replace with your VM address; opens UI to browsers on the internet):
 

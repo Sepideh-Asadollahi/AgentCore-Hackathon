@@ -16,6 +16,7 @@ if [[ "$(id -u)" -eq 0 && -n "${SUDO_USER:-}" ]]; then
 fi
 
 units=(
+  change-society-postgres.service
   change-society-langgraph-worker.service
   change-society-api.service
   change-society-web.service

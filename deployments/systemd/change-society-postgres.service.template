@@ -1,0 +1,16 @@
+[Unit]
+Description=Change Society PostgreSQL (Docker)
+After=docker.service network-online.target
+Wants=docker.service network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=@PACK_ROOT@
+EnvironmentFile=-@PACK_ROOT@/.env
+ExecStart=/usr/bin/docker compose --env-file @PACK_ROOT@/.env -f @PACK_ROOT@/deployments/compose.dev-postgres.yaml up -d
+ExecStop=/usr/bin/docker compose --env-file @PACK_ROOT@/.env -f @PACK_ROOT@/deployments/compose.dev-postgres.yaml stop
+TimeoutStartSec=120
+
+[Install]
+WantedBy=default.target

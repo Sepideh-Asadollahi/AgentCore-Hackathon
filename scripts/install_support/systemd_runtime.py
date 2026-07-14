@@ -78,6 +78,8 @@ def install_systemd_user_units(pack: Path, *, dry_run: bool) -> None:
     webhook_secret = _webhook_secret_from_env(pack)
 
     unit_dir = pack / "deployments" / "systemd"
+    postgres_tpl_path = unit_dir / "change-society-postgres.service.template"
+    postgres_tpl = postgres_tpl_path.read_text(encoding="utf-8") if postgres_tpl_path.is_file() else ""
     api_tpl = (unit_dir / "change-society-api.service.template").read_text(encoding="utf-8")
     web_tpl = (unit_dir / "change-society-web.service.template").read_text(encoding="utf-8")
     worker_tpl_path = unit_dir / "change-society-langgraph-worker.service.template"
@@ -99,13 +101,18 @@ def install_systemd_user_units(pack: Path, *, dry_run: bool) -> None:
     api_path = user_systemd / "change-society-api.service"
     web_path = user_systemd / "change-society-web.service"
     worker_path = user_systemd / "change-society-langgraph-worker.service"
+    postgres_path = user_systemd / "change-society-postgres.service"
 
     detail(f"Writing user systemd units under {user_systemd}")
+    if postgres_tpl:
+        info(f"  {postgres_path.name}")
     info(f"  {api_path.name}")
     info(f"  {web_path.name}")
     if worker_tpl:
         info(f"  {worker_path.name}")
     if not dry_run:
+        if postgres_tpl:
+            postgres_path.write_text(render_systemd_unit(postgres_tpl, **render_kw), encoding="utf-8")
         api_path.write_text(api_unit, encoding="utf-8")
         web_path.write_text(web_unit, encoding="utf-8")
         if worker_tpl:
@@ -120,6 +127,8 @@ def install_systemd_user_units(pack: Path, *, dry_run: bool) -> None:
     run_subprocess(["systemctl", "--user", "daemon-reload"], dry_run=dry_run, label="systemctl --user daemon-reload")
 
     units = []
+    if postgres_tpl:
+        units.append("change-society-postgres.service")
     if worker_tpl:
         units.append("change-society-langgraph-worker.service")
     units.extend(["change-society-api.service", "change-society-web.service"])

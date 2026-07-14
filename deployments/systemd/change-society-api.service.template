@@ -1,7 +1,8 @@
 [Unit]
 Description=Change Society API (AgentCore)
-After=network-online.target
-Wants=network-online.target
+After=network-online.target change-society-postgres.service
+Wants=network-online.target change-society-postgres.service
+Requires=change-society-postgres.service
 
 [Service]
 Type=simple

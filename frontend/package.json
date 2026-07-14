@@ -7,7 +7,7 @@
     "dev": "next dev --webpack -p 32501 -H 0.0.0.0",
     "dev:turbo": "next dev -p 32501 -H 0.0.0.0",
     "build": "next build --webpack",
-    "start": "next start -p ${CHANGE_SOCIETY_WEB_PORT:-32501} -H 0.0.0.0",
+    "start": "sh -c 'next start -H 0.0.0.0 -p \"${CHANGE_SOCIETY_WEB_PORT:-32501}\"'",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test ../../tests/frontend/change-society/*.test.mjs",
     "test:live-runs": "node scripts/live-runs-e2e.mjs"

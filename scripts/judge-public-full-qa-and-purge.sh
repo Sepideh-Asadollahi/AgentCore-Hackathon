@@ -52,7 +52,7 @@ for item in scenarios:
         bad.append(f"{sid}: final_state={state}")
     elif tickets is not True:
         bad.append(f"{sid}: ticket_lifecycle_verified={tickets}")
-    elif not ext and not integrator.get("all_roles_webhook"):
+    elif not ext:
         bad.append(f"{sid}: missing langgraph integrator evidence")
 if bad:
     raise SystemExit("scenario checks failed: " + "; ".join(bad))

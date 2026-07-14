@@ -2,6 +2,9 @@ import {NextRequest, NextResponse} from "next/server";
 
 const API_TARGET = (process.env.CHANGE_SOCIETY_PROXY_TARGET ?? "http://127.0.0.1:32500").replace(/\/$/, "");
 
+/** Route segment budget (seconds). Must be a static literal for Next.js. */
+export const maxDuration = 900;
+
 function proxyTimeoutMs(): number {
   const raw = process.env.CHANGE_SOCIETY_PROXY_TIMEOUT_MS?.trim();
   const fallback = 900_000;
@@ -10,11 +13,6 @@ function proxyTimeoutMs(): number {
   if (!Number.isFinite(parsed) || parsed < 60_000) return fallback;
   return parsed;
 }
-
-const PROXY_TIMEOUT_MS = proxyTimeoutMs();
-
-/** Route segment budget (seconds). Keep aligned with CHANGE_SOCIETY_PROXY_TIMEOUT_MS. */
-export const maxDuration = Math.min(900, Math.ceil(PROXY_TIMEOUT_MS / 1000));
 
 const HOP_BY_HOP = new Set([
   "connection",
@@ -50,7 +48,7 @@ async function proxyRequest(request: NextRequest, context: {params: Promise<{pat
     headers,
     body,
     cache: "no-store",
-    signal: AbortSignal.timeout(PROXY_TIMEOUT_MS - 5_000),
+    signal: AbortSignal.timeout(proxyTimeoutMs() - 5_000),
   });
 
   const responseHeaders = new Headers();

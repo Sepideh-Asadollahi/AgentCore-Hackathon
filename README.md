@@ -22,7 +22,30 @@ bash install.sh --non-interactive --install-os-deps
 bash install.sh --non-interactive --install-os-deps --systemd
 ```
 
-Same as `--runtime systemd` after install. Units: `change-society-langgraph-worker`, `change-society-api`, `change-society-web` under `~/.config/systemd/user/`. UI listens on **32501** (`npm run start`).
+Same as `--runtime systemd` after install. Units: `change-society-langgraph-worker`, `change-society-api`, `change-society-web` under `~/.config/systemd/user/`. UI listens on **`CHANGE_SOCIETY_WEB_PORT`** (default **32501**, `npm run start` binds **`0.0.0.0`**).
+
+**Keep services running after logout / reboot:**
+
+```bash
+bash scripts/ensure-systemd-stack.sh    # enable --now + loginctl enable-linger
+```
+
+**Public IP demo** (replace with your VM address; opens UI to browsers on the internet):
+
+```bash
+bash scripts/configure-public-demo-host.sh 203.0.113.50
+bash install.sh --non-interactive --systemd   # rebuild UI if NEXT_PUBLIC_* changed
+bash scripts/ensure-systemd-stack.sh
+```
+
+Open **TCP** on the host / security group: **`32501`** (UI), **`32500`** (API curl / judges), optional **`32510`** (worker health). PostgreSQL stays on **`32232`** (localhost / Docker only).
+
+| Port | Service |
+|------|---------|
+| **32500** | Change Society API (`/health`, `/ready`, `/api/v1/...`) |
+| **32501** | Production web UI (systemd; override with `CHANGE_SOCIETY_WEB_PORT=3200` in `.env` if you expose **3200** instead) |
+| **32510** | LangGraph webhook worker (`/ready`) |
+| **32232** | PostgreSQL (Docker, not public) |
 
 **OS prerequisites only** (Python 3.12, Node/npm, Docker + Compose v2, curl, git — Debian/Ubuntu via `apt`; then run full install above):
 
@@ -84,7 +107,8 @@ Two processes: **API** (FastAPI) and **web UI** (Next.js). Copy **`.env.example`
 | Service | Default port | URL (local) | Purpose |
 |---------|--------------|-------------|---------|
 | Change Society API | `32500` | [http://127.0.0.1:32500](http://127.0.0.1:32500) | REST + `/health`, `/ready`, `/api/v1/...` |
-| Demo web UI | `3000` | [http://localhost:3000](http://localhost:3000) | Cinematic Change Society demo |
+| Demo web UI (dev) | `32501` | [http://localhost:32501](http://localhost:32501) | `cd frontend && npm run dev` |
+| Demo web UI (systemd) | `32501` (or `CHANGE_SOCIETY_WEB_PORT`) | [http://127.0.0.1:32501](http://127.0.0.1:32501) | `npm run start` via `change-society-web.service` |
 
 **Terminal 1 — API** (from pack root):
 
@@ -105,7 +129,23 @@ PYTHONPATH=backend/change-society-service/src .venv/bin/python -m uvicorn change
 cd frontend && npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:32501](http://localhost:32501) (or `npm run dev` default port).
+
+### Public server (systemd, judges / internet)
+
+1. Install with **`bash install.sh --non-interactive --install-os-deps --systemd`**.
+2. Set **`QWEN_API_KEY`** in **`.env`** for live LangGraph agents.
+3. **`bash scripts/configure-public-demo-host.sh YOUR_PUBLIC_IP`**
+4. **`bash scripts/ensure-systemd-stack.sh`** — enables units and **`loginctl enable-linger`** so services stay up after SSH logout.
+5. Firewall / cloud security group: allow **32501** (UI), **32500** (API). Worker **32510** is optional (health checks only).
+6. Browser: **`http://YOUR_PUBLIC_IP:32501/`** — API is proxied same-origin (`/change-society-api` → `127.0.0.1:32500`).
+
+Sanity from your laptop:
+
+```bash
+curl -sS "http://YOUR_PUBLIC_IP:32500/health"
+curl -sS "http://YOUR_PUBLIC_IP:32501/" | head -c 200
+```
 
 ### Connect from another machine (same LAN / VM)
 
@@ -113,7 +153,7 @@ Open [http://localhost:3000](http://localhost:3000).
 2. In `.env`, set **`NEXT_PUBLIC_CHANGE_SOCIETY_API_URL`** to the host IP the **browser** can reach, e.g. `http://192.168.1.10:32500` (not `127.0.0.1` if the UI is opened on another PC).
 3. Add that UI origin to **`CHANGE_SOCIETY_ALLOWED_ORIGINS`** (comma-separated), e.g. `http://localhost:3000,http://192.168.1.10:3000`.
 4. Rebuild or restart the UI after changing `NEXT_PUBLIC_*` vars (`npm run dev` picks them up on restart).
-5. Open firewall/security groups for **TCP 3000** (web) and **32500** (API) if needed.
+5. Open firewall/security groups for **TCP 32501** (web) and **32500** (API) if needed.
 
 ### Sanity checks
 

@@ -8,6 +8,7 @@ Requires=change-society-api.service
 Type=simple
 WorkingDirectory=@PACK_ROOT@/frontend
 EnvironmentFile=@PACK_ROOT@/.env
+Environment=HOSTNAME=0.0.0.0
 ExecStart=@NPM@ run start
 Restart=on-failure
 RestartSec=3

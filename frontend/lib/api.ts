@@ -264,6 +264,62 @@ type ReadinessResponse = {
 
 export type DevLlmApplyResult = {ok: boolean; message: string};
 
+export type JudgeRuntimeApplyResult = {
+  ok: boolean;
+  message: string;
+  workerLiveMode?: boolean;
+};
+
+/** Development / judge demo: persist Qwen key to server .env and restart LangGraph worker (systemd user). */
+export async function applyJudgeRuntimeConfig(settings: {
+  llmBaseUrl: string;
+  llmModel: string;
+  llmApiKey: string;
+  restartApi?: boolean;
+}): Promise<JudgeRuntimeApplyResult> {
+  const ctx = requestContext();
+  if (!settings.llmApiKey.trim()) {
+    return {ok: false, message: "API key is required."};
+  }
+  try {
+    const response = await fetch(`${ctx.baseUrl}/api/v1/hackathon/dev/judge-runtime-apply`, {
+      method: "POST",
+      headers: {...ctx.headers, "Content-Type": "application/json"},
+      cache: "no-store",
+      body: JSON.stringify({
+        qwen_api_key: settings.llmApiKey.trim(),
+        qwen_base_url: settings.llmBaseUrl.trim(),
+        qwen_model: settings.llmModel.trim(),
+        restart_worker: true,
+        restart_api: Boolean(settings.restartApi),
+      }),
+    });
+    const raw = await response.text();
+    let data: {
+      message?: string;
+      worker_ready?: {live_mode?: boolean};
+      error?: {message?: string};
+    } = {};
+    if (raw) {
+      try {
+        data = JSON.parse(raw) as typeof data;
+      } catch {
+        return {ok: false, message: `API returned non-JSON (${response.status}).`};
+      }
+    }
+    if (!response.ok) {
+      return {ok: false, message: data.error?.message ?? parseApiError(data, response.status)};
+    }
+    return {
+      ok: true,
+      message: data.message ?? "Worker restarted.",
+      workerLiveMode: data.worker_ready?.live_mode,
+    };
+  } catch (err) {
+    return {ok: false, message: err instanceof Error ? err.message : "Apply failed"};
+  }
+}
+
 /** Development-only: push LLM base URL, model, and API key to the running API (Qwen client). */
 export async function applyDevLlmConnection(settings: {
   llmBaseUrl: string;

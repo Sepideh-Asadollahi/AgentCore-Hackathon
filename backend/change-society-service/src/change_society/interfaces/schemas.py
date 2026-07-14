@@ -164,3 +164,21 @@ class HackathonLlmConnectionResponse(BaseModel):
     model_health: dict[str, Any]
     message: str
     correlation_id: str
+
+
+class HackathonJudgeRuntimeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    qwen_api_key: str = Field(min_length=1, max_length=500)
+    qwen_base_url: str = Field(default="", max_length=500)
+    qwen_model: str = Field(default="", max_length=200)
+    restart_worker: bool = True
+    restart_api: bool = False
+
+
+class HackathonJudgeRuntimeResponse(BaseModel):
+    applied: bool
+    message: str
+    keys_updated: list[str]
+    restarted_units: list[str]
+    worker_ready: dict[str, Any]
+    correlation_id: str

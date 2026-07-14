@@ -79,10 +79,10 @@ Three areas:
 
 ### LLM API settings
 
-- Base URL, model, and API key fields are **browser-only** unless you use **Apply to running API (dev)**.
-- **Apply** works only when the API process uses `CHANGE_SOCIETY_MODEL_PROVIDER=qwen` (hot-update in that process).
-- **Default demo stack** (`MODEL_PROVIDER=fake` + LangGraph worker): live Qwen runs use **`QWEN_API_KEY` in server `hackathon/.env`** — update `.env` and **restart `change-society-langgraph-worker.service`**, not the form alone.
-- **`.env` snippet** block: permanent server config — paste into `.env` and restart API and/or worker as indicated.
+- Base URL, model, and **API key** for Qwen.
+- **Save key & restart worker** (Settings): calls `POST /api/v1/hackathon/dev/judge-runtime-apply` — writes `QWEN_*` to server `.env` and restarts **`change-society-langgraph-worker.service`** (development / judge demo only; optional `CHANGE_SOCIETY_JUDGE_RUNTIME_SECRET` + header).
+- **Apply to running API (dev):** hot-update when `CHANGE_SOCIETY_MODEL_PROVIDER=qwen`.
+- Browser-only **Save settings** still requires tab reload for scope IDs; it does not restart services.
 
 ### Debug logging
 

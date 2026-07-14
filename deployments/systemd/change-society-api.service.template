@@ -9,6 +9,7 @@ Type=simple
 WorkingDirectory=@PACK_ROOT@
 EnvironmentFile=@PACK_ROOT@/.env
 Environment=PYTHONPATH=@PACK_ROOT@/backend/change-society-service/src
+Environment=CHANGE_SOCIETY_PACK_ROOT=@PACK_ROOT@
 ExecStart=@PYTHON@ @PACK_ROOT@/run.py
 Restart=on-failure
 RestartSec=3

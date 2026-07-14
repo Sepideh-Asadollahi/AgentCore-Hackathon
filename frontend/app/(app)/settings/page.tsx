@@ -4,7 +4,7 @@ import {useEffect, useMemo, useState} from "react";
 import {Button} from "@/components/animate-ui/components/buttons/button";
 import {WorkspaceSelect} from "@/components/workspace/WorkspaceSelect";
 import {WorkspaceAlerts} from "@/components/workspace/WorkspaceOverlays";
-import {probeConnection, applyDevLlmConnection, type ConnectionProbe} from "@/lib/api";
+import {probeConnection, applyDevLlmConnection, applyJudgeRuntimeConfig, type ConnectionProbe} from "@/lib/api";
 import {useRunWorkspace} from "@/lib/run-workspace";
 import {
   buildDefaultClientSettings,
@@ -41,6 +41,7 @@ export default function SettingsPage() {
   const [probing, setProbing] = useState(false);
   const [llmApplyMessage, setLlmApplyMessage] = useState("");
   const [applyingLlm, setApplyingLlm] = useState(false);
+  const [applyingJudgeRuntime, setApplyingJudgeRuntime] = useState(false);
 
   const envSnippet = useMemo(() => buildHackathonEnvSnippet(form), [form]);
 
@@ -106,6 +107,40 @@ export default function SettingsPage() {
     const result = await probeConnection();
     setProbe(result);
     setProbing(false);
+  }
+
+  async function handleApplyJudgeRuntime() {
+    setApplyingJudgeRuntime(true);
+    setLlmApplyMessage("");
+    const validation = validateClientSettings(form);
+    if (!validation.ok) {
+      setError(validation.message ?? "Fix validation errors before saving the server key.");
+      setApplyingJudgeRuntime(false);
+      return;
+    }
+    if (!form.llmApiKey.trim()) {
+      setError("Enter your Qwen API key first.");
+      setApplyingJudgeRuntime(false);
+      return;
+    }
+    const normalized = normalizeClientSettings(form);
+    saveClientSettings(normalized);
+    setForm(normalized);
+    const result = await applyJudgeRuntimeConfig({
+      llmBaseUrl: normalized.llmBaseUrl,
+      llmModel: normalized.llmModel,
+      llmApiKey: normalized.llmApiKey,
+    });
+    setLlmApplyMessage(result.message);
+    if (result.ok) {
+      setProbing(true);
+      const probeResult = await probeConnection();
+      setProbe(probeResult);
+      setProbing(false);
+    } else {
+      setError(result.message);
+    }
+    setApplyingJudgeRuntime(false);
   }
 
   async function handleApplyLlm() {
@@ -333,14 +368,12 @@ export default function SettingsPage() {
         <p className={wsStep}>LLM</p>
         <h2 className={wsPanelTitle}>LLM API settings</h2>
         <p className={`${wsLead} max-w-none`}>
-          Base URL, model, and API key for Qwen-compatible chat completions. Values are saved in this browser only (never
-          committed to Git). On the default hackathon stack (<code className="text-xs">CHANGE_SOCIETY_MODEL_PROVIDER=fake</code>
-          + LangGraph worker), live runs use <code className="text-xs">QWEN_API_KEY</code> from server{" "}
-          <code className="text-xs">hackathon/.env</code> — update that file and{" "}
-          <strong className="font-medium text-foreground">restart the LangGraph worker</strong> (
-          <code className="text-xs">change-society-langgraph-worker.service</code>), not this form alone. Use{" "}
-          <strong className="font-medium text-foreground">Apply to running API</strong> only when the API started with{" "}
-          <code className="text-xs">CHANGE_SOCIETY_MODEL_PROVIDER=qwen</code> (hot-update, no API restart).
+          Base URL, model, and API key for Qwen-compatible chat completions. Values are saved in this browser when you use{" "}
+          <strong className="font-medium text-foreground">Save settings</strong>. For live LangGraph runs on the default
+          demo stack, use <strong className="font-medium text-foreground">Save key &amp; restart worker</strong> — writes{" "}
+          <code className="text-xs">QWEN_*</code> to server <code className="text-xs">.env</code> and restarts the
+          LangGraph worker (no SSH). Optional <strong className="font-medium text-foreground">Apply to running API</strong>{" "}
+          only when <code className="text-xs">CHANGE_SOCIETY_MODEL_PROVIDER=qwen</code>.
         </p>
 
         {llmApplyMessage && (
@@ -399,6 +432,9 @@ export default function SettingsPage() {
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2.5">
+          <Button type="button" disabled={applyingJudgeRuntime} onClick={() => void handleApplyJudgeRuntime()}>
+            {applyingJudgeRuntime ? "Restarting worker…" : "Save key & restart worker"}
+          </Button>
           <Button type="button" variant="outline" disabled={applyingLlm} onClick={() => void handleApplyLlm()}>
             {applyingLlm ? "Applying…" : "Apply to running API (dev)"}
           </Button>

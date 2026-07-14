@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import hmac
 import logging
+import os
+import subprocess
 import time
 from uuid import uuid4
 
@@ -9,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from ..infrastructure.model_client_resolve import resolve_qwen_client
+from ..infrastructure.judge_runtime_config import apply_judge_runtime_config
 from ..application.service import ChangeSocietyService
 from ..application.judging_engineering_profile import build_judging_engineering_profile
 from ..application.submission_compliance import build_submission_compliance_report
@@ -21,6 +25,7 @@ from .schemas import (
     OrgPolicyActivateRequest, OrgPolicyActivateResponse, OrgPolicyChallengeResolveRequest, OrgPolicyIntakeAnalyzeRequest,
     OrgPolicyIntakeAnalyzeResponse, OrgPolicyIntakeSessionResponse, OrgPolicyListResponse,
     HackathonLlmConnectionRequest, HackathonLlmConnectionResponse,
+    HackathonJudgeRuntimeRequest, HackathonJudgeRuntimeResponse,
     SocietyRunListResponse, SocietyRunResponse,
 )
 
@@ -428,6 +433,54 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
             "applied": True,
             "model_health": health,
             "message": "Qwen connection updated for this API process (development only).",
+            "correlation_id": correlation(request),
+        }
+
+    @app.post(
+        "/api/v1/hackathon/dev/judge-runtime-apply",
+        response_model=HackathonJudgeRuntimeResponse,
+        responses=errors,
+        operation_id="change_society_apply_judge_runtime",
+        tags=["operations"],
+    )
+    async def apply_judge_runtime(
+        request: Request,
+        body: HackathonJudgeRuntimeRequest,
+        x_judge_runtime_secret: str | None = Header(default=None, alias="X-Judge-Runtime-Secret"),
+    ):
+        environment = (runtime_profile or {}).get("environment", "production")
+        if environment != "development":
+            raise ValidationError("judge_runtime_apply requires CHANGE_SOCIETY_ENVIRONMENT=development")
+        expected = os.getenv("CHANGE_SOCIETY_JUDGE_RUNTIME_SECRET", "").strip()
+        if expected:
+            provided = (x_judge_runtime_secret or "").strip()
+            if not provided or not hmac.compare_digest(expected, provided):
+                raise ValidationError("Invalid or missing X-Judge-Runtime-Secret header")
+        try:
+            result = apply_judge_runtime_config(
+                qwen_api_key=body.qwen_api_key,
+                qwen_base_url=body.qwen_base_url or None,
+                qwen_model=body.qwen_model or None,
+                restart_worker=body.restart_worker,
+                restart_api=body.restart_api,
+            )
+        except (ValueError, subprocess.CalledProcessError, OSError) as exc:
+            app_log.warning("judge runtime apply failed: %s", exc.__class__.__name__)
+            raise ValidationError(f"Could not apply judge runtime config: {exc}") from exc
+        worker = result.get("worker_ready") or {}
+        live = worker.get("live_mode")
+        ok = worker.get("status") == "ok" if body.restart_worker else True
+        msg = (
+            "Qwen key saved to server .env and LangGraph worker restarted."
+            if ok
+            else "Key saved and worker restart requested, but /ready is not OK yet — wait a few seconds and test a run."
+        )
+        return {
+            "applied": True,
+            "message": msg,
+            "keys_updated": result.get("keys_updated", []),
+            "restarted_units": result.get("restarted_units", []),
+            "worker_ready": worker,
             "correlation_id": correlation(request),
         }
 

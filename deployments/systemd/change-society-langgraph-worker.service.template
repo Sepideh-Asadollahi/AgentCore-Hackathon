@@ -9,6 +9,9 @@ WorkingDirectory=@PACK_ROOT@
 EnvironmentFile=@PACK_ROOT@/.env
 Environment=PYTHONPATH=@WORKER_PYTHONPATH@
 Environment=AGENTCORE_WEBHOOK_SHARED_SECRET=@WEBHOOK_SECRET@
+Environment=WORKER_LIVE_MODE=1
+Environment=WORKER_USE_LLM=1
+Environment=WORKER_RUNTIME_NAME=langgraph-sdk-society-worker
 ExecStart=@PYTHON@ @PACK_ROOT@/examples/external-change-analyst-worker/src/run_worker.py
 Restart=on-failure
 RestartSec=3

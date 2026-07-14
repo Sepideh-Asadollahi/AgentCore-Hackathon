@@ -48,6 +48,8 @@ ensure_node20() {
     return 0
   fi
   log "Installing Node.js 20.x (NodeSource) — Next.js requires Node 18+…"
+  run sudo apt-get remove -y libnode-dev nodejs npm 2>/dev/null || true
+  run sudo apt-get autoremove -y || true
   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
   run sudo apt-get install -y nodejs
   log "Node after install: $(node --version) npm $(npm --version)"

@@ -7,6 +7,7 @@
 .env.*.local
 scripts/push-github-hackathon.local.sh
 scripts/push-github-hackathon.local.env
+scripts/judge-deploy-public-server.local.sh
 push-github-hackathon.local.env
 
 # Local workspace mirrors (duplicate of parent hackathon docs)

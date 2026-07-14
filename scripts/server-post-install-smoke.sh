@@ -4,10 +4,22 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+PY="${ROOT}/.venv/bin/python"
+if [[ ! -x "$PY" ]]; then
+  PY="$(command -v python3.12 || command -v python3 || true)"
+fi
+
 if [[ ! -f .env ]]; then
   if [[ -f .env.example ]]; then
-    cp .env.example .env
-    echo "Created .env from .env.example — set QWEN_API_KEY for live LangGraph workers."
+    if [[ -x "${ROOT}/.venv/bin/python" ]]; then
+      "${ROOT}/.venv/bin/python" scripts/sync_boot_env.py
+    elif [[ -n "$PY" ]]; then
+      "$PY" scripts/sync_boot_env.py
+    else
+      echo "Run bash install.sh first (need Python for .env sync)." >&2
+      exit 1
+    fi
+    echo "Created .env from .env.example (minimum boot) — set QWEN_API_KEY for live LangGraph workers."
   else
     echo "FAIL: missing .env and .env.example" >&2
     exit 1

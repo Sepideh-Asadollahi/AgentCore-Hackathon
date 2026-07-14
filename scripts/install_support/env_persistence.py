@@ -3,6 +3,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from .install_log import detail
+
 DEFAULT_DEV_PASSWORD = "change-society-dev-local"
 
 
@@ -38,8 +40,9 @@ def ensure_persistence_env(env_path: Path, *, dry_run: bool) -> bool:
     text = _upsert_line(text, "CHANGE_SOCIETY_DATABASE_URL", db_url)
 
     if text == original:
+        detail(f"{env_path} already configured for PostgreSQL (CHANGE_SOCIETY_STORE=postgresql).")
         return False
-    print(f"Updating {env_path} for PostgreSQL-backed society runs (CHANGE_SOCIETY_STORE=postgresql).")
+    detail(f"Updating {env_path} for PostgreSQL-backed society runs (CHANGE_SOCIETY_STORE=postgresql).")
     if dry_run:
         return True
     env_path.write_text(text, encoding="utf-8")

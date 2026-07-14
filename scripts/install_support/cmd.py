@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
+
+from .install_log import run_subprocess
 
 
 def run_cmd(cmd: list[str], *, dry_run: bool, cwd: Path | None = None) -> None:
-    label = " ".join(cmd)
-    print(f"→ {label}")
-    if dry_run:
-        return
-    subprocess.run(cmd, cwd=cwd, check=True)
+    run_subprocess(cmd, dry_run=dry_run, cwd=cwd)

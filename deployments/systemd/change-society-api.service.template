@@ -8,7 +8,7 @@ Type=simple
 WorkingDirectory=@PACK_ROOT@
 EnvironmentFile=@PACK_ROOT@/.env
 Environment=PYTHONPATH=@PACK_ROOT@/backend/change-society-service/src
-ExecStart=@PYTHON@ -m uvicorn change_society.main:app --host 127.0.0.1 --port 32500
+ExecStart=@PYTHON@ @PACK_ROOT@/run.py
 Restart=on-failure
 RestartSec=3
 

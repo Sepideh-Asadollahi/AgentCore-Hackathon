@@ -6,6 +6,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from .install_log import detail, info, run_subprocess
 from .platform_detect import command_exists
 
 
@@ -47,15 +48,16 @@ def start_docker_postgres(pack: Path, *, dry_run: bool) -> None:
     env = os.environ.copy()
     env.setdefault("AGENTCORE_POSTGRES_PASSWORD", "change-society-dev-local")
     fixed_name = "change-society-dev-postgres"
-    print("Starting PostgreSQL (Docker) for persisted society runs…")
-    print("  Example connect: postgresql://agentcore:change-society-dev-local@127.0.0.1:32232/agentcore")
+    detail("Starting PostgreSQL (Docker) for persisted society runs…")
+    info("  Connect: postgresql://agentcore:change-society-dev-local@127.0.0.1:32232/agentcore")
     env_path = pack / ".env"
     env_file_args: tuple[str, ...] = ()
     if env_path.is_file():
         env_file_args = ("--env-file", str(env_path))
+        info(f"  Using env file: {env_path}")
     full = [*cmd_base, *env_file_args, "-f", str(compose_file), "up", "-d"]
-    print(f"→ {' '.join(full)}")
     if dry_run:
+        detail(f"→ {' '.join(full)}")
         return
 
     running = subprocess.run(
@@ -64,15 +66,26 @@ def start_docker_postgres(pack: Path, *, dry_run: bool) -> None:
         text=True,
     )
     if running.returncode == 0 and running.stdout.strip() == "true":
-        print(f"PostgreSQL container {fixed_name} already running.")
+        detail(f"PostgreSQL container {fixed_name} already running.")
+        info("  docker ps (postgres):")
+        run_subprocess(
+            ["docker", "ps", "--filter", f"name={fixed_name}", "--format", "{{.Names}} {{.Status}}"],
+            dry_run=False,
+            label="docker ps",
+        )
         return
 
     try:
-        subprocess.run(full, cwd=pack / "deployments", check=True, env=env)
+        run_subprocess(full, cwd=pack / "deployments", dry_run=False, env=env)
     except subprocess.CalledProcessError:
-        # Stale container with the fixed name but not owned by this compose project blocks recreate.
-        subprocess.run(["docker", "rm", "-f", fixed_name], check=False)
-        subprocess.run(full, cwd=pack / "deployments", check=True, env=env)
+        detail(f"Compose up failed; removing stale container {fixed_name} and retrying…")
+        run_subprocess(["docker", "rm", "-f", fixed_name], dry_run=False, label=f"docker rm -f {fixed_name}")
+        run_subprocess(full, cwd=pack / "deployments", dry_run=False, env=env)
+    run_subprocess(
+        ["docker", "ps", "--filter", f"name={fixed_name}", "--format", "{{.Names}} {{.Status}}"],
+        dry_run=False,
+        label="docker ps (after up)",
+    )
 
 
 def _compose_file(pack: Path) -> Path:
@@ -119,7 +132,7 @@ def start_docker_compose_stack(pack: Path, *, dry_run: bool) -> None:
         "-d",
         "--build",
     ]
-    print(f"→ {' '.join(full)}")
+    detail(f"→ {' '.join(full)}")
     if dry_run:
         return
-    subprocess.run(full, cwd=pack / "deployments", check=True)
+    run_subprocess(full, cwd=pack / "deployments", dry_run=False, label="docker compose up (full stack)")

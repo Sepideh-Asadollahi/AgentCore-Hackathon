@@ -10,23 +10,72 @@ Agent control plane for governed multi-agent work. This repository includes the 
 
 From the pack root (folder with `install.sh`), or from anywhere via absolute path — paths are resolved from the script location, not your current shell directory.
 
+**Recommended (fresh VM / judge machine — OS prerequisites + app + Docker PostgreSQL):**
+
+```bash
+bash install.sh --non-interactive --install-os-deps
+```
+
+**Recommended server / always-on demo (systemd user units — LangGraph worker + API + production UI):**
+
+```bash
+bash install.sh --non-interactive --install-os-deps --systemd
+```
+
+Same as `--runtime systemd` after install. Units: `change-society-langgraph-worker`, `change-society-api`, `change-society-web` under `~/.config/systemd/user/`. UI listens on **32501** (`npm run start`).
+
+**OS prerequisites only** (Python 3.12, Node/npm, Docker + Compose v2, curl, git — Debian/Ubuntu via `apt`; then run full install above):
+
+```bash
+bash install.sh --prerequisites-only
+```
+
+Other profiles:
+
 ```bash
 bash install.sh
 bash install.sh --profile verify   # + live Qwen society smoke (one scenario)
 ```
 
-**Manual Python `.venv`:**
+Copy **`.env.example`** → **`.env`** for live Qwen (`QWEN_API_KEY`). **`install.sh` syncs a minimum boot `.env` from `.env.example` on every run** (preserves a non-empty `QWEN_API_KEY` and Postgres password). **`CHANGE_SOCIETY_STORE=postgresql`** — install starts **PostgreSQL 16 in Docker** and applies SQL migrations.
+
+Details: [docs/01-quickstart.md](docs/01-quickstart.md).
+
+### Manual install — prerequisites
+
+Install these **before** the manual Python/npm steps below, or use `bash install.sh --install-os-deps` to install them on Debian/Ubuntu.
+
+| Prerequisite | Required | Version / notes | Debian/Ubuntu (example) | Verify |
+|--------------|----------|-----------------|-------------------------|--------|
+| **Python** | yes | **3.12+** with `venv` | `sudo apt install python3.12 python3.12-venv` (Ubuntu 22.04: `install.sh --install-os-deps` may add deadsnakes PPA) | `python3.12 --version` |
+| **pip** | yes | via project `.venv` | created by installer / `python3.12 -m venv .venv` | `.venv/bin/pip --version` |
+| **Node.js** | yes (UI) | **20+** recommended (18 minimum) | `sudo apt install nodejs npm` or [Node 20 LTS](https://nodejs.org/) if apt Node is too old | `node --version` |
+| **npm** | yes (UI) | matches Node | same as Node | `npm --version` |
+| **Docker Engine** | yes | for PostgreSQL | `sudo apt install docker.io` + `sudo systemctl enable --now docker` | `docker info` |
+| **Docker Compose** | yes | **v2 plugin** (`docker compose`) | `sudo apt install docker-compose-v2` | `docker compose version` |
+| **PostgreSQL** | yes (runtime) | **16** via Docker (not host packages) | started by `install.sh` (`deployments/compose.dev-postgres.yaml`) | `docker ps` shows `change-society-dev-postgres` |
+| **curl** | yes | health / smoke checks | `sudo apt install curl ca-certificates` | `curl --version` |
+| **git** | yes (clone) | any recent | `sudo apt install git` | `git --version` |
+| **QWEN_API_KEY** | live demos | Qwen Cloud API key | set in `.env` (not committed) | `python scripts/qwen_hello_smoke.py` |
+| **jq** | optional | README sanity examples | `sudo apt install jq` | `jq --version` |
+
+**Manual Python `.venv`** (after prerequisites):
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 .venv/bin/pip install --upgrade pip
 .venv/bin/pip install -r requirements.txt
 .venv/bin/pip install -r requirements-dev.txt   # optional: pytest helpers
+cp .env.example .env   # edit QWEN_API_KEY, postgres URLs if needed
+bash install.sh --non-interactive --skip-frontend   # still runs Docker Postgres + migrations if Docker is up
 ```
 
-Copy **`.env.example`** → **`.env`** for live Qwen (`QWEN_API_KEY`). A fresh install writes a **demo** `.env` when missing (`fake` model — no API key required for local judging).
+Or start PostgreSQL yourself:
 
-Details: [docs/01-quickstart.md](docs/01-quickstart.md).
+```bash
+docker compose --env-file .env -f deployments/compose.dev-postgres.yaml up -d
+.venv/bin/python scripts/apply_change_society_migrations.py --wait
+```
 
 ## Run locally
 
@@ -109,7 +158,7 @@ flowchart TB
   SVC --> CP["Agent control plane"]
   CP --> ADP["Model / Webhook adapters"]
   ADP --> QW["Qwen Cloud compatible API"]
-  CP --> Store["Memory or PostgreSQL"]
+  CP --> Store["PostgreSQL (Docker)"]
 ```
 
 ## Documentation

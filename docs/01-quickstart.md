@@ -7,22 +7,38 @@ Judges: see [14-submission-pack-index.md](14-submission-pack-index.md) for the f
 From the **repository root** (folder that contains `install.sh`, `backend/`, `frontend/`):
 
 ```bash
+bash install.sh --non-interactive --install-os-deps
+```
+
+This runs **OS prerequisites** (Debian/Ubuntu: Python 3.12, Node/npm, Docker + Compose v2, curl, git), then **venv**, **pip**, **npm**, **Docker PostgreSQL**, and SQL migrations.
+
+**Prerequisites only** (no venv/npm app install yet):
+
+```bash
+bash install.sh --prerequisites-only
+```
+
+Minimal interactive install (assumes prerequisites already on PATH):
+
+```bash
 bash install.sh
 ```
 
 Options:
 
 ```bash
-bash install.sh --profile demo          # default: venv, backend deps, frontend npm, demo .env (qwen — set QWEN_API_KEY)
+bash install.sh --profile demo          # default: venv, backend deps, frontend npm, demo .env
 bash install.sh --profile verify        # demo install + live Qwen end-to-end test (one scenario)
 bash install.sh --profile production    # print Qwen/PostgreSQL/Alibaba hints only
 bash install.sh --dry-run               # show steps without changing the machine
 bash install.sh --skip-frontend         # backend only (no Node/npm)
-bash install.sh --non-interactive --install-os-deps   # Debian/Ubuntu: apt for venv, node, docker
-bash install.sh --runtime systemd --install-os-deps   # user systemd units for API + UI
+bash install.sh --non-interactive --install-os-deps   # recommended on fresh VMs
+bash install.sh --non-interactive --install-os-deps --systemd   # + user systemd: worker, API, UI
+bash install.sh --runtime systemd --install-os-deps   # same as --systemd
 bash install.sh --runtime docker        # full Docker Compose (needs QWEN + DB password in .env)
-bash install.sh --with-postgres         # optional dev PostgreSQL container (Docker)
 ```
+
+PostgreSQL via Docker is **required** for demo/verify profiles (`CHANGE_SOCIETY_STORE=postgresql`). See README **Manual install — prerequisites** for per-package install commands on other distros.
 
 On an **interactive terminal**, `bash install.sh` shows an ASCII banner and numbered menus.
 
@@ -43,9 +59,9 @@ Or use **`deployments/compose.yaml`** (worker + API + Postgres + UI).
 
 Default development: **six LangGraph roles** via signed webhook; **AgentCore** owns tickets, negotiation, and approval. Offline CI: `bash tests/e2e/change-society/run-deterministic-regression.sh`.
 
-## PostgreSQL profile (optional persistence)
+## PostgreSQL (required — Docker)
 
-Set `CHANGE_SOCIETY_STORE=postgresql` and `CHANGE_SOCIETY_DATABASE_URL`. Apply migrations under `backend/change-society-service/migrations/`. Production startup requires `qwen` + PostgreSQL.
+Install starts **PostgreSQL 16** with `deployments/compose.dev-postgres.yaml`, sets `CHANGE_SOCIETY_STORE=postgresql`, and applies migrations under `backend/change-society-service/migrations/`. Production also requires live Qwen in workers when `WORKER_USE_LLM=1`.
 
 ## Verification
 

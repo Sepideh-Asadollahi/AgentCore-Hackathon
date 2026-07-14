@@ -4,7 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .cmd import run_cmd
+from .install_log import detail, info, run_subprocess
 from .docker_runtime import compose_cmd
 from .platform_detect import (
     command_exists,
@@ -19,16 +19,16 @@ def try_sudo_apt_install(packages: list[str], *, dry_run: bool) -> bool:
     if not packages:
         return True
     if dry_run:
-        print(f"→ would run: sudo apt-get install -y {' '.join(packages)}")
+        detail(f"→ would run: sudo apt-get install -y {' '.join(packages)}")
         return True
     if not command_exists("sudo"):
-        print("WARNING: sudo not found; install OS packages manually.")
+        detail("WARNING: sudo not found; install OS packages manually.")
         return False
     if not command_exists("apt-get"):
-        print("WARNING: apt-get not found; install OS packages manually.")
+        detail("WARNING: apt-get not found; install OS packages manually.")
         return False
-    run_cmd(["sudo", "apt-get", "update"], dry_run=False)
-    run_cmd(["sudo", "apt-get", "install", "-y", *packages], dry_run=False)
+    run_subprocess(["sudo", "apt-get", "update"], dry_run=False)
+    run_subprocess(["sudo", "apt-get", "install", "-y", *packages], dry_run=False, label=f"apt-get install: {' '.join(packages)}")
     return True
 
 
@@ -65,14 +65,16 @@ def install_os_dependencies(
 ) -> None:
     """Best-effort apt packages on Debian/Ubuntu when requested."""
     if not install_os_deps:
+        info("Skipping OS apt packages (--install-os-deps not set; bootstrap may have run from install.sh).")
         return
     if not linux_debian_family():
-        print(
+        detail(
             "NOTE: --install-os-deps is supported on Debian/Ubuntu via apt. "
             "On this OS, install Python venv, Node 20+, and Docker manually."
         )
         return
 
+    info(f"Checking OS packages (runtime={runtime}, postgres={with_postgres}, skip_frontend={skip_frontend})")
     need_venv = not python_has_venv_module(sys.executable)
     need_node = not skip_frontend and (not command_exists("npm") or (node_major_version() or 0) < 18)
     want_docker = runtime == "docker" or with_postgres
@@ -86,15 +88,15 @@ def install_os_dependencies(
             raise SystemExit(
                 "PostgreSQL requires 'docker compose'. Re-run with: bash install.sh --install-os-deps --non-interactive"
             )
-        print("OS dependency check: nothing extra to install via apt.")
+        detail("OS dependency check: nothing extra to install via apt.")
         return
-    print(f"Installing OS packages: {', '.join(pkgs)}")
+    detail(f"Installing OS packages via apt: {', '.join(pkgs)}")
     try_sudo_apt_install(pkgs, dry_run=dry_run)
     if need_docker and command_exists("docker") and not dry_run:
         try:
-            run_cmd(["sudo", "systemctl", "enable", "--now", "docker"], dry_run=False)
+            run_subprocess(["sudo", "systemctl", "enable", "--now", "docker"], dry_run=False, label="Enable Docker service")
         except subprocess.CalledProcessError:
-            print("WARNING: could not enable docker service; you may need: sudo systemctl start docker")
+            detail("WARNING: could not enable docker service; you may need: sudo systemctl start docker")
         if compose_cmd(Path(".")) is None:
             raise SystemExit(
                 "Docker is installed but 'docker compose' is missing. "

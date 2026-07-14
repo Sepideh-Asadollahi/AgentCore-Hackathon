@@ -21,9 +21,11 @@ def narrative_for_runtime(runtime: RuntimeMode) -> str:
     if runtime == "systemd":
         return """
 After install (systemd user units):
-  • API:  http://127.0.0.1:32500/health
-  • UI:   http://127.0.0.1:3000
-  • Example: systemctl --user restart change-society-api.service
+  • Worker: http://127.0.0.1:32510/ready  (LangGraph webhook agents)
+  • API:    http://127.0.0.1:32500/health
+  • UI:     http://127.0.0.1:32501  (production next start)
+  • Example: systemctl --user restart change-society-api.service change-society-web.service
+  • Logs:    journalctl --user -u change-society-api -f
 """
     if runtime == "docker":
         return """

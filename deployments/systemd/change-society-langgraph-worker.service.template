@@ -1,0 +1,17 @@
+[Unit]
+Description=Change Society LangGraph worker (webhook agents)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@PACK_ROOT@
+EnvironmentFile=@PACK_ROOT@/.env
+Environment=PYTHONPATH=@WORKER_PYTHONPATH@
+Environment=AGENTCORE_WEBHOOK_SHARED_SECRET=@WEBHOOK_SECRET@
+ExecStart=@PYTHON@ @PACK_ROOT@/examples/external-change-analyst-worker/src/run_worker.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

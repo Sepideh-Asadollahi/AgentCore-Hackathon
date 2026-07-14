@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from change_society.infrastructure.qwen_output_normalizer import extract_json_object, validate_normalized_payload
 
+from .errors import WorkerUpstreamError
 from .settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,18 @@ def complete_structured(settings: Settings, system_prompt: str, user_prompt: str
         },
         timeout=float(settings.qwen_timeout_seconds),
     )
-    response.raise_for_status()
+    if response.status_code == 401:
+        raise WorkerUpstreamError(
+            "qwen_authentication_failed",
+            "Qwen API rejected the API key (HTTP 401). Update QWEN_API_KEY in Settings and restart the worker.",
+            http_status=502,
+        )
+    if response.status_code >= 400:
+        raise WorkerUpstreamError(
+            "qwen_provider_error",
+            f"Qwen API returned HTTP {response.status_code}.",
+            http_status=502 if response.status_code >= 500 else 422,
+        )
     content = response.json()["choices"][0]["message"]["content"]
     parsed = extract_json_object(content)
     return validate_normalized_payload(parsed, schema_model)

@@ -97,6 +97,33 @@ def poll_worker_ready(port: int = 32510, *, attempts: int = 15, sleep_s: float =
     return last
 
 
+def verify_qwen_api_key(*, api_key: str, base_url: str, model: str, timeout_seconds: float = 20.0) -> None:
+    """Fail fast before persisting an invalid DashScope key (common cause of run HTTP 500)."""
+    key = api_key.strip()
+    if not key:
+        raise ValueError("qwen_api_key is required")
+    url = base_url.strip().rstrip("/") + "/chat/completions"
+    model_name = model.strip() or "qwen-plus"
+    response = httpx.post(
+        url,
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        json={
+            "model": model_name,
+            "messages": [{"role": "user", "content": "ping"}],
+            "max_tokens": 1,
+        },
+        timeout=timeout_seconds,
+    )
+    if response.status_code == 401:
+        raise ValueError(
+            "Qwen API rejected this key (HTTP 401). Use a valid DashScope key for the selected base URL "
+            "(intl: dashscope-intl.aliyuncs.com)."
+        )
+    if response.status_code >= 400:
+        snippet = response.text[:200].replace("\n", " ")
+        raise ValueError(f"Qwen API check failed (HTTP {response.status_code}): {snippet}")
+
+
 def apply_judge_runtime_config(
     *,
     qwen_api_key: str | None,
@@ -119,6 +146,10 @@ def apply_judge_runtime_config(
 
     if "QWEN_API_KEY" not in updates:
         raise ValueError("qwen_api_key is required to update server runtime")
+
+    verify_base = updates.get("QWEN_BASE_URL") or os.getenv("QWEN_BASE_URL", "https://dashscope-intl.aliyuncs.com/compatible-mode/v1")
+    verify_model = updates.get("QWEN_MODEL") or os.getenv("QWEN_MODEL", "qwen-plus")
+    verify_qwen_api_key(api_key=updates["QWEN_API_KEY"], base_url=verify_base, model=verify_model)
 
     env_path = pack_env_path()
     upsert_env_file(env_path, updates)

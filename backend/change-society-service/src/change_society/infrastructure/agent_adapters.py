@@ -13,6 +13,30 @@ from ..domain.control_plane import ManagedAgent
 from ..domain.models import DependencyError
 
 
+def _webhook_failure(response: httpx.Response) -> DependencyError:
+    status = response.status_code
+    code = "external_agent_failed"
+    message = f"External agent returned HTTP {status}."
+    retryable = status >= 500
+    try:
+        payload = response.json()
+        detail = payload.get("detail")
+        if isinstance(detail, dict):
+            code = str(detail.get("code") or code)
+            message = str(detail.get("message") or message)
+        elif isinstance(detail, str) and detail.strip():
+            message = f"{message} {detail.strip()}"
+    except (json.JSONDecodeError, TypeError, ValueError):
+        pass
+    if code == "qwen_authentication_failed" or status == 401:
+        return DependencyError(
+            "qwen_authentication_failed",
+            "Qwen API key was rejected. Open Settings, enter a valid DashScope key, then Save key & restart worker.",
+            False,
+        )
+    return DependencyError(code, message, retryable)
+
+
 class ModelAgentAdapter:
     """Adapter-managed demo worker. The model is outside the control-plane domain boundary."""
 
@@ -49,7 +73,7 @@ class WebhookAgentAdapter:
                                      headers={"Content-Type": "application/json", "X-AgentCore-Signature": signature,
                                               "X-Correlation-Id": request.correlation_id})
         if response.status_code >= 400:
-            raise DependencyError("external_agent_failed", f"External agent returned HTTP {response.status_code}.", response.status_code >= 500)
+            raise _webhook_failure(response)
         data = response.json()
         validated = request.output_schema.model_validate(data["output"])
         usage = data.get("usage", {})

@@ -6,6 +6,7 @@ from fastapi import FastAPI, Header, HTTPException, Request, Response
 
 from agentcore_agent_sdk import SignedWebhookWorker, SignatureError
 
+from .errors import WorkerUpstreamError
 from .executor import WorkerExecutor, build_signed_webhook_worker
 from .settings import Settings
 
@@ -47,8 +48,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             result = webhook.handle(body, x_agentcore_signature)
         except SignatureError as exc:
             raise HTTPException(status_code=401, detail=str(exc)) from exc
+        except WorkerUpstreamError as exc:
+            raise HTTPException(
+                status_code=exc.http_status,
+                detail={"code": exc.code, "message": exc.message},
+            ) from exc
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
+        except Exception as exc:
+            logger.exception("webhook execution failed")
+            raise HTTPException(
+                status_code=500,
+                detail={"code": "worker_execution_failed", "message": str(exc)[:400]},
+            ) from exc
         result["runtime"] = settings.runtime_name
         if executor.last_duration_ms:
             result["duration_ms"] = executor.last_duration_ms

@@ -2,6 +2,7 @@
 name: change-society-dev-postgres
 services:
   postgres:
+    container_name: change-society-dev-postgres
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${AGENTCORE_POSTGRES_DATABASE:-agentcore}

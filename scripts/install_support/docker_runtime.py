@@ -39,10 +39,14 @@ def start_docker_postgres(pack: Path, *, dry_run: bool) -> None:
     compose_file = pack / "deployments" / "compose.dev-postgres.yaml"
     cmd_base = compose_cmd(pack)
     if not cmd_base:
-        print("WARNING: docker compose not available; skipping dev PostgreSQL container.")
-        return
+        raise SystemExit(
+            "PostgreSQL via Docker is required but docker compose is not available. "
+            "Example fix: bash install.sh --install-os-deps --non-interactive "
+            "(Debian/Ubuntu: docker.io + docker-compose-v2) then re-run install."
+        )
     env = os.environ.copy()
     env.setdefault("AGENTCORE_POSTGRES_PASSWORD", "change-society-dev-local")
+    fixed_name = "change-society-dev-postgres"
     print("Starting PostgreSQL (Docker) for persisted society runs…")
     print("  Example connect: postgresql://agentcore:change-society-dev-local@127.0.0.1:32232/agentcore")
     env_path = pack / ".env"
@@ -53,7 +57,22 @@ def start_docker_postgres(pack: Path, *, dry_run: bool) -> None:
     print(f"→ {' '.join(full)}")
     if dry_run:
         return
-    subprocess.run(full, cwd=pack / "deployments", check=True, env=env)
+
+    running = subprocess.run(
+        ["docker", "inspect", "-f", "{{.State.Running}}", fixed_name],
+        capture_output=True,
+        text=True,
+    )
+    if running.returncode == 0 and running.stdout.strip() == "true":
+        print(f"PostgreSQL container {fixed_name} already running.")
+        return
+
+    try:
+        subprocess.run(full, cwd=pack / "deployments", check=True, env=env)
+    except subprocess.CalledProcessError:
+        # Stale container with the fixed name but not owned by this compose project blocks recreate.
+        subprocess.run(["docker", "rm", "-f", fixed_name], check=False)
+        subprocess.run(full, cwd=pack / "deployments", check=True, env=env)
 
 
 def _compose_file(pack: Path) -> Path:

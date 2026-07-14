@@ -57,6 +57,7 @@ def install_os_dependencies(
     *,
     install_os_deps: bool,
     runtime: RuntimeMode,
+    with_postgres: bool = False,
     skip_frontend: bool,
     dry_run: bool,
 ) -> None:
@@ -72,7 +73,7 @@ def install_os_dependencies(
 
     need_venv = not python_has_venv_module(sys.executable)
     need_node = not skip_frontend and (not command_exists("npm") or (node_major_version() or 0) < 18)
-    need_docker = runtime == "docker" and not command_exists("docker")
+    need_docker = (runtime == "docker" or with_postgres) and not command_exists("docker")
 
     pkgs = collect_os_package_wishes(need_venv=need_venv, need_node=need_node, need_docker=need_docker)
     if not pkgs:

@@ -56,14 +56,13 @@ def gather_interactive_config(
         )
 
     pg = with_postgres
-    if pg is None and docker_available() and rt != "docker":
-        pg = prompt_yes_no(
-            "Start PostgreSQL in Docker and persist society runs to the database (recommended for judges)?",
-            default=True,
-            example_yes="y  → compose.dev-postgres + SQL migrations + CHANGE_SOCIETY_STORE=postgresql",
-            example_no="n  → in-memory store only (runs lost on API restart)",
-        )
+    if pg is None and rt != "docker":
+        pg = True
     elif pg is None:
-        pg = False
+        pg = True
+    if pg and not docker_available():
+        raise SystemExit(
+            "PostgreSQL via Docker is required. Install Docker (e.g. bash install.sh --install-os-deps) and re-run."
+        )
 
     return prof, rt, os_deps, pg

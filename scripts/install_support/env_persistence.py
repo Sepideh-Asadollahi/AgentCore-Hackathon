@@ -22,9 +22,6 @@ def ensure_persistence_env(env_path: Path, *, dry_run: bool) -> bool:
     text = env_path.read_text(encoding="utf-8")
     original = text
 
-    if _read_key(text, "CHANGE_SOCIETY_STORE") == "memory":
-        return False
-
     user = _read_key(text, "AGENTCORE_POSTGRES_USER") or "agentcore"
     password = _read_key(text, "AGENTCORE_POSTGRES_PASSWORD") or DEFAULT_DEV_PASSWORD
     port = _read_key(text, "AGENTCORE_POSTGRES_PORT") or "32232"

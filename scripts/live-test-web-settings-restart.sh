@@ -99,7 +99,7 @@ fi
 
 echo "---"
 echo "Summary: $pass passed, $fail failed"
-echo "Browser workspace fields (API mode, project/tenant/workspace/actor): localStorage only → reload tab, NO systemd restart."
+echo "Browser preferences (debug + LLM URL/model only): localStorage — no workspace fields; no systemd restart."
 echo "Apply to running API (dev): only when CHANGE_SOCIETY_MODEL_PROVIDER=qwen — hot-updates in-process API, NO restart."
 echo "Default hackathon (fake + LangGraph worker): paste .env snippet → restart API if qwen in-process; restart worker for QWEN_API_KEY."
 [[ "$fail" -eq 0 ]]

@@ -70,7 +70,7 @@ Full walkthrough of **Home**, **Run**, **Work queue** tabs, **Settings**, and th
 
 ## Settings page (`/settings`)
 
-Operators edit **connection-only** fields in the browser: API access mode (proxy vs direct URL), project / tenant / workspace / actor IDs. Saved in `localStorage` (`lib/client-settings.ts`); **`api.ts` reads them on each request**. After save, **reload the tab** to refetch scenarios — no API process restart for these fields. LLM/worker keys and PostgreSQL stay in `hackathon/.env` (see [web-interface-guide.md](./web-interface-guide.md#settings-settings)).
+**API connection is fixed** (proxy + demo scope IDs from `buildDefaultClientSettings()` / `NEXT_PUBLIC_*` at build time). The UI only persists **debug logging** and **LLM base URL / model** in `localStorage`; **`api.ts` always uses the fixed connection headers**. Qwen API keys go to the server (PostgreSQL + worker `.env`) — see [web-interface-guide.md](./web-interface-guide.md#settings-settings).
 
 ## Commands
 

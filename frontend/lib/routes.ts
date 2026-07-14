@@ -40,7 +40,7 @@ export const APP_ROUTES: AppRoute[] = [
     href: "/settings",
     label: "Settings",
     icon: Settings,
-    description: "API connection and workspace IDs",
+    description: "LLM key, debug preferences, connection status",
   },
   {
     id: "policy",

@@ -18,7 +18,7 @@ Browsers usually call the API via **same-origin proxy**: `{UI origin}/change-soc
 |-------|-------|---------|
 | **Home** | `/overview` | Session snapshot: latest run link, quick path to **Work queue** |
 | **Run** | `/runs` | Pick a **demo scenario**, start or reload a society run |
-| **Settings** | `/settings` | Browser connection (proxy/direct), scope IDs, LLM fields, connection test |
+| **Settings** | `/settings` | Fixed proxy connection, LLM key (server), debug preferences |
 | **Work queue** | `/agents?run=…&tab=…` | **Primary judge hub** after a run exists — tabs below |
 
 **Policy** (`/policy`) is routable but not in the sidebar; use it for org-policy intake demos when documented in [30-org-policy-intake-slice.md](../docs/30-org-policy-intake-slice.md).
@@ -67,27 +67,23 @@ Lists **managed agents** from the control plane (model vs webhook). On the defau
 
 ## Settings (`/settings`)
 
-Three areas:
+Two configurable areas plus read-only connection:
 
-### Workspace API settings
+### API connection (fixed)
 
-- **API access:** same-origin **proxy** (recommended on LAN/public IP) vs **direct** API URL from the browser.
-- **Project / tenant / workspace / actor IDs:** sent as `X-*` headers on every API call.
-- Stored in **`localStorage` only** (per browser).
-- After **Save settings:** **reload the tab** so lists and SSR pick up new scope — **no systemd restart** for these fields.
-- **Test connection** hits `/ready` and `/demo-scenarios` with current headers.
+- Always **same-origin proxy** (`/change-society-api`) and demo scope IDs (`demo-project`, `demo-tenant`, `demo-workspace`, `demo-engineering-lead`) unless overridden at **build time** via `NEXT_PUBLIC_*` env.
+- Not editable in the UI. **Test connection** hits `/ready` and `/demo-scenarios`.
 
 ### LLM API settings
 
 - Base URL, model, and **API key** for Qwen.
 - **Save key & restart worker**: sends the key once to `POST /api/v1/hackathon/dev/judge-runtime-apply` — stored in **PostgreSQL** (`change_society_runtime_secrets`) and server `.env`, then restarts the worker. **The API key is never written to browser localStorage.**
 - **Apply to running API (dev)**: only shown when the API uses in-process Qwen (`MODEL_PROVIDER=qwen`). On the default **fake + LangGraph worker** stack, use **Save key & restart worker** — not Apply (the orange warning appears if you click Apply on the wrong stack).
-- **Apply to running API (dev):** hot-update when `CHANGE_SOCIETY_MODEL_PROVIDER=qwen`.
-- Browser-only **Save settings** still requires tab reload for scope IDs; it does not restart services.
+- **Save preferences** (Debug section): stores LLM base URL, model, and debug flag in `localStorage` only — not the API key.
 
 ### Debug logging
 
-- Verbose client console (`ChangeSociety` tag); no server restart.
+- Verbose client console (`ChangeSociety` tag); use **Save preferences**; no server restart.
 
 Live QA script (restart behavior): `bash scripts/live-test-web-settings-restart.sh` from pack root.
 

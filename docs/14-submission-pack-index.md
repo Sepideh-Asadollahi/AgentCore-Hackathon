@@ -5,7 +5,8 @@ Central navigation for Qwen Cloud hackathon **Track 3** submission readiness for
 ## Before you submit
 
 1. Complete [15-devpost-field-guide-and-checklist.md](15-devpost-field-guide-and-checklist.md).
-2. Run [21-release-candidate-and-smoke-checklist.md](21-release-candidate-and-smoke-checklist.md).
+2. Skim **[../frontend/docs/web-interface-guide.md](../frontend/docs/web-interface-guide.md)** so demo clicks match the written evidence.
+3. Run [21-release-candidate-and-smoke-checklist.md](21-release-candidate-and-smoke-checklist.md).
 3. Map every public claim to [16-claim-evidence-mapping.md](16-claim-evidence-mapping.md).
 4. Record video using [17-video-storyboard-and-recording-guide.md](17-video-storyboard-and-recording-guide.md).
 5. Publish blog draft from [18-blog-post-outline.md](18-blog-post-outline.md) (Blog Post Award).
@@ -18,6 +19,7 @@ Central navigation for Qwen Cloud hackathon **Track 3** submission readiness for
 | Doc | Purpose |
 |---|---|
 | [01-quickstart.md](01-quickstart.md) | Local and production-shaped setup |
+| [../frontend/docs/web-interface-guide.md](../frontend/docs/web-interface-guide.md) | **Web UI pages, run tabs, Settings, judge click path** |
 | [02-architecture.md](02-architecture.md) | Mermaid runtime and module diagrams |
 | [03-qwen-cloud-integration.md](03-qwen-cloud-integration.md) | Qwen adapter and budgets |
 | [04-protocol-and-sdk.md](04-protocol-and-sdk.md) | Universal Agent JSON and clients |

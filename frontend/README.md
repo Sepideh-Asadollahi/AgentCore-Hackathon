@@ -35,6 +35,7 @@ Stack smoke (API + Next proxy): from pack root run `../tests/e2e/change-society/
 ## UI shell
 
 Workspace layout, routing, and route-transition rules (avoid blank main column): [docs/ui-shell-layout.md](docs/ui-shell-layout.md).  
+**Judges — pages, tabs, Settings:** [docs/web-interface-guide.md](docs/web-interface-guide.md).  
 Submission index: [docs/31-frontend-ui-shell.md](../docs/31-frontend-ui-shell.md).
 
 ## Demo flow

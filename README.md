@@ -6,6 +6,21 @@ Agent control plane for governed multi-agent work. This repository includes the 
 
 **Judges / reviewers:** start at **[docs/14-submission-pack-index.md](docs/14-submission-pack-index.md)** (review path, evidence links, compliance API).
 
+### Judges — where important information lives
+
+| If you need… | Go here |
+|--------------|---------|
+| **What to click in the demo UI** (pages, run tabs, Settings, progress dialog) | **[frontend/docs/web-interface-guide.md](frontend/docs/web-interface-guide.md)** |
+| **Full submission checklist & doc map** | [docs/14-submission-pack-index.md](docs/14-submission-pack-index.md) |
+| **Executed live / real test proof** (commands + artifacts) | [docs/27-judge-live-and-real-test-evidence.md](docs/27-judge-live-and-real-test-evidence.md) · [docs/29-langgraph-sdk-live-seven-scenarios.md](docs/29-langgraph-sdk-live-seven-scenarios.md) |
+| **Install & public URL / systemd ports** | This README (Install + Run locally) · [docs/01-quickstart.md](docs/01-quickstart.md) |
+| **Architecture & Qwen integration** | [docs/02-architecture.md](docs/02-architecture.md) · [docs/03-qwen-cloud-integration.md](docs/03-qwen-cloud-integration.md) |
+| **Claims → evidence mapping** | [docs/16-claim-evidence-mapping.md](docs/16-claim-evidence-mapping.md) |
+| **Machine-readable compliance** | `curl -sS http://<host>:32500/api/v1/hackathon/submission-compliance` |
+| **LangGraph external worker** | [docs/26-external-agent-integrator-guide.md](docs/26-external-agent-integrator-guide.md) · `examples/external-change-analyst-worker/` |
+
+**Suggested UI path for a 5-minute review:** open **Run** → start one scenario → when the progress dialog finishes, **Open Work queue** → tab **Guide** → **Agent Story** (Mermaid map) → **Work Queue** (tickets) → **Review** → **Results**.
+
 ## Install
 
 From the pack root (folder with `install.sh`), or from anywhere via absolute path — paths are resolved from the script location, not your current shell directory.
@@ -207,7 +222,7 @@ flowchart TB
 
 | Audience | Start here |
 |----------|------------|
-| Judges | [docs/14-submission-pack-index.md](docs/14-submission-pack-index.md) · [docs/27-judge-live-and-real-test-evidence.md](docs/27-judge-live-and-real-test-evidence.md) · [docs/29-langgraph-sdk-live-seven-scenarios.md](docs/29-langgraph-sdk-live-seven-scenarios.md) |
+| Judges | [docs/14-submission-pack-index.md](docs/14-submission-pack-index.md) · **[frontend/docs/web-interface-guide.md](frontend/docs/web-interface-guide.md)** (UI walkthrough) · [docs/27-judge-live-and-real-test-evidence.md](docs/27-judge-live-and-real-test-evidence.md) · [docs/29-langgraph-sdk-live-seven-scenarios.md](docs/29-langgraph-sdk-live-seven-scenarios.md) |
 | Architecture | [docs/02-architecture.md](docs/02-architecture.md) |
 | Pitch / demo | [docs/25-pitch-and-demo-focus.md](docs/25-pitch-and-demo-focus.md) |
 | Org policy intake | [docs/30-org-policy-intake-slice.md](docs/30-org-policy-intake-slice.md) |

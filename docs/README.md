@@ -5,7 +5,8 @@ English documentation for the public Track 3 submission. **AgentCore** is the pl
 ## For judges and reviewers
 
 1. [14-submission-pack-index.md](14-submission-pack-index.md) — review path and document map  
-2. [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md) — executed real/live E2E evidence  
+2. [../frontend/docs/web-interface-guide.md](../frontend/docs/web-interface-guide.md) — **web UI pages, run tabs, Settings**  
+3. [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md) — executed real/live E2E evidence  
 3. [29-langgraph-sdk-live-seven-scenarios.md](29-langgraph-sdk-live-seven-scenarios.md) — LangGraph + SDK, seven scenarios  
 4. [28-judge-seven-scenario-live-qwen-smoke.md](28-judge-seven-scenario-live-qwen-smoke.md) — in-process live Qwen smoke  
 5. [16-claim-evidence-mapping.md](16-claim-evidence-mapping.md) — claims linked to proof  
@@ -26,6 +27,7 @@ English documentation for the public Track 3 submission. **AgentCore** is the pl
 - [Multi-vendor agent network](23-multi-vendor-agent-network-ecosystem.md)
 - [Org policy intake](30-org-policy-intake-slice.md)
 - [Frontend UI shell](31-frontend-ui-shell.md)
+- [Web interface guide (UI walkthrough)](../frontend/docs/web-interface-guide.md)
 
 ## Submission pack
 

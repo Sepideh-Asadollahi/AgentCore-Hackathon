@@ -64,9 +64,13 @@ By default the UI calls **`/change-society-api/*`** (Next.js rewrite in `next.co
 
 Bootstrap uses `Promise.allSettled` so a failing agents/ready call does not block scenario loading.
 
+## Web interface (judges)
+
+Full walkthrough of **Home**, **Run**, **Work queue** tabs, **Settings**, and the society-run progress dialog: **[web-interface-guide.md](./web-interface-guide.md)**.
+
 ## Settings page (`/settings`)
 
-Operators edit **connection-only** fields in the browser: API access mode (proxy vs direct URL), project / tenant / workspace / actor IDs. Saved in `localStorage` (`lib/client-settings.ts`); **`api.ts` reads them on each request**. After save, **reload the tab** to refetch scenarios — no API process restart for these fields. Qwen keys and PostgreSQL stay in `hackathon/.env` (restart backend after changing those).
+Operators edit **connection-only** fields in the browser: API access mode (proxy vs direct URL), project / tenant / workspace / actor IDs. Saved in `localStorage` (`lib/client-settings.ts`); **`api.ts` reads them on each request**. After save, **reload the tab** to refetch scenarios — no API process restart for these fields. LLM/worker keys and PostgreSQL stay in `hackathon/.env` (see [web-interface-guide.md](./web-interface-guide.md#settings-settings)).
 
 ## Commands
 
@@ -87,6 +91,7 @@ bash ../tests/frontend/change-society/run-frontend-tests.sh
 
 ## Related docs
 
+- [web-interface-guide.md](./web-interface-guide.md) — judges: all UI areas and tabs
 - [app/README.md](../app/README.md) — App Router segments
 - [06-testing-and-evaluation.md](../../docs/06-testing-and-evaluation.md) — frontend unit tests
 - [08-security.md](../../docs/08-security.md) — secrets and `.gitignore` boundaries

@@ -4,7 +4,8 @@ Public-facing summary for reviewers and contributors. Full layout rules and the 
 
 ## What judges see
 
-- Multi-page App Router workspace (`/overview`, `/policy`, `/runs`, …) with Animate UI sidebar.
+- Multi-page App Router workspace (`/overview`, `/policy`, `/runs`, `/agents`, `/settings`) with Animate UI sidebar.
+- **Page-by-page guide:** [../frontend/docs/web-interface-guide.md](../frontend/docs/web-interface-guide.md).
 - Shared session state via `RunWorkspaceProvider` (runs, messages, conflicts, modals).
 - Dark neutral theme; page content is rendered in the **main column** beside the sidebar, not as a single tabbed canvas.
 

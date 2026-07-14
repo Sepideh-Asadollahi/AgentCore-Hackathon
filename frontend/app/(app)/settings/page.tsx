@@ -4,7 +4,7 @@ import {useEffect, useMemo, useState} from "react";
 import {Button} from "@/components/animate-ui/components/buttons/button";
 import {WorkspaceSelect} from "@/components/workspace/WorkspaceSelect";
 import {WorkspaceAlerts} from "@/components/workspace/WorkspaceOverlays";
-import {probeConnection, applyDevLlmConnection, applyJudgeRuntimeConfig, type ConnectionProbe} from "@/lib/api";
+import {probeConnection, applyDevLlmConnection, applyJudgeRuntimeConfig, fetchJudgeRuntimeStatus, type ConnectionProbe, type JudgeRuntimeStatus} from "@/lib/api";
 import {useRunWorkspace} from "@/lib/run-workspace";
 import {
   buildDefaultClientSettings,
@@ -42,17 +42,23 @@ export default function SettingsPage() {
   const [llmApplyMessage, setLlmApplyMessage] = useState("");
   const [applyingLlm, setApplyingLlm] = useState(false);
   const [applyingJudgeRuntime, setApplyingJudgeRuntime] = useState(false);
+  const [serverRuntime, setServerRuntime] = useState<JudgeRuntimeStatus | null>(null);
 
   const envSnippet = useMemo(() => buildHackathonEnvSnippet(form), [form]);
+  const inProcessQwen =
+    probe?.modelProvider === "qwen_cloud" || probe?.modelProvider === "qwen" || serverRuntime?.model_provider === "qwen";
 
   useEffect(() => {
     setForm(loadClientSettings());
     let cancelled = false;
     void (async () => {
       setProbing(true);
-      const result = await probeConnection();
-      if (!cancelled) setProbe(result);
-      if (!cancelled) setProbing(false);
+      const [result, runtime] = await Promise.all([probeConnection(), fetchJudgeRuntimeStatus()]);
+      if (!cancelled) {
+        setProbe(result);
+        setServerRuntime(runtime);
+        setProbing(false);
+      }
     })();
     return () => {
       cancelled = true;
@@ -79,7 +85,7 @@ export default function SettingsPage() {
     }
     const normalized = normalizeClientSettings(form);
     saveClientSettings(normalized);
-    setForm(normalized);
+    setForm({...normalized, llmApiKey: ""});
     configureAppLogging(normalized);
     setSavedPendingReload(true);
     setError("");
@@ -124,8 +130,8 @@ export default function SettingsPage() {
       return;
     }
     const normalized = normalizeClientSettings(form);
-    saveClientSettings(normalized);
-    setForm(normalized);
+    saveClientSettings({...normalized, llmApiKey: ""});
+    setForm({...normalized, llmApiKey: ""});
     const result = await applyJudgeRuntimeConfig({
       llmBaseUrl: normalized.llmBaseUrl,
       llmModel: normalized.llmModel,
@@ -133,6 +139,8 @@ export default function SettingsPage() {
     });
     setLlmApplyMessage(result.message);
     if (result.ok) {
+      setForm(f => ({...f, llmApiKey: ""}));
+      setServerRuntime(await fetchJudgeRuntimeStatus());
       setProbing(true);
       const probeResult = await probeConnection();
       setProbe(probeResult);
@@ -153,8 +161,8 @@ export default function SettingsPage() {
       return;
     }
     const normalized = normalizeClientSettings(form);
-    saveClientSettings(normalized);
-    setForm(normalized);
+    saveClientSettings({...normalized, llmApiKey: ""});
+    setForm({...normalized, llmApiKey: ""});
     const result = await applyDevLlmConnection(normalized);
     setLlmApplyMessage(result.message);
     if (result.ok) {
@@ -368,13 +376,27 @@ export default function SettingsPage() {
         <p className={wsStep}>LLM</p>
         <h2 className={wsPanelTitle}>LLM API settings</h2>
         <p className={`${wsLead} max-w-none`}>
-          Base URL, model, and API key for Qwen-compatible chat completions. Values are saved in this browser when you use{" "}
-          <strong className="font-medium text-foreground">Save settings</strong>. For live LangGraph runs on the default
-          demo stack, use <strong className="font-medium text-foreground">Save key &amp; restart worker</strong> — writes{" "}
-          <code className="text-xs">QWEN_*</code> to server <code className="text-xs">.env</code> and restarts the
-          LangGraph worker (no SSH). Optional <strong className="font-medium text-foreground">Apply to running API</strong>{" "}
-          only when <code className="text-xs">CHANGE_SOCIETY_MODEL_PROVIDER=qwen</code>.
+          Enter your Qwen API key <strong className="font-medium text-foreground">only when submitting</strong> — it is{" "}
+          <strong className="font-medium text-foreground">never saved in the browser</strong> (not in localStorage). Use{" "}
+          <strong className="font-medium text-foreground">Save key &amp; restart worker</strong> to store the key on the
+          server in <strong className="font-medium text-foreground">PostgreSQL</strong> and sync{" "}
+          <code className="text-xs">.env</code> for the LangGraph worker, then restart it. Base URL and model can still be
+          saved in this browser via <strong className="font-medium text-foreground">Save settings</strong>.
         </p>
+
+        {serverRuntime?.qwen_api_key_configured && (
+          <p className={`${wsMeta} mt-3 max-w-none text-emerald-200/90`} role="status">
+            Server reports a Qwen API key is configured (value is not shown).
+          </p>
+        )}
+
+        {!inProcessQwen && (
+          <p className={`${wsMeta} mt-3 max-w-none rounded-lg border border-border/70 bg-muted/20 px-3 py-2`}>
+            Default demo stack uses <code className="text-xs">MODEL_PROVIDER=fake</code> + LangGraph worker — ignore{" "}
+            <strong className="font-medium text-foreground">Apply to running API</strong> (that button is for in-process
+            Qwen only). Use <strong className="font-medium text-foreground">Save key &amp; restart worker</strong> instead.
+          </p>
+        )}
 
         {llmApplyMessage && (
           <div
@@ -382,7 +404,8 @@ export default function SettingsPage() {
               llmApplyMessage.toLowerCase().includes("updated") ||
               llmApplyMessage.toLowerCase().includes("applied") ||
               llmApplyMessage.toLowerCase().includes("restarted") ||
-              llmApplyMessage.toLowerCase().includes("saved")
+              llmApplyMessage.toLowerCase().includes("saved") ||
+              llmApplyMessage.toLowerCase().includes("postgresql")
                 ? "border-emerald-600/40 bg-emerald-950/30"
                 : wsAlertWarn
             }`}
@@ -420,14 +443,14 @@ export default function SettingsPage() {
           </label>
 
           <label className={wsFieldLabel} htmlFor="settings-llm-key">
-            API key
+            API key (not stored in browser)
             <input
               id="settings-llm-key"
               type="password"
               className={wsFieldControl}
               value={form.llmApiKey}
               onChange={e => update("llmApiKey", e.target.value)}
-              placeholder="sk-…"
+              placeholder="Paste key, then Save key & restart worker"
               spellCheck={false}
               autoComplete="off"
             />
@@ -438,9 +461,11 @@ export default function SettingsPage() {
           <Button type="button" disabled={applyingJudgeRuntime} onClick={() => void handleApplyJudgeRuntime()}>
             {applyingJudgeRuntime ? "Restarting worker…" : "Save key & restart worker"}
           </Button>
-          <Button type="button" variant="outline" disabled={applyingLlm} onClick={() => void handleApplyLlm()}>
-            {applyingLlm ? "Applying…" : "Apply to running API (dev)"}
-          </Button>
+          {inProcessQwen ? (
+            <Button type="button" variant="outline" disabled={applyingLlm} onClick={() => void handleApplyLlm()}>
+              {applyingLlm ? "Applying…" : "Apply to running API (dev)"}
+            </Button>
+          ) : null}
         </div>
 
         <div className="mt-6">

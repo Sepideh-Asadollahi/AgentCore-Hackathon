@@ -270,6 +270,27 @@ export type JudgeRuntimeApplyResult = {
   workerLiveMode?: boolean;
 };
 
+export type JudgeRuntimeStatus = {
+  qwen_api_key_configured: boolean;
+  qwen_base_url: string | null;
+  qwen_model: string | null;
+  model_provider: string;
+};
+
+export async function fetchJudgeRuntimeStatus(): Promise<JudgeRuntimeStatus | null> {
+  const ctx = requestContext();
+  try {
+    const response = await fetch(`${ctx.baseUrl}/api/v1/hackathon/dev/judge-runtime-status`, {
+      headers: ctx.headers,
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    return (await response.json()) as JudgeRuntimeStatus;
+  } catch {
+    return null;
+  }
+}
+
 /** Development / judge demo: persist Qwen key to server .env and restart LangGraph worker (systemd user). */
 export async function applyJudgeRuntimeConfig(settings: {
   llmBaseUrl: string;

@@ -181,4 +181,13 @@ class HackathonJudgeRuntimeResponse(BaseModel):
     keys_updated: list[str]
     restarted_units: list[str]
     worker_ready: dict[str, Any]
+    stored_in_database: bool
+    correlation_id: str
+
+
+class HackathonJudgeRuntimeStatusResponse(BaseModel):
+    qwen_api_key_configured: bool
+    qwen_base_url: str | None
+    qwen_model: str | None
+    model_provider: str
     correlation_id: str

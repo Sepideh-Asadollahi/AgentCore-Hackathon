@@ -122,7 +122,14 @@ def apply_judge_runtime_config(
 
     env_path = pack_env_path()
     upsert_env_file(env_path, updates)
-    _log.info("Judge runtime: updated %s (%d keys)", env_path, len(updates))
+
+    db_secrets = {k: v for k, v in updates.items() if k in {"QWEN_API_KEY", "QWEN_BASE_URL", "QWEN_MODEL"}}
+    if db_secrets:
+        from .runtime_secrets_store import upsert_runtime_secrets
+
+        upsert_runtime_secrets(db_secrets)
+
+    _log.info("Judge runtime: updated %s (%d keys) + database secrets", env_path, len(updates))
 
     units: list[str] = []
     if restart_worker:

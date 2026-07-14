@@ -80,7 +80,8 @@ Three areas:
 ### LLM API settings
 
 - Base URL, model, and **API key** for Qwen.
-- **Save key & restart worker** (Settings): calls `POST /api/v1/hackathon/dev/judge-runtime-apply` — writes `QWEN_*` to server `.env` and restarts **`change-society-langgraph-worker.service`** (development / judge demo only; optional `CHANGE_SOCIETY_JUDGE_RUNTIME_SECRET` + header).
+- **Save key & restart worker**: sends the key once to `POST /api/v1/hackathon/dev/judge-runtime-apply` — stored in **PostgreSQL** (`change_society_runtime_secrets`) and server `.env`, then restarts the worker. **The API key is never written to browser localStorage.**
+- **Apply to running API (dev)**: only shown when the API uses in-process Qwen (`MODEL_PROVIDER=qwen`). On the default **fake + LangGraph worker** stack, use **Save key & restart worker** — not Apply (the orange warning appears if you click Apply on the wrong stack).
 - **Apply to running API (dev):** hot-update when `CHANGE_SOCIETY_MODEL_PROVIDER=qwen`.
 - Browser-only **Save settings** still requires tab reload for scope IDs; it does not restart services.
 

@@ -1,6 +1,6 @@
 export type ApiAccessMode = "proxy" | "direct";
 
-/** Browser-only overrides for API connectivity, scope headers, and LLM connection (localStorage). */
+/** Browser-only overrides for API connectivity and scope headers (localStorage). API keys are never stored here. */
 export type ClientSettings = {
   apiMode: ApiAccessMode;
   apiBaseUrl: string;
@@ -10,8 +10,8 @@ export type ClientSettings = {
   actorId: string;
   llmBaseUrl: string;
   llmModel: string;
+  /** Session-only in the form; never persisted to localStorage. */
   llmApiKey: string;
-  /** Verbose browser console logs (API, workspace, bootstrap). */
   debugLogging: boolean;
 };
 
@@ -41,20 +41,27 @@ export function buildDefaultClientSettings(): ClientSettings {
   };
 }
 
+type PersistedClientSettings = Omit<ClientSettings, "llmApiKey">;
+
+function toPersisted(settings: ClientSettings): PersistedClientSettings {
+  const {llmApiKey: _omit, ...rest} = settings;
+  return rest;
+}
+
 export function loadClientSettings(): ClientSettings {
   const defaults = buildDefaultClientSettings();
   if (typeof window === "undefined") return defaults;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaults;
-    const parsed = JSON.parse(raw) as Partial<ClientSettings>;
+    const parsed = JSON.parse(raw) as Partial<PersistedClientSettings> & {llmApiKey?: string};
     return {
       ...defaults,
       ...parsed,
       apiMode: parsed.apiMode === "direct" ? "direct" : "proxy",
       llmBaseUrl: (parsed.llmBaseUrl ?? defaults.llmBaseUrl).trim() || defaults.llmBaseUrl,
       llmModel: (parsed.llmModel ?? defaults.llmModel).trim() || defaults.llmModel,
-      llmApiKey: typeof parsed.llmApiKey === "string" ? parsed.llmApiKey : "",
+      llmApiKey: "",
       debugLogging: typeof parsed.debugLogging === "boolean" ? parsed.debugLogging : defaults.debugLogging,
     };
   } catch {
@@ -63,7 +70,7 @@ export function loadClientSettings(): ClientSettings {
 }
 
 export function saveClientSettings(settings: ClientSettings): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(toPersisted(settings)));
 }
 
 export function clearClientSettings(): void {
@@ -138,34 +145,20 @@ export function normalizeClientSettings(form: ClientSettings): ClientSettings {
   };
 }
 
-/** Lines to paste into hackathon/.env (persisted server config; requires API restart). */
+/** Reference .env lines for operators (never includes a browser-stored key). */
 export function buildHackathonEnvSnippet(settings: ClientSettings): string {
-  const lines = [
-    "CHANGE_SOCIETY_MODEL_PROVIDER=qwen",
+  return [
+    "CHANGE_SOCIETY_MODEL_PROVIDER=fake",
     `QWEN_BASE_URL=${settings.llmBaseUrl.trim()}`,
     `QWEN_MODEL=${settings.llmModel.trim()}`,
-  ];
-  if (settings.llmApiKey.trim()) {
-    lines.push(`QWEN_API_KEY=${settings.llmApiKey.trim()}`);
-  } else {
-    lines.push("QWEN_API_KEY=");
-  }
-  return lines.join("\n");
+    "QWEN_API_KEY=<use Save key & restart worker in Settings — stored in PostgreSQL>",
+  ].join("\n");
 }
 
 export function settingsEqual(a: ClientSettings, b: ClientSettings): boolean {
-  return (
-    a.apiMode === b.apiMode &&
-    a.apiBaseUrl.trim() === b.apiBaseUrl.trim() &&
-    a.projectId.trim() === b.projectId.trim() &&
-    a.tenantId.trim() === b.tenantId.trim() &&
-    a.workspaceId.trim() === b.workspaceId.trim() &&
-    a.actorId.trim() === b.actorId.trim() &&
-    a.llmBaseUrl.trim() === b.llmBaseUrl.trim() &&
-    a.llmModel.trim() === b.llmModel.trim() &&
-    a.llmApiKey === b.llmApiKey &&
-    a.debugLogging === b.debugLogging
-  );
+  const pa = toPersisted(a);
+  const pb = toPersisted(b);
+  return JSON.stringify(pa) === JSON.stringify(pb);
 }
 
 export {STORAGE_KEY};

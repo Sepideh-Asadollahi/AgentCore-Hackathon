@@ -13,6 +13,7 @@ services:
       - change-society-dev-postgres:/var/lib/postgresql/data
       - ../backend/change-society-service/migrations/0001_change_society.sql:/docker-entrypoint-initdb.d/0010_change_society.sql:ro
       - ../backend/change-society-service/migrations/0002_agent_control_plane.sql:/docker-entrypoint-initdb.d/0020_agent_control_plane.sql:ro
+      - ../backend/change-society-service/migrations/0003_runtime_secrets.sql:/docker-entrypoint-initdb.d/0030_runtime_secrets.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s

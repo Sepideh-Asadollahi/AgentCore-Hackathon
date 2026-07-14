@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 
 from ..infrastructure.model_client_resolve import resolve_qwen_client
 from ..infrastructure.judge_runtime_config import apply_judge_runtime_config
+from ..infrastructure.runtime_secrets_store import runtime_secret_status
 from ..application.service import ChangeSocietyService
 from ..application.judging_engineering_profile import build_judging_engineering_profile
 from ..application.submission_compliance import build_submission_compliance_report
@@ -25,7 +26,7 @@ from .schemas import (
     OrgPolicyActivateRequest, OrgPolicyActivateResponse, OrgPolicyChallengeResolveRequest, OrgPolicyIntakeAnalyzeRequest,
     OrgPolicyIntakeAnalyzeResponse, OrgPolicyIntakeSessionResponse, OrgPolicyListResponse,
     HackathonLlmConnectionRequest, HackathonLlmConnectionResponse,
-    HackathonJudgeRuntimeRequest, HackathonJudgeRuntimeResponse,
+    HackathonJudgeRuntimeRequest, HackathonJudgeRuntimeResponse, HackathonJudgeRuntimeStatusResponse,
     SocietyRunListResponse, SocietyRunResponse,
 )
 
@@ -471,9 +472,9 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
         live = worker.get("live_mode")
         ok = worker.get("status") == "ok" if body.restart_worker else True
         msg = (
-            "Qwen key saved to server .env and LangGraph worker restarted."
+            "Qwen key saved on the server (PostgreSQL + .env for the worker) and LangGraph worker restarted."
             if ok
-            else "Key saved and worker restart requested, but /ready is not OK yet — wait a few seconds and test a run."
+            else "Key saved on the server; worker restart requested but /ready is not OK yet — wait a few seconds and test a run."
         )
         return {
             "applied": True,
@@ -481,6 +482,24 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
             "keys_updated": result.get("keys_updated", []),
             "restarted_units": result.get("restarted_units", []),
             "worker_ready": worker,
+            "stored_in_database": True,
+            "correlation_id": correlation(request),
+        }
+
+    @app.get(
+        "/api/v1/hackathon/dev/judge-runtime-status",
+        response_model=HackathonJudgeRuntimeStatusResponse,
+        operation_id="change_society_get_judge_runtime_status",
+        tags=["operations"],
+    )
+    async def get_judge_runtime_status(request: Request):
+        environment = (runtime_profile or {}).get("environment", "production")
+        if environment != "development":
+            raise ValidationError("judge_runtime_status requires CHANGE_SOCIETY_ENVIRONMENT=development")
+        status = runtime_secret_status()
+        return {
+            **status,
+            "model_provider": (runtime_profile or {}).get("model_provider", "unknown"),
             "correlation_id": correlation(request),
         }
 

@@ -50,6 +50,6 @@ After install — two terminals from the pack root (directory with install.sh):
     cd frontend && npm run dev
     Open http://localhost:3000
 
-  Automated proof (no browser):
+  Automated proof (live Qwen — needs QWEN_API_KEY in .env):
     bash ../tests/e2e/change-society/run-real-test.sh
 """

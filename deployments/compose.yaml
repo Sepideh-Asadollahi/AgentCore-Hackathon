@@ -1,5 +1,24 @@
 name: change-society
 services:
+  society-langgraph-worker:
+    build:
+      context: ../..
+      dockerfile: hackathon/examples/external-change-analyst-worker/Dockerfile
+    environment:
+      AGENTCORE_WEBHOOK_SHARED_SECRET: ${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-integrator-demo-secret-change-me}
+      QWEN_API_KEY: ${QWEN_API_KEY:?required}
+      QWEN_BASE_URL: ${QWEN_BASE_URL:-https://dashscope-intl.aliyuncs.com/compatible-mode/v1}
+      QWEN_MODEL: ${QWEN_MODEL:-qwen-flash}
+      WORKER_LIVE_MODE: "1"
+      WORKER_USE_LLM: "1"
+      WORKER_RUNTIME_NAME: ${WORKER_RUNTIME_NAME:-langgraph-sdk-society-worker}
+      WORKER_PORT: "32510"
+    ports: ["32510:32510"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:32510/ready')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
   postgres:
     image: pgvector/pgvector:0.8.2-pg18-trixie
     environment:
@@ -20,18 +39,20 @@ services:
     build: {context: ../.., dockerfile: hackathon/backend/change-society-service/Dockerfile}
     environment:
       CHANGE_SOCIETY_ENVIRONMENT: production
-      CHANGE_SOCIETY_MODEL_PROVIDER: qwen
+      CHANGE_SOCIETY_MODEL_PROVIDER: fake
       QWEN_API_KEY: ${QWEN_API_KEY:?required}
-      QWEN_BASE_URL: ${QWEN_BASE_URL:-https://dashscope-intl.aliyuncs.com/compatible-mode/v1}
-      QWEN_MODEL: ${QWEN_MODEL:-qwen-plus}
       CHANGE_SOCIETY_STORE: postgresql
       CHANGE_SOCIETY_DATABASE_URL: postgresql://${AGENTCORE_POSTGRES_USER:-agentcore}:${AGENTCORE_POSTGRES_PASSWORD}@postgres:5432/${AGENTCORE_POSTGRES_DATABASE:-agentcore}
       CHANGE_SOCIETY_ALLOWED_ORIGINS: ${CHANGE_SOCIETY_ALLOWED_ORIGINS:-http://localhost:3000}
-      CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG: ${CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG:-}
-      CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET: ${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-}
-      CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS: ${CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS:-30}
+      CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG: /config/managed-agents.docker.json
+      CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET: ${CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET:-integrator-demo-secret-change-me}
+      CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS: ${CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS:-120}
+    volumes:
+      - ../backend/change-society-service/config/managed-agents.docker.json:/config/managed-agents.docker.json:ro
     ports: ["${CHANGE_SOCIETY_API_PORT:-32500}:32500"]
-    depends_on: {postgres: {condition: service_healthy}}
+    depends_on:
+      postgres: {condition: service_healthy}
+      society-langgraph-worker: {condition: service_healthy}
     restart: unless-stopped
   web:
     build:

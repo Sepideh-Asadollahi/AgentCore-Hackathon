@@ -32,6 +32,7 @@ SCENARIOS = (
             "Human approval gate before merge on high revenue risk.",
         ),
         ("multi_agent_orchestration", "negotiation_and_rebuttal", "human_approval_gate", "frontend_handoff", "baseline_evaluation"),
+        judge_demo_request="Refactor checkout tax helper only—keep customer-visible prices unchanged.",
     ),
     Scenario(
         "password-migration",
@@ -52,6 +53,7 @@ SCENARIOS = (
             "Legacy user migration must be explicit before cutover.",
         ),
         ("multi_agent_orchestration", "policy_tag_rules", "human_approval_gate", "frontend_handoff", "cross_session_memory"),
+        judge_demo_request="Move password hashing to Argon2 and keep legacy SHA256 users able to sign in.",
     ),
     Scenario(
         "payment-memory",
@@ -73,6 +75,7 @@ SCENARIOS = (
             "Payment retries require idempotency keys and revenue approval.",
         ),
         ("multi_agent_orchestration", "context_freshness_rules", "human_approval_gate", "frontend_handoff"),
+        judge_demo_request="Fix PayPal checkout timeout retries without duplicate charges.",
     ),
     Scenario(
         "checkout-api-refactor",
@@ -118,6 +121,7 @@ SCENARIOS = (
             "Backend-only CI must not skip mobile contract suites.",
         ),
         ("multi_agent_orchestration", "negotiation_and_rebuttal", "frontend_handoff", "human_approval_gate"),
+        judge_demo_request="Refactor checkout handler to call pricing service; do not break the HTTP contract.",
     ),
     Scenario(
         "hr-compensation-export",
@@ -172,6 +176,7 @@ SCENARIOS = (
             "Restricted HR memory must not bypass context boundaries.",
         ),
         ("multi_agent_orchestration", "negotiation_and_rebuttal", "governance_rules", "frontend_handoff", "human_approval_gate"),
+        judge_demo_request="Add manager CSV export for compensation bands; mask PII per HR policy.",
     ),
     Scenario(
         "gdpr-erasure-automation",
@@ -217,6 +222,7 @@ SCENARIOS = (
             "Privacy and Legal approval required for automated deletion pipelines.",
         ),
         ("multi_agent_orchestration", "negotiation_and_rebuttal", "conflicting_policies", "human_approval_gate"),
+        judge_demo_request="Automate GDPR erasure when the ticket closes; respect finance retention rules.",
     ),
     Scenario(
         "vendor-access-offboarding",
@@ -262,6 +268,7 @@ SCENARIOS = (
             "Terminated identities cannot retain SSO beyond four hours.",
         ),
         ("multi_agent_orchestration", "cross_team_routing", "policy_tag_rules", "human_approval_gate", "frontend_handoff"),
+        judge_demo_request="Offboard a terminated vendor contractor and revoke SSO within the same change.",
     ),
 )
 

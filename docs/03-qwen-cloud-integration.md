@@ -8,7 +8,7 @@ Use `QWEN_*` and `CHANGE_SOCIETY_*` variables in `hackathon/.env.example`. Model
 
 | Variable (typical) | Purpose |
 |---|---|
-| `CHANGE_SOCIETY_MODEL_PROVIDER` | `qwen` vs `fake` (deterministic CI) |
+| `CHANGE_SOCIETY_MODEL_PROVIDER` | `qwen` (default) vs `fake` (offline CI regression only) |
 | `QWEN_API_KEY` / base URL | Cloud credentials and compatible endpoint |
 | `QWEN_MODEL` | Deployment id shared by role adapters unless overridden per env |
 | `QWEN_TEMPERATURE` | Fixed per run for reproducible benchmarks |

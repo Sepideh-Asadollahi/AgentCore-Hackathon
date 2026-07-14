@@ -218,6 +218,7 @@ export function useRunWorkspaceState(initialScenarios: Scenario[]): RunWorkspace
     await executeRunLaunch({
       scenarioId,
       requestText,
+      judgeDemoRequest: selected?.judge_demo_request,
       refresh,
       bumpStorageRevision,
       autoEvalRunIdRef: autoEvalStartedRef,
@@ -237,7 +238,7 @@ export function useRunWorkspaceState(initialScenarios: Scenario[]): RunWorkspace
         },
       },
     });
-  }, [scenarioId, requestText, refresh, bumpStorageRevision]);
+  }, [scenarioId, requestText, selected?.judge_demo_request, refresh, bumpStorageRevision]);
 
   const loadLatestDemo = useCallback(async () => {
     const {snapshot, live} = scenarioRunAvailability(scenarioId, dbReportsByScenario[scenarioId] ?? null);

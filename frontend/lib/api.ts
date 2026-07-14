@@ -1,7 +1,7 @@
 import {createIdempotencyKey} from "./idempotency-key";
 
 export type Scenario = {
-  scenario_id: string; title: string; default_request: string; evidence_count: number;
+  scenario_id: string; title: string; default_request: string; judge_demo_request: string; evidence_count: number;
   domain: string; governance_rules: string[]; feature_demonstrations: string[];
   expected_impacts: string[]; required_policies: string[]; required_tasks: string[];
   requires_negotiation: boolean;

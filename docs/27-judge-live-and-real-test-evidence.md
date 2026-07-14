@@ -299,12 +299,13 @@ Include `test_qwen_live.py` when `QWEN_API_KEY` is set for live provider proof.
 
 ## How judges should read evidence (5-minute path)
 
-1. Open [../evidence/real/suite/manifest.json](../evidence/real/suite/manifest.json) — confirm **seven** scenarios and domains.  
-2. Open [../evidence/real/suite/checkout-api-refactor-interaction-trace.json](../evidence/real/suite/checkout-api-refactor-interaction-trace.json) — follow negotiation steps.  
-3. Open [../evidence/real/benchmark-summary.json](../evidence/real/benchmark-summary.json) — society vs single-agent aggregates.  
-4. If bundle includes `live/`: open [../evidence/live/society-live-test.json](../evidence/live/society-live-test.json) — same schema with **live Qwen** token counts.  
-5. For **LangGraph + SDK** proof: open `evidence/live/integrator-langgraph-qwen/langgraph-sdk-judge-summary.json` — every row should show `external_worker: langgraph-sdk-society-worker`.  
-6. Cross-check claims in [16-claim-evidence-mapping.md](16-claim-evidence-mapping.md).
+1. Run **`bash tests/live/change-society/run-judge-seven-scenarios.sh`** (or open a prior bundle) → **`evidence/live/judge-seven-scenarios/judge-summary.json`** — seven rows, `real_model_agents: true`, all `passed`.  
+2. Open [../evidence/real/suite/manifest.json](../evidence/real/suite/manifest.json) only for **deterministic regression** (fake model)—not the primary live-agent proof.  
+3. Open [../evidence/real/suite/checkout-api-refactor-interaction-trace.json](../evidence/real/suite/checkout-api-refactor-interaction-trace.json) — follow negotiation steps (deterministic trace shape; live traces live beside judge bundle).  
+4. Open [../evidence/real/benchmark-summary.json](../evidence/real/benchmark-summary.json) — society vs single-agent aggregates (deterministic metrics).  
+5. If bundle includes `live/`: open [../evidence/live/society-live-test.json](../evidence/live/society-live-test.json) — checkout with **live Qwen** token counts.  
+6. For **LangGraph + SDK** proof (optional): open `evidence/live/integrator-langgraph-qwen/langgraph-sdk-judge-summary.json` — every row should show `external_worker: langgraph-sdk-society-worker`.  
+7. Cross-check claims in [16-claim-evidence-mapping.md](16-claim-evidence-mapping.md).
 
 ---
 

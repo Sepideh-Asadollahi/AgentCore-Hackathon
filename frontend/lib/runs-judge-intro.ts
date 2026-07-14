@@ -53,7 +53,7 @@ export function buildRunsJudgeIntroContent(
     headline: scenario.title,
     paragraphs: [
       `Demo domain: ${domainLabel(scenario.domain)}. ${scenarioHook}${negotiationNote} When you click Run new demo, the API creates a society run: a coordinator assigns durable tickets to context, change, impact, policy, and optionally frontend-delivery agents. Each step produces evidence-backed protocol messages; disagreements become conflicts a human must resolve—that is the governance story, not one chat reply.`,
-      `Use Load latest demo to reopen the last saved run for this scenario without starting a new test. Use Run new demo to POST a fresh society run and land on Work queue (Guide, Work Queue, Messages, Review, Results, Details). Hackathon display mode auto-approves high-risk steps on the server (display only—not for production). No API keys are required on the deterministic demo path.`,
+      `Use Load latest demo to reopen the last saved run for this scenario without starting a new test. Use Run new demo to POST a fresh society run through AgentCore (tickets, negotiation, approval). Specialist reasoning runs in external LangGraph workers (default registry); start them with hackathon/scripts/start-langgraph-demo-stack.sh before Run new demo. QWEN_API_KEY is used inside the worker. Hackathon display mode auto-approves high-risk steps on the server (display only—not for production).`,
     ],
     watchItems: scenario.feature_demonstrations.map(humanizeFeatureSlug),
   };

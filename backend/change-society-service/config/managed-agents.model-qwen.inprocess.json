@@ -1,0 +1,60 @@
+{
+  "contract_version": "1.0",
+  "_comment": "Optional: all roles in-process via ModelAgentAdapter + Qwen (no LangGraph worker).",
+  "agents": [
+    {
+      "key": "context-scout",
+      "name": "Context Scout Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "context_scout",
+      "capabilities": ["retrieve_scoped_project_truth"],
+      "description": "In-process Qwen model adapter."
+    },
+    {
+      "key": "change-analyst",
+      "name": "Change Analyst Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "change_analyst",
+      "capabilities": ["interpret_ambiguous_software_change"],
+      "description": "In-process Qwen model adapter."
+    },
+    {
+      "key": "impact-analyst",
+      "name": "Impact Analyst Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "impact_analyst",
+      "capabilities": ["analyze_cross_boundary_impact"],
+      "description": "In-process Qwen model adapter."
+    },
+    {
+      "key": "policy-guardian",
+      "name": "Policy Guardian Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "policy_guardian",
+      "capabilities": ["evaluate_policy_and_approval_risk"],
+      "description": "In-process Qwen model adapter."
+    },
+    {
+      "key": "conflict-judge",
+      "name": "Conflict Judge Worker",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "coordinator_judge",
+      "capabilities": ["decompose_route_reconcile"],
+      "description": "In-process Qwen model adapter."
+    },
+    {
+      "key": "frontend-delivery-lead",
+      "name": "Frontend Delivery Coordinator",
+      "provider": "qwen-cloud",
+      "adapter_type": "model",
+      "role": "frontend_delivery_lead",
+      "capabilities": ["coordinate_frontend_ui_delivery"],
+      "description": "In-process Qwen model adapter."
+    }
+  ]
+}

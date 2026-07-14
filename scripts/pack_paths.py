@@ -2,24 +2,38 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
 
+def _is_pack(directory: Path) -> bool:
+    return (
+        (directory / "scripts" / "install.py").is_file()
+        and (directory / "backend" / "change-society-service" / "src" / "change_society").is_dir()
+    )
+
+
 def pack_root(start: Path | None = None) -> Path:
     """Directory that contains install.sh, backend/, frontend/, scripts/install.py."""
+    env_root = os.getenv("PACK_ROOT", "").strip()
+    if env_root:
+        candidate = Path(env_root).resolve()
+        if _is_pack(candidate):
+            return candidate
+
     here = (start or Path(__file__)).resolve()
     if here.is_file():
         here = here.parent
     best: Path | None = None
     for directory in (here, *here.parents):
-        if not (directory / "scripts" / "install.py").is_file():
-            continue
-        if (directory / "backend" / "change-society-service" / "src" / "change_society").is_dir():
-            if directory.name == "hackathon":
-                return directory
+        for candidate in (directory, directory / "hackathon"):
+            if not _is_pack(candidate):
+                continue
+            if candidate.name == "hackathon":
+                return candidate
             if best is None:
-                best = directory
+                best = candidate
     if best is not None:
         return best
     raise SystemExit(

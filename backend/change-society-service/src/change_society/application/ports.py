@@ -30,12 +30,18 @@ class Scenario:
     domain: str = "engineering"
     governance_rules: tuple[str, ...] = ()
     feature_demonstrations: tuple[str, ...] = ()
+    judge_demo_request: str = ""
+
+    def effective_judge_request(self) -> str:
+        text = (self.judge_demo_request or self.default_request).strip()
+        return text
 
     def public(self) -> dict[str, Any]:
         return {
             "scenario_id": self.scenario_id,
             "title": self.title,
             "default_request": self.default_request,
+            "judge_demo_request": self.effective_judge_request(),
             "domain": self.domain,
             "governance_rules": list(self.governance_rules),
             "feature_demonstrations": list(self.feature_demonstrations),

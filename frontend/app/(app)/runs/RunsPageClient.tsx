@@ -75,7 +75,7 @@ export function RunsPageClient() {
                 placeholder={
                   ws.scenariosLoading && !scenariosReady
                     ? "Waiting for API…"
-                    : "Leave empty for the scenario’s built-in demo request (recommended for judges)."
+                    : "Leave empty for the short judge demo request (requires LangGraph worker on :32510)."
                 }
                 onChange={e => ws.setRequestText(e.target.value)}
                 rows={4}

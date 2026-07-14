@@ -1,16 +1,18 @@
-# Judge live demo — seven scenarios (real Qwen API)
+# Judge live demo — seven scenarios (real Qwen model agents)
 
-English one-pager for **Track 3 judges**: prove all benchmark domains work against the **live** Qwen Cloud compatible-mode API (e.g. free-tier `qwen-flash`).
+English one-pager for **Track 3 judges**: prove all benchmark domains with **live Qwen** calls through managed **model** adapters (real agents in-process—not the deterministic fake profile, not LangGraph unless you run the integrator suite separately).
 
-**Not the LangGraph integrator path:** specialists run **inside** change-society-service (`ModelAgentAdapter`). For **external LangGraph + `agentcore_agent_sdk`**, use [29-langgraph-sdk-live-seven-scenarios.md](29-langgraph-sdk-live-seven-scenarios.md) instead.
+**LangGraph integrator path (optional):** [29-langgraph-sdk-live-seven-scenarios.md](29-langgraph-sdk-live-seven-scenarios.md).
 
 ## One command
 
 From repository root (requires `QWEN_API_KEY` in `hackathon/.env`):
 
 ```bash
-bash tests/live/change-society/run-qwen-judge-seven-scenarios.sh
+bash tests/live/change-society/run-judge-seven-scenarios.sh
 ```
+
+Same as `run-qwen-judge-seven-scenarios.sh`. Profile **`judge-live`**: short `judge_demo_request` per scenario, skips cross-session follow-up, asserts `qwen_cloud` + `ModelAgentAdapter` ticket runtimes.
 
 ## What it does
 
@@ -30,7 +32,8 @@ flowchart LR
 |------|--------|
 | Start local API with `CHANGE_SOCIETY_MODEL_PROVIDER=qwen` | Yes |
 | For **each of 7** scenario IDs: create run → tickets → negotiation → approve → baseline | Yes |
-| Each specialist call hits **Qwen HTTP API** | Yes |
+| Each specialist call hits **Qwen HTTP API** via **ModelAgentAdapter** | Yes |
+| Short judge request text per scenario (`judge_demo_request`) | Yes |
 | Skip cross-session follow-up (saves tokens; core workflow unchanged) | Config |
 
 ## Seven scenarios
@@ -61,7 +64,7 @@ Also updates `evidence/live/society-live-test.json` from checkout scenario.
 | Variable | Default | Notes |
 |----------|---------|--------|
 | `QWEN_JUDGE_MODEL` | `qwen-flash` | Free/cheap tier friendly |
-| `CHANGE_SOCIETY_JUDGE_RUN_TOKEN_BUDGET` | `120000` | Per society run cap |
+| `CHANGE_SOCIETY_JUDGE_RUN_TOKEN_BUDGET` | `80000` | Per society run cap (shorter judge smoke) |
 | `CHANGE_SOCIETY_JUDGE_ROLE_TOOLS` | `0` | Faster smoke; set `1` for tool-loop demo |
 | `CHANGE_SOCIETY_JUDGE_SUITE_PORT` | `32504` | Local API port |
 

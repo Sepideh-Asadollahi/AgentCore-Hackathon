@@ -12,7 +12,7 @@ From the pack root (folder with `install.sh`), or from anywhere via absolute pat
 
 ```bash
 bash install.sh
-bash install.sh --profile verify   # + deterministic society smoke
+bash install.sh --profile verify   # + live Qwen society smoke (one scenario)
 ```
 
 **Manual Python `.venv`:**

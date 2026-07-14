@@ -87,7 +87,8 @@ class PostgresControlPlaneRepository:
         from psycopg.rows import dict_row
         from psycopg.types.json import Jsonb
         self._json = Jsonb
-        self._connection = psycopg.connect(database_url.replace("postgresql+psycopg://", "postgresql://", 1), autocommit=False, row_factory=dict_row)
+        # autocommit=True: read helpers must not leave an implicit txn open; writes use transaction().
+        self._connection = psycopg.connect(database_url.replace("postgresql+psycopg://", "postgresql://", 1), autocommit=True, row_factory=dict_row)
 
     @staticmethod
     def _scope(scope: Scope) -> tuple[str, str, str]:

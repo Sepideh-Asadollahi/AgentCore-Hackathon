@@ -52,6 +52,9 @@ class Settings:
             "true",
             "yes",
         }
+        webhook_secret = os.getenv("CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET", "")
+        if not webhook_secret and env != "production":
+            webhook_secret = "integrator-demo-secret-change-me"
         value = cls(
             environment=env,
             model_provider=os.getenv("CHANGE_SOCIETY_MODEL_PROVIDER", "fake"),
@@ -72,7 +75,7 @@ class Settings:
             mcp_tool_gateway_url=os.getenv("CHANGE_SOCIETY_MCP_TOOL_GATEWAY_URL", "").strip(),
             allowed_origins=tuple(item.strip() for item in os.getenv("CHANGE_SOCIETY_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:32501,http://127.0.0.1:32501").split(",") if item.strip()),
             managed_agents_config=os.getenv("CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG", ""),
-            webhook_agent_secret=os.getenv("CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET", ""),
+            webhook_agent_secret=webhook_secret,
             webhook_agent_timeout_seconds=_float("CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS", 30, 1),
             demo_auto_approve=demo_auto_approve,
         )

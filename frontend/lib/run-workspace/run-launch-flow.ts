@@ -25,6 +25,7 @@ export type RunLaunchSetters = {
 export type RunLaunchParams = {
   scenarioId: string;
   requestText: string;
+  judgeDemoRequest?: string;
   setters: RunLaunchSetters;
   refresh: (active: SocietyRun) => Promise<SocietyRun | undefined>;
   bumpStorageRevision: () => void;
@@ -34,6 +35,7 @@ export type RunLaunchParams = {
 export async function executeRunLaunch({
   scenarioId,
   requestText,
+  judgeDemoRequest,
   setters,
   refresh,
   bumpStorageRevision,
@@ -49,7 +51,9 @@ export async function executeRunLaunch({
   setters.setEvaluation(null);
   setters.setCorrelationId("");
   try {
-    const created = await api.createRun(scenarioId, requestText.trim() || null);
+    const trimmed = requestText.trim();
+    const effective = trimmed || judgeDemoRequest?.trim() || "";
+    const created = await api.createRun(scenarioId, effective || null);
     wsLog.info("run created", {runId: created.run_id, state: created.state, correlationId: created.correlation_id});
     setRunSessionCookies(created.run_id);
     setters.setRun(created);

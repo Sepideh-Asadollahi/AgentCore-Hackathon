@@ -69,7 +69,8 @@ From repository root:
 bash ../tests/e2e/change-society/run-real-test-suite.sh
 bash ../tests/e2e/change-society/run-real-test.sh
 bash ../tests/live/change-society/run-real-qwen-suite.sh   # live Qwen → evidence/live/
-bash ../tests/live/change-society/run-qwen-judge-seven-scenarios.sh   # 7 scenarios, in-process Qwen
+bash ../tests/live/change-society/run-judge-seven-scenarios.sh   # 7 scenarios, real Qwen model agents (canonical)
+bash ../tests/live/change-society/run-qwen-judge-seven-scenarios.sh   # same harness
 bash ../tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh   # 7 scenarios, LangGraph worker + SDK
 ```
 

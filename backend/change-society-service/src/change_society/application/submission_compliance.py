@@ -40,7 +40,14 @@ def build_submission_compliance_report(
         and store_health.get("production_ready")
         and store_health.get("ready")
     )
-    demo_ready = model_provider == "fake" and store == "memory" and store_health.get("ready")
+    live_demo_ready = (
+        model_provider == "qwen"
+        and model_health.get("provider") == "qwen_cloud"
+        and bool(model_health.get("configured"))
+        and store_health.get("ready")
+    )
+    offline_regression_ready = model_provider == "fake" and store == "memory" and store_health.get("ready")
+    demo_ready = live_demo_ready or offline_regression_ready
     return {
         "competition": "Qwen Cloud Hackathon — Track 3 Agent Society",
         "official_rules_url": "https://qwencloud-hackathon.devpost.com/rules",
@@ -52,7 +59,9 @@ def build_submission_compliance_report(
             "alibaba_cloud_code_proof": alibaba_proof_module,
             "evaluation_data": evaluation_artifact,
             "install": "hackathon/install.sh",
-            "deterministic_harness": "tests/e2e/change-society/run-real-test.sh",
+            "deterministic_harness": "tests/e2e/change-society/run-deterministic-regression.sh",
+            "default_live_verify": "tests/e2e/change-society/run-real-test.sh",
+            "judge_seven_real_agents": "tests/live/change-society/run-judge-seven-scenarios.sh",
         },
         "runtime_profile": {
             "environment": environment,

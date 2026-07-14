@@ -1,6 +1,6 @@
 {
   "contract_version": "1.0",
-  "_comment": "Default: LangGraph+Qwen workers via webhook; AgentCore control plane orchestrates tickets only.",
+  "_comment": "Docker Compose: LangGraph worker service hostname society-langgraph-worker.",
   "agents": [
     {
       "key": "context-scout",
@@ -9,8 +9,8 @@
       "adapter_type": "webhook",
       "role": "context_scout",
       "capabilities": ["retrieve_scoped_project_truth"],
-      "description": "External LangGraph worker (live Qwen when WORKER_LIVE_MODE=1).",
-      "endpoint": "http://127.0.0.1:32510"
+      "description": "External LangGraph worker.",
+      "endpoint": "http://society-langgraph-worker:32510"
     },
     {
       "key": "change-analyst",
@@ -19,8 +19,8 @@
       "adapter_type": "webhook",
       "role": "change_analyst",
       "capabilities": ["interpret_ambiguous_software_change"],
-      "description": "LangGraph pipeline + Qwen in external worker.",
-      "endpoint": "http://127.0.0.1:32510"
+      "description": "External LangGraph worker.",
+      "endpoint": "http://society-langgraph-worker:32510"
     },
     {
       "key": "impact-analyst",
@@ -30,7 +30,7 @@
       "role": "impact_analyst",
       "capabilities": ["analyze_cross_boundary_impact"],
       "description": "External LangGraph worker.",
-      "endpoint": "http://127.0.0.1:32510"
+      "endpoint": "http://society-langgraph-worker:32510"
     },
     {
       "key": "policy-guardian",
@@ -40,7 +40,7 @@
       "role": "policy_guardian",
       "capabilities": ["evaluate_policy_and_approval_risk"],
       "description": "External LangGraph worker.",
-      "endpoint": "http://127.0.0.1:32510"
+      "endpoint": "http://society-langgraph-worker:32510"
     },
     {
       "key": "conflict-judge",
@@ -49,8 +49,8 @@
       "adapter_type": "webhook",
       "role": "coordinator_judge",
       "capabilities": ["decompose_route_reconcile"],
-      "description": "External LangGraph worker (JudgeOutput).",
-      "endpoint": "http://127.0.0.1:32510"
+      "description": "External LangGraph worker.",
+      "endpoint": "http://society-langgraph-worker:32510"
     },
     {
       "key": "frontend-delivery-lead",
@@ -60,7 +60,7 @@
       "role": "frontend_delivery_lead",
       "capabilities": ["coordinate_frontend_ui_delivery"],
       "description": "External LangGraph worker.",
-      "endpoint": "http://127.0.0.1:32510"
+      "endpoint": "http://society-langgraph-worker:32510"
     }
   ]
 }

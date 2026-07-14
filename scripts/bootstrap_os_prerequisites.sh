@@ -38,6 +38,21 @@ ensure_python312_ubuntu_deadsnakes() {
   run sudo apt-get install -y python3.12 python3.12-venv python3.12-dev
 }
 
+ensure_node20() {
+  local major=0
+  if command -v node >/dev/null 2>&1; then
+    major=$(node --version | sed 's/^v//' | cut -d. -f1)
+  fi
+  if [[ "$major" -ge 18 ]]; then
+    log "Node.js already OK: $(node --version)"
+    return 0
+  fi
+  log "Installing Node.js 20.x (NodeSource) — Next.js requires Node 18+…"
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+  run sudo apt-get install -y nodejs
+  log "Node after install: $(node --version) npm $(npm --version)"
+}
+
 install_debian_packages() {
   log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   log "AgentCore OS prerequisites (Debian/Ubuntu apt)"
@@ -59,8 +74,9 @@ install_debian_packages() {
     exit 1
   fi
 
-  log "Installing Node.js, npm, Docker Engine, Docker Compose v2 plugin…"
-  run sudo apt-get install -y nodejs npm docker.io docker-compose-v2
+  log "Installing Docker Engine + Docker Compose v2 plugin…"
+  run sudo apt-get install -y docker.io docker-compose-v2
+  ensure_node20
 
   if command -v docker >/dev/null 2>&1; then
     log "Enabling Docker service…"

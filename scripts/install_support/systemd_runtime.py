@@ -46,10 +46,27 @@ def render_systemd_unit(template: str, *, pack_root: Path, npm_path: str, python
     )
 
 
-def install_systemd_user_units(pack: Path, *, dry_run: bool) -> None:
+def _resolve_npm() -> str:
     npm = shutil.which("npm")
     if not npm:
-        raise SystemExit("systemd runtime requires npm (frontend). Re-run without --skip-frontend.")
+        raise SystemExit("systemd runtime requires npm. Re-run: bash install.sh --install-os-deps")
+    node = shutil.which("node") or "node"
+    try:
+        ver = subprocess.run([node, "--version"], check=True, capture_output=True, text=True).stdout.strip()
+        major = int(ver.lstrip("v").split(".")[0])
+    except (ValueError, subprocess.CalledProcessError, FileNotFoundError):
+        major = 0
+    if major < 18:
+        raise SystemExit(
+            f"Node.js 18+ required for 'npm run build' (found {ver if major else 'missing'}). "
+            "Re-run: bash install.sh --install-os-deps (installs Node 20 via NodeSource)."
+        )
+    info(f"Using npm={npm} node={ver}")
+    return npm
+
+
+def install_systemd_user_units(pack: Path, *, dry_run: bool) -> None:
+    npm = _resolve_npm()
 
     python = _python_for_pack(pack)
     worker_dir = pack / "examples" / "external-change-analyst-worker"

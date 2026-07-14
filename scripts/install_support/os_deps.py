@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import subprocess
 import sys
+from pathlib import Path
 
 from .cmd import run_cmd
+from .docker_runtime import compose_cmd
 from .platform_detect import (
     command_exists,
     linux_debian_family,
@@ -73,10 +75,17 @@ def install_os_dependencies(
 
     need_venv = not python_has_venv_module(sys.executable)
     need_node = not skip_frontend and (not command_exists("npm") or (node_major_version() or 0) < 18)
-    need_docker = (runtime == "docker" or with_postgres) and not command_exists("docker")
+    want_docker = runtime == "docker" or with_postgres
+    need_docker = want_docker and (
+        not command_exists("docker") or compose_cmd(Path(".")) is None
+    )
 
     pkgs = collect_os_package_wishes(need_venv=need_venv, need_node=need_node, need_docker=need_docker)
     if not pkgs:
+        if want_docker and not dry_run and compose_cmd(Path(".")) is None:
+            raise SystemExit(
+                "PostgreSQL requires 'docker compose'. Re-run with: bash install.sh --install-os-deps --non-interactive"
+            )
         print("OS dependency check: nothing extra to install via apt.")
         return
     print(f"Installing OS packages: {', '.join(pkgs)}")
@@ -86,3 +95,9 @@ def install_os_dependencies(
             run_cmd(["sudo", "systemctl", "enable", "--now", "docker"], dry_run=False)
         except subprocess.CalledProcessError:
             print("WARNING: could not enable docker service; you may need: sudo systemctl start docker")
+        if compose_cmd(Path(".")) is None:
+            raise SystemExit(
+                "Docker is installed but 'docker compose' is missing. "
+                "Re-run: bash install.sh --install-os-deps --non-interactive "
+                "(installs docker-compose-v2 on Debian/Ubuntu)."
+            )

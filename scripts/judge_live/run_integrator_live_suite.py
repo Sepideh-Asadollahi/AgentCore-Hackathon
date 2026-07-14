@@ -28,6 +28,13 @@ VERIFY = Path(__file__).resolve().parent / "verify_society_run.py"
 SCENARIO_CATALOG = {item.scenario_id: item for item in SCENARIOS}
 
 
+def manifest_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(PACK))
+    except ValueError:
+        return str(path)
+
+
 def redact_message(message: dict) -> dict:
     payload = message.get("payload") or {}
     summary = payload.get("summary") or payload.get("rationale") or payload.get("verdict") or ""
@@ -107,8 +114,8 @@ def main() -> int:
                 "scenario_id": scenario_id,
                 "domain": SCENARIO_CATALOG[scenario_id].domain,
                 "run_id": run_id,
-                "report_path": str(report_path.relative_to(PACK)),
-                "interaction_trace_path": str(trace_path.relative_to(PACK)),
+                "report_path": manifest_path(report_path),
+                "interaction_trace_path": manifest_path(trace_path),
                 "langgraph_integrator": report.get("langgraph_integrator"),
                 "rebuttal_response_count": report.get("rebuttal_response_count"),
                 "final_state": report.get("final_state"),

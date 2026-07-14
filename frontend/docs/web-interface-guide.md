@@ -10,7 +10,7 @@ English guide for **judges**, **reviewers**, and **operators** using the Next.js
 | API (direct curl) | `32500` | `/health`, `/ready`, `/docs` |
 | LangGraph worker | `32510` (localhost only) | `/ready` |
 
-Browsers usually call the API via **same-origin proxy**: `{UI origin}/change-society-api/...` → backend on `127.0.0.1:32500`.
+Browsers call the API via **same-origin proxy**: `{UI origin}/change-society-api/...` → backend on `127.0.0.1:32500`. The Next.js **route handler** allows up to **~5 minutes** for long live society runs (default rewrites timed out at ~30s).
 
 ## Sidebar navigation
 

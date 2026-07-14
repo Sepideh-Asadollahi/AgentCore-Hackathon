@@ -72,6 +72,7 @@ export type FrontendDelivery = {
 };
 
 import {getApiBaseUrl} from "./api-base-url";
+import {formatApiErrorMessage, formatNonJsonHttpError, parseApiErrorPayload} from "./api-http-errors";
 import {loadClientSettings} from "./client-settings";
 import {createLogger} from "./app-logger";
 
@@ -100,29 +101,24 @@ function requestContext() {
 }
 
 export function parseApiError(data: unknown, status: number): string {
-  if (data && typeof data === "object" && "error" in data) {
-    const error = (data as {error?: {message?: string}}).error;
-    if (error?.message) return error.message;
-  }
-  return `Request failed with ${status}`;
+  return formatApiErrorMessage(parseApiErrorPayload(data, status));
 }
 
 export function parseApiErrorCode(data: unknown): string | undefined {
-  if (data && typeof data === "object" && "error" in data) {
-    return (data as {error?: {code?: string}}).error?.code;
-  }
-  return undefined;
+  return parseApiErrorPayload(data, 0).code;
 }
 
 export class ApiRequestError extends Error {
   readonly status: number;
   readonly code?: string;
+  readonly correlationId?: string;
 
-  constructor(message: string, status: number, code?: string) {
+  constructor(message: string, status: number, code?: string, correlationId?: string) {
     super(message);
     this.name = "ApiRequestError";
     this.status = status;
     this.code = code;
+    this.correlationId = correlationId;
   }
 }
 
@@ -164,15 +160,17 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     try {
       data = JSON.parse(raw);
     } catch {
-      apiLog.error("non-json response", {method, path, status: response.status, ms});
-      throw new Error(`API returned non-JSON (${response.status}) from ${ctx.baseUrl}${path}`);
+      const url = `${ctx.baseUrl}${path}`;
+      const message = formatNonJsonHttpError(raw, response.status, url);
+      apiLog.error("non-json response", {method, path, status: response.status, ms, snippet: raw.slice(0, 200)});
+      throw new Error(message);
     }
   }
   if (!response.ok) {
-    const message = parseApiError(data, response.status);
-    const code = parseApiErrorCode(data);
-    apiLog.warn("api error", {method, path, status: response.status, ms, message, code});
-    throw new ApiRequestError(message, response.status, code);
+    const parsed = parseApiErrorPayload(data, response.status);
+    const message = formatApiErrorMessage(parsed);
+    apiLog.warn("api error", {method, path, status: response.status, ms, message, code: parsed.code, correlationId: parsed.correlationId});
+    throw new ApiRequestError(message, response.status, parsed.code, parsed.correlationId);
   }
   apiLog.debug("fetch ok", {method, path, status: response.status, ms});
   return data as T;

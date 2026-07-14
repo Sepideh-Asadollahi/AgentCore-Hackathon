@@ -50,6 +50,7 @@ export async function executeRunLaunch({
   setters.setError("");
   setters.setEvaluation(null);
   setters.setCorrelationId("");
+  let latest: SocietyRun | null = null;
   try {
     const trimmed = requestText.trim();
     const effective = trimmed || judgeDemoRequest?.trim() || "";
@@ -63,7 +64,7 @@ export async function executeRunLaunch({
     setters.setCorrelationId(created.correlation_id);
 
     setters.setRunLaunchPhase("running");
-    let latest = created;
+    latest = created;
     const deadline = Date.now() + 120_000;
     while (shouldPollDuringRunLaunch(latest.state) && Date.now() < deadline) {
       await new Promise(resolve => window.setTimeout(resolve, 900));
@@ -108,10 +109,17 @@ export async function executeRunLaunch({
     setters.setRunLaunchPhase("finished");
   } catch (err) {
     const message = err instanceof Error ? err.message : "Run failed";
-    wsLog.error("run failed", {message});
-    setters.setRunLaunchError(message);
-    setters.setRunLaunchPhase("error");
-    setters.setError(message);
+    wsLog.error("run failed", {message, runId: latest?.run_id, state: latest?.state});
+    if (latest?.state === "completed") {
+      setters.setRunLaunchTargetRunId(latest.run_id);
+      setters.setRunLaunchPhase("finished");
+      setters.setRunLaunchError(`Run completed on the server, but UI follow-up failed: ${message}`);
+      setters.setError(message);
+    } else {
+      setters.setRunLaunchError(message);
+      setters.setRunLaunchPhase("error");
+      setters.setError(message);
+    }
   } finally {
     setters.setBusy(false);
   }

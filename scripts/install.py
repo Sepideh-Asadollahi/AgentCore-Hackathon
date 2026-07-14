@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -305,6 +306,10 @@ def main() -> int:
     install_frontend(frontend, args.dry_run, args.skip_frontend)
     ensure_demo_env(env_path, args.dry_run)
     ensure_persistence_env(env_path, dry_run=args.dry_run)
+    if not args.dry_run and env_path.is_file():
+        load_dotenv_into_environ(env_path)
+        if os.getenv("CHANGE_SOCIETY_STORE", "").strip() == "memory":
+            with_postgres = False
 
     if with_postgres:
         start_docker_postgres(pack, dry_run=args.dry_run)

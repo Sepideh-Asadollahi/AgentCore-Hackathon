@@ -60,3 +60,20 @@ def runtime_secret_status() -> dict[str, object]:
         elif key == "QWEN_MODEL":
             out["qwen_model"] = val
     return out
+
+
+def delete_runtime_secrets(keys: frozenset[str] | None = None) -> int:
+    """Remove stored secrets (returns rows deleted). Never logs values."""
+    target = frozenset(keys) if keys is not None else ALLOWED_SECRET_KEYS
+    for key in target:
+        if key not in ALLOWED_SECRET_KEYS:
+            raise ValueError(f"Refusing to delete disallowed secret key: {key}")
+    if not target:
+        return 0
+    with psycopg.connect(_database_url(), autocommit=True, row_factory=dict_row) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM change_society_runtime_secrets WHERE secret_key = ANY(%s)",
+                (list(target),),
+            )
+            return int(cur.rowcount or 0)

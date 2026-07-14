@@ -4,6 +4,7 @@ import {
   shouldPollDuringRunLaunch,
 } from "@/lib/demo-state";
 import type {RunLaunchPhase} from "@/lib/run-progress-steps";
+import {societyRunLaunchPollDeadlineMs, societyRunLaunchPollIntervalMs} from "@/lib/run-launch-timing";
 import {recordLiveRunForScenario} from "@/lib/run-report-storage";
 import {setRunSessionCookies} from "@/lib/run-session-cookies";
 import {wsLog} from "./logger";
@@ -65,15 +66,18 @@ export async function executeRunLaunch({
 
     setters.setRunLaunchPhase("running");
     latest = created;
-    const deadline = Date.now() + 120_000;
-    while (shouldPollDuringRunLaunch(latest.state) && Date.now() < deadline) {
-      await new Promise(resolve => window.setTimeout(resolve, 900));
+    const pollDeadline = Date.now() + societyRunLaunchPollDeadlineMs();
+    const pollEvery = societyRunLaunchPollIntervalMs();
+    while (shouldPollDuringRunLaunch(latest.state) && Date.now() < pollDeadline) {
+      await new Promise(resolve => window.setTimeout(resolve, pollEvery));
       latest = await api.getRun(latest.run_id);
       setters.setRun(latest);
     }
 
     if (!isSocietyRunLaunchSettled(latest.state)) {
-      throw new Error("Timed out waiting for the society run to finish. Check API logs and try again.");
+      throw new Error(
+        `Timed out waiting for the society run (${latest.state}). The run may still be executing on the server — open Work queue or retry Load latest demo.`,
+      );
     }
 
     if (latest.state === "failed" || latest.state === "rejected" || latest.state === "canceled") {

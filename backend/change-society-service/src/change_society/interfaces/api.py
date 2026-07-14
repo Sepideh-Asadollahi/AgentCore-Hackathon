@@ -136,7 +136,7 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
             and bool(model.get("production_ready") or model.get("provider") == "qwen_cloud")
             and model.get("provider") == "qwen_cloud"
         )
-        return {"status": "ok" if ready and production_ready else ("degraded" if ready else "not_ready"), "service": "change-society-service", "checks": {"store": store, "model": model, "demo": {"demo_auto_approve": service.demo_auto_approve}}}
+        return {"status": "ok" if ready and production_ready else ("degraded" if ready else "not_ready"), "service": "change-society-service", "checks": {"store": store, "model": model, "demo": {"demo_auto_approve": service.demo_auto_approve, "async_run_create": service._async_run_create}}}
 
     @app.get("/api/v1/projects/{project_id}/demo-scenarios", response_model=DemoScenarioListResponse, operation_id="change_society_list_demo_scenarios", tags=["change-society"])
     async def list_scenarios(request: Request, project_id: str, x_tenant_id: str = Header(alias="X-Tenant-Id"), x_workspace_id: str = Header(alias="X-Workspace-Id"), page_size: int = Query(20, ge=1, le=50), page_token: str | None = None):

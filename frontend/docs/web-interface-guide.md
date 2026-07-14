@@ -10,7 +10,7 @@ English guide for **judges**, **reviewers**, and **operators** using the Next.js
 | API (direct curl) | `32500` | `/health`, `/ready`, `/docs` |
 | LangGraph worker | `32510` (localhost only) | `/ready` |
 
-Browsers call the API via **same-origin proxy**: `{UI origin}/change-society-api/...` → backend on `127.0.0.1:32500`. The Next.js **route handler** allows up to **~5 minutes** for long live society runs (default rewrites timed out at ~30s).
+Browsers call the API via **same-origin proxy** (`app/change-society-api/` route, up to **15 minutes** upstream timeout). **Society runs** use **async create**: `POST /society-runs` returns in seconds with `accepted`; the UI **polls** `GET …/society-runs/{id}` until settled (default **15 minutes**, env `NEXT_PUBLIC_SOCIETY_RUN_POLL_MS`).
 
 ## Sidebar navigation
 

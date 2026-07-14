@@ -42,12 +42,20 @@ class Settings:
     webhook_agent_secret: str
     webhook_agent_timeout_seconds: float
     demo_auto_approve: bool
+    async_run_create: bool
 
     @classmethod
     def load(cls) -> "Settings":
         env = os.getenv("CHANGE_SOCIETY_ENVIRONMENT", "development")
         demo_default = env != "production"
         demo_auto_approve = os.getenv("CHANGE_SOCIETY_DEMO_AUTO_APPROVE", "1" if demo_default else "0").lower() in {
+            "1",
+            "true",
+            "yes",
+        }
+        store = os.getenv("CHANGE_SOCIETY_STORE", "memory")
+        async_default = env != "production" and store == "postgresql"
+        async_run_create = os.getenv("CHANGE_SOCIETY_ASYNC_RUN_CREATE", "1" if async_default else "0").lower() in {
             "1",
             "true",
             "yes",
@@ -65,7 +73,7 @@ class Settings:
             qwen_max_output_tokens=_int("QWEN_MAX_OUTPUT_TOKENS", 1400, 100),
             qwen_temperature=_float("QWEN_TEMPERATURE", 0.1, 0),
             qwen_max_retries=_int("QWEN_MAX_RETRIES", 1, 0),
-            store=os.getenv("CHANGE_SOCIETY_STORE", "memory"),
+            store=store,
             database_url=os.getenv("CHANGE_SOCIETY_DATABASE_URL", ""),
             context_token_budget=_int("CHANGE_SOCIETY_CONTEXT_TOKEN_BUDGET", 1800, 200),
             qwen_run_token_budget=_int("CHANGE_SOCIETY_QWEN_RUN_TOKEN_BUDGET", 40000, 0),
@@ -78,6 +86,7 @@ class Settings:
             webhook_agent_secret=webhook_secret,
             webhook_agent_timeout_seconds=_float("CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS", 30, 1),
             demo_auto_approve=demo_auto_approve,
+            async_run_create=async_run_create,
         )
         if value.environment == "production" and value.model_provider != "qwen":
             raise ValueError("production requires CHANGE_SOCIETY_MODEL_PROVIDER=qwen")

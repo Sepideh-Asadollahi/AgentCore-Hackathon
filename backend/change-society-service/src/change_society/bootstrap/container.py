@@ -63,6 +63,7 @@ def build_service(settings: Settings | None = None) -> ChangeSocietyService:
     return ChangeSocietyService(
         repository, model, ScenarioEvidenceProvider(), clock, ids, control_plane, settings.context_token_budget,
         demo_auto_approve=settings.demo_auto_approve,
+        async_run_create=settings.async_run_create,
     )
 
 

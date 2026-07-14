@@ -28,6 +28,9 @@ BOOT_ENV_KEYS: tuple[str, ...] = (
     "CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG",
     "CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS",
     "CHANGE_SOCIETY_DEMO_AUTO_APPROVE",
+    "CHANGE_SOCIETY_ASYNC_RUN_CREATE",
+    "CHANGE_SOCIETY_PROXY_TIMEOUT_MS",
+    "NEXT_PUBLIC_SOCIETY_RUN_POLL_MS",
     "CHANGE_SOCIETY_DATABASE_URL",
     "AGENTCORE_POSTGRES_DATABASE",
     "AGENTCORE_POSTGRES_USER",
@@ -124,6 +127,9 @@ def ensure_boot_env_from_example(pack: Path, env_path: Path, *, dry_run: bool) -
         keys=frozenset(BOOT_ENV_KEYS),
     )
     from_example.setdefault("CHANGE_SOCIETY_DEMO_AUTO_APPROVE", "1")
+    from_example.setdefault("CHANGE_SOCIETY_ASYNC_RUN_CREATE", "1")
+    from_example.setdefault("CHANGE_SOCIETY_PROXY_TIMEOUT_MS", "900000")
+    from_example.setdefault("NEXT_PUBLIC_SOCIETY_RUN_POLL_MS", "900000")
     if not from_example.get("CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET", "").strip():
         from_example["CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET"] = "integrator-demo-secret-change-me"
 

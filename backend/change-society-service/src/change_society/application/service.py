@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import threading
 from copy import deepcopy
 from typing import Any
 
@@ -97,7 +98,7 @@ SCENARIO_ROLE_GUIDANCE: dict[tuple[str, Role], str] = {
 class ChangeSocietyService:
     def __init__(self, repository: RunRepository, model: ModelClient, evidence: EvidenceProvider, clock: Clock,
                  ids: IdGenerator, control_plane: AgentControlPlane, context_token_budget: int = 1800,
-                 *, demo_auto_approve: bool = True):
+                 *, demo_auto_approve: bool = True, async_run_create: bool = False):
         self.repository = repository
         self.model = model
         self.evidence = evidence
@@ -106,6 +107,7 @@ class ChangeSocietyService:
         self.control_plane = control_plane
         self.context_token_budget = context_token_budget
         self.demo_auto_approve = demo_auto_approve
+        self._async_run_create = async_run_create
 
     def list_scenarios(self) -> list[dict[str, Any]]:
         return [item.public() for item in self.evidence.list_scenarios()]
@@ -127,25 +129,51 @@ class ChangeSocietyService:
         logger.info("create_run start run_id=%s scenario=%s actor=%s cid=%s", run.run_id, scenario_id, actor_id, correlation_id)
         self.repository.save(run)
         self.repository.remember_idempotent(scope, "create_society_run", idempotency_key, fingerprint, run.run_id)
+        if self._async_run_create:
+            threading.Thread(
+                target=self._execute_run_background,
+                args=(scope, run.run_id, correlation_id, scenario_id),
+                daemon=True,
+                name=f"society-run-{run.run_id}",
+            ).start()
+            logger.info("create_run queued async run_id=%s scenario=%s cid=%s", run.run_id, scenario_id, correlation_id)
+            return run
         try:
             self._execute(run)
         except Exception as exc:
-            logger.exception(
-                "create_run failed run_id=%s scenario=%s cid=%s exc_type=%s",
-                run.run_id,
-                scenario_id,
-                correlation_id,
-                type(exc).__name__,
-            )
-            if isinstance(exc, (ValidationError, ConflictError)):
-                raise
-            run.error = {"error_code": getattr(exc, "code", "unexpected_error"), "message": getattr(exc, "message", "Society execution failed.")}
-            if RunState.FAILED in self._allowed(run):
-                run.transition(RunState.FAILED, self.clock.now())
-            self.repository.save(run)
+            self._fail_run_after_execute_error(run, scenario_id, correlation_id, exc)
             raise
         logger.info("create_run done run_id=%s state=%s cid=%s", run.run_id, run.state.value, correlation_id)
         return run
+
+    def _fail_run_after_execute_error(self, run: SocietyRun, scenario_id: str, correlation_id: str, exc: Exception) -> None:
+        logger.exception(
+            "create_run failed run_id=%s scenario=%s cid=%s exc_type=%s",
+            run.run_id,
+            scenario_id,
+            correlation_id,
+            type(exc).__name__,
+        )
+        if isinstance(exc, (ValidationError, ConflictError)):
+            raise exc
+        run.error = {"error_code": getattr(exc, "code", "unexpected_error"), "message": getattr(exc, "message", "Society execution failed.")}
+        if RunState.FAILED in self._allowed(run):
+            run.transition(RunState.FAILED, self.clock.now())
+        self.repository.save(run)
+
+    def _execute_run_background(self, scope: Scope, run_id: str, correlation_id: str, scenario_id: str) -> None:
+        run = self.repository.get(scope, run_id)
+        try:
+            self._execute(run)
+        except Exception as exc:
+            try:
+                run = self.repository.get(scope, run_id)
+                self._fail_run_after_execute_error(run, scenario_id, correlation_id, exc)
+            except (ValidationError, ConflictError):
+                pass
+            return
+        finished = self.repository.get(scope, run_id)
+        logger.info("create_run async done run_id=%s state=%s cid=%s", run_id, finished.state.value, correlation_id)
 
     def _allowed(self, run: SocietyRun) -> set[RunState]:
         from ..domain.models import TRANSITIONS

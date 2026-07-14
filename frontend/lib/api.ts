@@ -1,4 +1,5 @@
 import {createIdempotencyKey} from "./idempotency-key";
+import {societyRunCreateMaxWaitMs} from "./run-launch-timing";
 
 export type Scenario = {
   scenario_id: string; title: string; default_request: string; judge_demo_request: string; evidence_count: number;
@@ -399,7 +400,10 @@ export const api = {
       trimmed.length > 0 ? {scenario_id, request_text: trimmed} : {scenario_id};
     apiLog.info("createRun", {path, scenario_id, requestLen: trimmed.length});
     const body = await request<{society_run: SocietyRun; correlation_id?: string}>(path, {
-      method: "POST", headers: {"Idempotency-Key": createIdempotencyKey()}, body: JSON.stringify(bodyPayload),
+      method: "POST",
+      headers: {"Idempotency-Key": createIdempotencyKey()},
+      body: JSON.stringify(bodyPayload),
+      signal: AbortSignal.timeout(societyRunCreateMaxWaitMs()),
     });
     apiLog.info("createRun ok", {runId: body.society_run.run_id, state: body.society_run.state});
     return body.society_run;

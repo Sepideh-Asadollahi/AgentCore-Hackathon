@@ -151,6 +151,16 @@ def install_systemd_user_units(pack: Path, *, dry_run: bool) -> None:
         except OSError:
             pass
 
+    if not dry_run:
+        verify = pack / "scripts" / "verify-async-society-create.sh"
+        if verify.is_file():
+            detail("Verifying async society create (POST returns quickly, poll until settled)…")
+            run_subprocess(["bash", str(verify)], cwd=pack, dry_run=False, label="verify-async-society-create")
+        proxy_test = pack / "scripts" / "live-test-proxy-society-run.sh"
+        if proxy_test.is_file():
+            detail("Verifying UI proxy path for society runs…")
+            run_subprocess(["bash", str(proxy_test)], cwd=pack, dry_run=False, label="live-test-proxy-society-run")
+
     detail(
         "\nSystemd (user) stack started.\n"
         "  API:    http://127.0.0.1:32500/health  (CHANGE_SOCIETY_API_HOST in .env)\n"

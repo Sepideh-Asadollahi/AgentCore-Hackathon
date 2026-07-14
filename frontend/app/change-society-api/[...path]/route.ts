@@ -2,8 +2,19 @@ import {NextRequest, NextResponse} from "next/server";
 
 const API_TARGET = (process.env.CHANGE_SOCIETY_PROXY_TARGET ?? "http://127.0.0.1:32500").replace(/\/$/, "");
 
-/** Society runs with live Qwen can exceed the default ~30s rewrite/proxy limit. */
-export const maxDuration = 300;
+function proxyTimeoutMs(): number {
+  const raw = process.env.CHANGE_SOCIETY_PROXY_TIMEOUT_MS?.trim();
+  const fallback = 900_000;
+  if (!raw) return fallback;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed) || parsed < 60_000) return fallback;
+  return parsed;
+}
+
+const PROXY_TIMEOUT_MS = proxyTimeoutMs();
+
+/** Route segment budget (seconds). Keep aligned with CHANGE_SOCIETY_PROXY_TIMEOUT_MS. */
+export const maxDuration = Math.min(900, Math.ceil(PROXY_TIMEOUT_MS / 1000));
 
 const HOP_BY_HOP = new Set([
   "connection",
@@ -39,7 +50,7 @@ async function proxyRequest(request: NextRequest, context: {params: Promise<{pat
     headers,
     body,
     cache: "no-store",
-    signal: AbortSignal.timeout(290_000),
+    signal: AbortSignal.timeout(PROXY_TIMEOUT_MS - 5_000),
   });
 
   const responseHeaders = new Headers();

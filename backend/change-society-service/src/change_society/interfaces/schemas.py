@@ -150,3 +150,17 @@ class OrgPolicyActivateResponse(BaseModel):
 class OrgPolicyListResponse(BaseModel):
     items: list[dict[str, Any]]
     correlation_id: str
+
+
+class HackathonLlmConnectionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    api_key: str = Field(default="", max_length=500)
+    base_url: str = Field(default="", max_length=500)
+    model: str = Field(default="", max_length=200)
+
+
+class HackathonLlmConnectionResponse(BaseModel):
+    applied: bool
+    model_health: dict[str, Any]
+    message: str
+    correlation_id: str

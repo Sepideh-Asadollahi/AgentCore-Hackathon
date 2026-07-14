@@ -41,11 +41,19 @@ class Settings:
     managed_agents_config: str
     webhook_agent_secret: str
     webhook_agent_timeout_seconds: float
+    demo_auto_approve: bool
 
     @classmethod
     def load(cls) -> "Settings":
+        env = os.getenv("CHANGE_SOCIETY_ENVIRONMENT", "development")
+        demo_default = env != "production"
+        demo_auto_approve = os.getenv("CHANGE_SOCIETY_DEMO_AUTO_APPROVE", "1" if demo_default else "0").lower() in {
+            "1",
+            "true",
+            "yes",
+        }
         value = cls(
-            environment=os.getenv("CHANGE_SOCIETY_ENVIRONMENT", "development"),
+            environment=env,
             model_provider=os.getenv("CHANGE_SOCIETY_MODEL_PROVIDER", "fake"),
             qwen_api_key=os.getenv("QWEN_API_KEY", ""),
             qwen_base_url=os.getenv("QWEN_BASE_URL", "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"),
@@ -62,10 +70,11 @@ class Settings:
             enable_qwen_role_tools=os.getenv("CHANGE_SOCIETY_ENABLE_QWEN_ROLE_TOOLS", "1").lower() in {"1", "true", "yes"},
             qwen_max_tool_rounds=_int("CHANGE_SOCIETY_QWEN_MAX_TOOL_ROUNDS", 2, 0),
             mcp_tool_gateway_url=os.getenv("CHANGE_SOCIETY_MCP_TOOL_GATEWAY_URL", "").strip(),
-            allowed_origins=tuple(item.strip() for item in os.getenv("CHANGE_SOCIETY_ALLOWED_ORIGINS", "http://localhost:32501").split(",") if item.strip()),
+            allowed_origins=tuple(item.strip() for item in os.getenv("CHANGE_SOCIETY_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:32501,http://127.0.0.1:32501").split(",") if item.strip()),
             managed_agents_config=os.getenv("CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG", ""),
             webhook_agent_secret=os.getenv("CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET", ""),
             webhook_agent_timeout_seconds=_float("CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS", 30, 1),
+            demo_auto_approve=demo_auto_approve,
         )
         if value.environment == "production" and value.model_provider != "qwen":
             raise ValueError("production requires CHANGE_SOCIETY_MODEL_PROVIDER=qwen")

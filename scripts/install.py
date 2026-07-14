@@ -12,11 +12,13 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 if str(_SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIR))
 
-from pack_paths import pack_root  # noqa: E402
+from pack_paths import pack_root, venv_base  # noqa: E402
 
 from install_support import (  # noqa: E402
     RuntimeMode,
+    apply_change_society_migrations,
     docker_available,
+    ensure_persistence_env,
     gather_interactive_config,
     install_os_dependencies,
     install_systemd_user_units,
@@ -27,6 +29,8 @@ from install_support import (  # noqa: E402
     start_docker_postgres,
 )
 from install_support import run_cmd as support_run_cmd  # noqa: E402
+from install_support.postgres_setup import load_dotenv_into_environ  # noqa: E402
+from install_support.postgres_setup import load_dotenv_into_environ  # noqa: E402
 
 MIN_PYTHON = (3, 12)
 
@@ -37,13 +41,20 @@ CHANGE_SOCIETY_ENVIRONMENT=development
 CHANGE_SOCIETY_MODEL_PROVIDER=fake
 QWEN_API_KEY=
 QWEN_MODEL=qwen-plus
-CHANGE_SOCIETY_STORE=memory
+CHANGE_SOCIETY_STORE=postgresql
 CHANGE_SOCIETY_CONTEXT_TOKEN_BUDGET=1800
-CHANGE_SOCIETY_ALLOWED_ORIGINS=http://localhost:32501
+CHANGE_SOCIETY_ALLOWED_ORIGINS=http://localhost:3000
 CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG=
 CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET=
 CHANGE_SOCIETY_WEBHOOK_AGENT_TIMEOUT_SECONDS=30
+CHANGE_SOCIETY_DEMO_AUTO_APPROVE=1
 CHANGE_SOCIETY_API_PORT=32500
+CHANGE_SOCIETY_DATABASE_URL=postgresql://agentcore:change-society-dev-local@127.0.0.1:32232/agentcore
+AGENTCORE_POSTGRES_DATABASE=agentcore
+AGENTCORE_POSTGRES_USER=agentcore
+AGENTCORE_POSTGRES_PASSWORD=change-society-dev-local
+AGENTCORE_POSTGRES_PORT=32232
+AGENTCORE_POSTGRES_HOST=127.0.0.1
 NEXT_PUBLIC_CHANGE_SOCIETY_API_URL=http://localhost:32500
 NEXT_PUBLIC_CHANGE_SOCIETY_PROJECT_ID=demo-project
 NEXT_PUBLIC_CHANGE_SOCIETY_TENANT_ID=demo-tenant
@@ -65,7 +76,8 @@ def run(cmd: list[str], *, cwd: Path | None = None, dry_run: bool = False) -> No
 
 
 def ensure_venv(pack: Path, dry_run: bool) -> Path:
-    venv = pack / ".venv"
+    base = venv_base(pack)
+    venv = base / ".venv"
     python = venv / "bin" / "python"
     if not python.is_file():
         print(f"Creating virtual environment at {venv}")
@@ -177,7 +189,7 @@ Interactive (default on a TTY): numbered menus with examples for profile, OS pac
     parser.add_argument(
         "--with-postgres",
         action="store_true",
-        help="If Docker is available: start deployments/compose.dev-postgres.yaml",
+        help="If Docker is available: start dev PostgreSQL and apply migrations (default on for demo profile)",
     )
     parser.add_argument(
         "--non-interactive",
@@ -209,6 +221,8 @@ def resolve_config(args: argparse.Namespace) -> tuple[str, RuntimeMode, bool, bo
     rt: RuntimeMode = runtime or "manual"  # type: ignore[assignment]
     os_deps = bool(args.install_os_deps)
     pg = bool(args.with_postgres)
+    if not pg and prof == "demo" and docker_available():
+        pg = True
     if pg and not docker_available():
         print("WARNING: --with-postgres set but Docker is not available; skipping Postgres container.")
         pg = False
@@ -232,7 +246,8 @@ def apply_runtime(
     if runtime == "docker":
         start_docker_compose_stack(pack, dry_run=dry_run)
         return
-    py = pack / ".venv" / "bin" / "python"
+    base = venv_base(pack)
+    py = base / ".venv" / "bin" / "python"
     print(
         "Runtime=manual: start API + UI yourself when ready.\n"
         f"  Example API:  set -a && source .env && set +a && "
@@ -281,9 +296,13 @@ def main() -> int:
         install_backend(python, dev_requirements, args.dry_run)
     install_frontend(frontend, args.dry_run, args.skip_frontend)
     ensure_demo_env(env_path, args.dry_run)
+    ensure_persistence_env(env_path, dry_run=args.dry_run)
 
     if with_postgres:
         start_docker_postgres(pack, dry_run=args.dry_run)
+        if not args.dry_run:
+            load_dotenv_into_environ(env_path)
+        apply_change_society_migrations(pack, python, dry_run=args.dry_run, wait=True)
 
     apply_runtime(
         pack,

@@ -1,3 +1,7 @@
 # App Router
 
-Judged single-page workflow and global styling for the **AgentCore** **Change Society** demo. Remote business state remains backend-owned.
+Multi-page **Change Society** demo UI (`app/(app)/*`). Shared run state lives in `RunWorkspaceProvider`.
+
+Layout: `layout.tsx` → `AppShell` only (no motion wrappers here). Route animation: `components/app-shell/RouteTransition.tsx` inside `AppShell`.
+
+See [../docs/ui-shell-layout.md](../docs/ui-shell-layout.md).

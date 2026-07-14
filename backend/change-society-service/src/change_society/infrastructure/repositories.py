@@ -78,6 +78,17 @@ class InMemoryRunRepository:
     def list_runs(self, scope: Scope) -> list[SocietyRun]:
         return [run_from_dict(deepcopy(value)) for key, value in self._runs.items() if key[:3] == (scope.tenant_id, scope.workspace_id, scope.project_id)]
 
+    def latest_for_scenario(self, scope: Scope, scenario_id: str) -> SocietyRun | None:
+        matches = [
+            run_from_dict(deepcopy(value))
+            for key, value in self._runs.items()
+            if key[:3] == (scope.tenant_id, scope.workspace_id, scope.project_id) and value.get("scenario_id") == scenario_id
+        ]
+        if not matches:
+            return None
+        matches.sort(key=lambda item: item.updated_at, reverse=True)
+        return matches[0]
+
     def health(self) -> dict[str, Any]:
         return {"store": "in_memory_test_fake", "ready": True, "production_ready": False}
 
@@ -140,6 +151,20 @@ class PostgresRunRepository:
         with self._connection.cursor() as cursor:
             cursor.execute("SELECT payload FROM change_society.runs WHERE tenant_id=%s AND workspace_id=%s AND project_id=%s ORDER BY created_at DESC", (scope.tenant_id, scope.workspace_id, scope.project_id))
             return [run_from_dict(row["payload"]) for row in cursor.fetchall()]
+
+    def latest_for_scenario(self, scope: Scope, scenario_id: str) -> SocietyRun | None:
+        with self._connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT payload FROM change_society.runs
+                   WHERE tenant_id=%s AND workspace_id=%s AND project_id=%s
+                     AND payload->>'scenario_id' = %s
+                   ORDER BY updated_at DESC LIMIT 1""",
+                (scope.tenant_id, scope.workspace_id, scope.project_id, scenario_id),
+            )
+            row = cursor.fetchone()
+        if not row:
+            return None
+        return run_from_dict(row["payload"])
 
     def health(self) -> dict[str, Any]:
         try:

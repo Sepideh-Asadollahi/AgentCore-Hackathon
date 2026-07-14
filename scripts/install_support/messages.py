@@ -22,7 +22,7 @@ def narrative_for_runtime(runtime: RuntimeMode) -> str:
         return """
 After install (systemd user units):
   • API:  http://127.0.0.1:32500/health
-  • UI:   http://127.0.0.1:32501
+  • UI:   http://127.0.0.1:3000
   • Example: systemctl --user restart change-society-api.service
 """
     if runtime == "docker":
@@ -30,7 +30,7 @@ After install (systemd user units):
 After install (Docker Compose):
   • Example: docker compose -f deployments/compose.yaml ps
   • API:  http://127.0.0.1:32500/health
-  • UI:   http://127.0.0.1:32501
+  • UI:   http://127.0.0.1:3000
 """
     if runtime == "none":
         return """
@@ -48,7 +48,7 @@ After install — two terminals from the pack root (directory with install.sh):
 
   Terminal 2 (demo UI):
     cd frontend && npm run dev
-    Open http://localhost:32501
+    Open http://localhost:3000
 
   Automated proof (no browser):
     bash scripts/run-real-test.sh

@@ -1,7 +1,8 @@
 "use client";
 
 import type {AgentMessage, Conflict, SocietyRun} from "../lib/api";
-import {roleDisplayName} from "../lib/demo-state";
+import {roleDisplayName, humanRunStateLabel} from "../lib/demo-state";
+import {panelClass, wsMeta, wsStep} from "@/lib/workspace-ui";
 
 type Props = {
   run: SocietyRun | null;
@@ -24,7 +25,7 @@ function coordinatorDecision(messages: AgentMessage[]): AgentMessage | undefined
 function summaryLine(message: AgentMessage | undefined): string {
   if (!message) return "—";
   const payload = message.payload;
-  return String(payload.summary ?? payload.rationale ?? payload.verdict ?? "Structured specialist output");
+  return String(payload.summary ?? payload.rationale ?? payload.verdict ?? "No short summary available");
 }
 
 export function NegotiationPanel(props: Props) {
@@ -42,93 +43,102 @@ export function NegotiationPanel(props: Props) {
     ? (decision.payload.required_approvers as string[] | undefined)
     : (policy?.payload.required_approvers as string[] | undefined);
 
+  const cell = "rounded-lg border border-border bg-background p-3 text-sm";
+
   return (
-    <section className="negotiation-panel cinematic-in" aria-labelledby="negotiation-title">
-      <h3 id="negotiation-title">Negotiation at a glance</h3>
-      <p className="negotiation-lead">
-        Judges see role disagreement in plain language—not only raw Universal Agent JSON.
+    <section className={`${panelClass()} mt-4`} aria-labelledby="negotiation-title">
+      <div className={wsStep}>Disagreement summary</div>
+      <h3 id="negotiation-title" className="text-base font-semibold text-foreground">
+        How specialists argued — in plain language
+      </h3>
+      <p className="mt-1 text-sm text-muted-foreground">
+        For judges: read this before the Approve / Reject buttons. Agent Story has the full timeline.
       </p>
 
-      <div className="negotiation-grid">
-        <article>
-          <h4>Initial positions</h4>
-          <ul>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <article className={cell}>
+          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Where each specialist started</h4>
+          <ul className="mt-2 space-y-3">
             <li>
-              <strong>{roleDisplayName("change_analyst")}</strong>
-              <span>{change?.risk_level ?? "—"} risk</span>
-              <p>{summaryLine(change)}</p>
+              <strong className="text-foreground">{roleDisplayName("change_analyst")}</strong>
+              <span className="ml-2 text-[10px] text-amber-500">{change?.risk_level ?? "—"} risk</span>
+              <p className="mt-1 text-muted-foreground">{summaryLine(change)}</p>
             </li>
             <li>
-              <strong>{roleDisplayName("impact_analyst")}</strong>
-              <span>{impact?.risk_level ?? "—"} risk</span>
-              <p>{summaryLine(impact)}</p>
+              <strong className="text-foreground">{roleDisplayName("impact_analyst")}</strong>
+              <span className="ml-2 text-[10px] text-amber-500">{impact?.risk_level ?? "—"} risk</span>
+              <p className="mt-1 text-muted-foreground">{summaryLine(impact)}</p>
             </li>
             <li>
-              <strong>{roleDisplayName("policy_guardian")}</strong>
-              <span>{policy?.risk_level ?? "—"} risk</span>
-              <p>{summaryLine(policy)}</p>
+              <strong className="text-foreground">{roleDisplayName("policy_guardian")}</strong>
+              <span className="ml-2 text-[10px] text-amber-500">{policy?.risk_level ?? "—"} risk</span>
+              <p className="mt-1 text-muted-foreground">{summaryLine(policy)}</p>
             </li>
           </ul>
         </article>
 
-        <article>
-          <h4>Detected conflict</h4>
+        <article className={cell}>
+          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Recorded disagreement</h4>
           {conflict ? (
             <>
-              <p className="conflict-claims">
+              <p className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                 <strong>{conflict.claim_a_risk}</strong>
-                <em>vs</em>
+                <em className="text-muted-foreground not-italic">vs</em>
                 <strong>{conflict.claim_b_risk}</strong>
               </p>
-              <p>{conflict.rationale}</p>
-              <small>{conflict.status} · {conflict.rebuttal_message_ids.length} rebuttal(s)</small>
+              <p className="mt-2 text-muted-foreground">{conflict.rationale}</p>
+              <small className={wsMeta}>
+                {conflict.status} · {conflict.rebuttal_message_ids.length} rebuttal(s)
+              </small>
             </>
           ) : (
-            <p className="meta">No conflict record on this run.</p>
+            <p className={`${wsMeta} mt-2`}>No disagreement recorded on this run.</p>
           )}
         </article>
 
-        <article>
-          <h4>Rebuttal (bounded round)</h4>
+        <article className={cell}>
+          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Follow-up replies (one round)</h4>
           {[...changeRebuttals, ...policyRebuttals].length === 0 ? (
-            <p className="meta">No rebuttal messages yet.</p>
+            <p className={`${wsMeta} mt-2`}>No follow-up replies yet.</p>
           ) : (
-            <ul>
+            <ul className="mt-2 space-y-2">
               {[...changeRebuttals, ...policyRebuttals].map(message => (
                 <li key={message.message_id}>
-                  <strong>{roleDisplayName(message.sender_role)}</strong>
-                  <p>{summaryLine(message)}</p>
-                  <small>Evidence: {message.evidence_refs.join(", ") || "none"}</small>
+                  <strong className="text-foreground">{roleDisplayName(message.sender_role)}</strong>
+                  <p className="text-muted-foreground">{summaryLine(message)}</p>
+                  <small className={wsMeta}>Evidence: {message.evidence_refs.join(", ") || "none"}</small>
                 </li>
               ))}
             </ul>
           )}
         </article>
 
-        <article>
-          <h4>Final decision</h4>
+        <article className={cell}>
+          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Coordinator recommendation</h4>
           {decision ? (
             <>
-              <p>{summaryLine(decision)}</p>
-              <small>Verdict: {String(decision.payload.verdict ?? "—")}</small>
+              <p className="mt-2 text-muted-foreground">{summaryLine(decision)}</p>
+              <small className={wsMeta}>Outcome label: {String(decision.payload.verdict ?? "—")}</small>
             </>
           ) : (
-            <p className="meta">Coordinator decision pending or not required.</p>
+            <p className={`${wsMeta} mt-2`}>No coordinator recommendation yet — or none was required.</p>
           )}
         </article>
 
-        <article>
-          <h4>Required approvals</h4>
+        <article className={cell}>
+          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Who must approve</h4>
           {approvers && approvers.length > 0 ? (
-            <ul className="approval-chips">
+            <ul className="mt-2 flex flex-wrap gap-2">
               {approvers.map(item => (
-                <li key={item}>{item}</li>
+                <li key={item} className="rounded-full border border-border px-2 py-0.5 text-[11px] text-foreground">
+                  {item}
+                </li>
               ))}
             </ul>
           ) : (
-            <p className="meta">Derived from policy tags and coordinator output when present.</p>
+            <p className={`${wsMeta} mt-2`}>Listed when policy or the coordinator requires named approvers.</p>
           )}
-          <p className="meta">Human gate: {props.run.state.replaceAll("_", " ")}</p>
+          <p className={wsMeta}>Approval gate: {humanRunStateLabel(props.run.state)}</p>
         </article>
       </div>
     </section>

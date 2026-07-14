@@ -11,11 +11,17 @@ def pack_root(start: Path | None = None) -> Path:
     here = (start or Path(__file__)).resolve()
     if here.is_file():
         here = here.parent
+    best: Path | None = None
     for directory in (here, *here.parents):
         if not (directory / "scripts" / "install.py").is_file():
             continue
         if (directory / "backend" / "change-society-service" / "src" / "change_society").is_dir():
-            return directory
+            if directory.name == "hackathon":
+                return directory
+            if best is None:
+                best = directory
+    if best is not None:
+        return best
     raise SystemExit(
         "Cannot find AgentCore pack root. Run install from the tree that contains "
         "install.sh, backend/change-society-service/, and scripts/install.py."

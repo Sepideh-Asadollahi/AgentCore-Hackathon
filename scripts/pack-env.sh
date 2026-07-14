@@ -32,3 +32,13 @@ pack_pytest_dir() {
     return 1
   fi
 }
+
+pack_frontend_test_dir() {
+  if [[ -d "${PACK_ROOT}/tests/frontend/change-society" ]]; then
+    echo "${PACK_ROOT}/tests/frontend/change-society"
+  elif [[ -d "${PACK_ROOT}/../tests/frontend/change-society" ]]; then
+    echo "${PACK_ROOT}/../tests/frontend/change-society"
+  else
+    return 1
+  fi
+}

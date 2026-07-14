@@ -7,7 +7,7 @@ Local production-shaped infrastructure uses [compose.yaml](compose.yaml). Alibab
 ```mermaid
 flowchart TB
     Internet --> Ingress["TLS Ingress / Alibaba ECS"]
-    Ingress --> Web["Change Society Web :32501"]
+    Ingress --> Web["Change Society Web :3000"]
     Ingress --> API["Change Society API :32500"]
     API --> Qwen["Qwen Cloud"]
     API --> PG[("Managed or container PostgreSQL")]
@@ -26,7 +26,7 @@ docker compose -f hackathon/deployments/compose.yaml up -d --build
 
 Requires entrant `.env` for Qwen and PostgreSQL passwords when using the production profile inside Compose.
 
-Default host ports (configurable): **32500** API, **32501** web — non-default per AgentCore port policy.
+Default host ports (configurable): **32500** API, **3000** web.
 
 ## Migrations
 

@@ -39,7 +39,7 @@ PYTHONPATH=backend/change-society-service/src .venv/bin/python -m uvicorn change
 ```
 
 4. In `frontend/`, run `npm install` and `npm run dev`.
-5. Open `http://localhost:32501`.
+5. Open `http://localhost:3000`.
 
 **Cinematic demo (default):** guided mode with animated beats (change request → tickets → Universal Agent JSON → conflict → human approval → metrics). Use **Inspector mode** for full ticket/message JSON. Keyboard: `←` / `→` change beat, `Esc` exits cinematic mode. See [frontend/README.md](../frontend/README.md).
 

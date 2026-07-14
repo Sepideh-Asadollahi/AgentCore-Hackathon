@@ -52,7 +52,7 @@ def build_submission_compliance_report(
             "alibaba_cloud_code_proof": alibaba_proof_module,
             "evaluation_data": evaluation_artifact,
             "install": "hackathon/install.sh",
-            "deterministic_harness": "hackathon/scripts/run-real-test.sh",
+            "deterministic_harness": "tests/e2e/change-society/run-real-test.sh",
         },
         "runtime_profile": {
             "environment": environment,

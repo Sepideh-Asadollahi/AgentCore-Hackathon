@@ -35,6 +35,20 @@ htmlcov/
 .nox/
 *.cover
 
+# --- Backend / Python runtime (not frontend) ---
+.venv/
+venv/
+wheelhouse/
+*.whl
+pip-wheel-metadata/
+sdk/python/dist/
+sdk/python/build/
+sdk/python/**/*.egg-info/
+examples/**/.venv/
+examples/**/node_modules/
+*.sqlite
+*.sqlite3
+
 # --- Node / Next.js (frontend) ---
 node_modules/
 .next/

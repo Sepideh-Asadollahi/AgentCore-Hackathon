@@ -25,6 +25,7 @@ English documentation for the public Track 3 submission. **AgentCore** is the pl
 - [LangChain / LangGraph SDK](11-agent-language-and-langchain-sdk.md)
 - [Multi-vendor agent network](23-multi-vendor-agent-network-ecosystem.md)
 - [Org policy intake](30-org-policy-intake-slice.md)
+- [Frontend UI shell](31-frontend-ui-shell.md)
 
 ## Submission pack
 

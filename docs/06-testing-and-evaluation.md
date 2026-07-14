@@ -10,7 +10,8 @@ bash install.sh --profile verify   # install + deterministic society proof
 PYTHONPATH=backend/change-society-service/src:sdk/python .venv/bin/python -m pytest tests/backend/change-society-service -q
 PYTHONPATH=backend/change-society-service/src:sdk/python .venv/bin/python -m pytest tests/backend/change-society-service/test_org_policy_intake.py -q
 cd frontend && npm run typecheck && npm run build
-node --experimental-strip-types --test tests/frontend/change-society/*.test.mjs
+bash scripts/run-frontend-tests.sh
+# or: cd frontend && npm test
 ```
 
 ## Org policy intake tests
@@ -21,7 +22,9 @@ node --experimental-strip-types --test tests/frontend/change-society/*.test.mjs
 | Provider | `test_org_policy_intake.py` | Session lifecycle, `retrieve()` merges `org_policy_*`, scope isolation |
 | Service | `test_org_policy_intake.py` | `ChangeSocietyService` façade, society run after activation |
 | HTTP (ASGI) | `test_org_policy_intake.py` | Analyze, resolve, activate, list, 404/400 paths |
-| Frontend helpers | `tests/frontend/change-society/org-policy-intake.test.mjs` | Pending challenge + adopt list helpers |
+| Frontend helpers | `tests/frontend/change-society/*.test.mjs` | Pending challenge + adopt list helpers; shell state helpers |
+
+Frontend layout and blank-page regression rules: [31-frontend-ui-shell.md](31-frontend-ui-shell.md) · [../frontend/docs/ui-shell-layout.md](../frontend/docs/ui-shell-layout.md).
 
 Design reference: [30-org-policy-intake-slice.md](30-org-policy-intake-slice.md).
 

@@ -58,10 +58,10 @@ def gather_interactive_config(
     pg = with_postgres
     if pg is None and docker_available() and rt != "docker":
         pg = prompt_yes_no(
-            "Start optional PostgreSQL in Docker for local DB experiments (demo still uses in-memory store)?",
-            default=False,
-            example_yes="y  → docker compose -f hackathon/deployments/compose.dev-postgres.yaml up -d",
-            example_no="n  → skip; demo profile needs no database container",
+            "Start PostgreSQL in Docker and persist society runs to the database (recommended for judges)?",
+            default=True,
+            example_yes="y  → compose.dev-postgres + SQL migrations + CHANGE_SOCIETY_STORE=postgresql",
+            example_no="n  → in-memory store only (runs lost on API restart)",
         )
     elif pg is None:
         pg = False

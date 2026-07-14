@@ -1,6 +1,6 @@
 # Demo and Live-Test Scripts
 
-Run from the **pack root** (directory with `install.sh`). Scripts resolve paths from their own location — cwd does not need to match.
+Run from the **pack root** (directory with `install.sh`). Canonical runners live under `tests/`; `hackathon/scripts/run-*.sh` delegates there for backward compatibility.
 
 ## Install
 
@@ -17,22 +17,31 @@ Core logic: `install.py` + `install_support/` (venv, pip, npm, optional OS packa
 
 ```bash
 bash scripts/run-pytest.sh -q
+# or: bash ../tests/backend/change-society-service/run-pytest.sh -q
 ```
 
 Sets `PYTHONPATH` and uses `.venv/bin/python -m pytest`.
 
-**Dependencies:** `pip install -r requirements-dev.txt` (or `bash install.sh`).
+## Frontend unit tests
 
-## Deterministic workflow tests
+```bash
+bash scripts/run-frontend-tests.sh
+```
+
+Uses Node’s built-in test runner with `--experimental-strip-types` against `tests/frontend/change-society/` (pack root or parent tree).
+
+From `frontend/`: `npm test`.
+
+## Deterministic workflow tests (e2e)
 
 ```bash
 bash scripts/run-real-test-suite.sh   # seven domains + traces under evidence/real/suite/
 bash scripts/run-real-test.sh         # golden pricing-refactor path only
 ```
 
-See [docs/22-real-multi-domain-agent-tests.md](../docs/22-real-multi-domain-agent-tests.md).
+Canonical path: `tests/e2e/change-society/`. See [docs/22-real-multi-domain-agent-tests.md](../docs/22-real-multi-domain-agent-tests.md).
 
-`generate_evaluation_evidence.py` refreshes `evidence/real/evaluation-scenarios.json` and `benchmark-summary.json`.
+`tests/e2e/change-society/generate_evaluation_evidence.py` refreshes `evidence/real/evaluation-scenarios.json` and `benchmark-summary.json`.
 
 ## Live Qwen (requires `.env` with `QWEN_API_KEY`)
 
@@ -44,7 +53,7 @@ export CHANGE_SOCIETY_LIVE_API_URL=https://your-api.example
 bash scripts/run-live-test.sh remote
 ```
 
-Live output under `evidence/live/` (not committed — see [evidence/README.md](../evidence/README.md)).
+Canonical path: `tests/live/change-society/`. Live output under `evidence/live/` (not committed — see [evidence/README.md](../evidence/README.md)).
 
 ## Full install smoke
 

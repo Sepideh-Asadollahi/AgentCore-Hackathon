@@ -17,6 +17,7 @@ from ..infrastructure.mcp_tool_gateway import McpToolGateway
 from ..infrastructure.qwen_client import QwenCloudClient
 from ..infrastructure.repositories import InMemoryRunRepository, PostgresRunRepository
 from ..infrastructure.runtime import SystemClock, UuidGenerator
+from ..infrastructure.logging_config import setup_logging
 from ..interfaces.api import create_api
 from .config import Settings
 
@@ -59,10 +60,14 @@ def build_service(settings: Settings | None = None) -> ChangeSocietyService:
     clock = SystemClock()
     ids = UuidGenerator()
     control_plane = AgentControlPlane(control_repository, adapters, CapabilityRouter(), clock, ids, templates)
-    return ChangeSocietyService(repository, model, ScenarioEvidenceProvider(), clock, ids, control_plane, settings.context_token_budget)
+    return ChangeSocietyService(
+        repository, model, ScenarioEvidenceProvider(), clock, ids, control_plane, settings.context_token_budget,
+        demo_auto_approve=settings.demo_auto_approve,
+    )
 
 
 def build_app(settings: Settings | None = None, service: ChangeSocietyService | None = None) -> FastAPI:
+    setup_logging()
     settings = settings or Settings.load()
     service = service or build_service(settings)
     profile = {
@@ -70,5 +75,6 @@ def build_app(settings: Settings | None = None, service: ChangeSocietyService | 
         "model_provider": settings.model_provider,
         "store": settings.store,
         "allowed_origins_list": list(settings.allowed_origins),
+        "demo_auto_approve": settings.demo_auto_approve,
     }
     return create_api(service, profile)

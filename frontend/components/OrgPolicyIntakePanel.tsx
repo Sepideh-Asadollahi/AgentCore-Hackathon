@@ -1,8 +1,18 @@
 "use client";
 
 import {useCallback, useEffect, useMemo, useState} from "react";
+import {Button} from "@/components/animate-ui/components/buttons/button";
 import {api, OrgPolicyChallenge, OrgPolicyIntakeSession, Scenario} from "../lib/api";
 import {defaultCandidateIds, firstPendingChallenge} from "../lib/org-policy-intake";
+import {
+  panelClass,
+  wsAlertError,
+  wsEmpty,
+  wsFieldControl,
+  wsFieldLabel,
+  wsMeta,
+  wsStep,
+} from "@/lib/workspace-ui";
 
 type Props = {
   scenario: Scenario | null;
@@ -86,24 +96,29 @@ export function OrgPolicyIntakePanel({scenario, disabled}: Props) {
   }
 
   return (
-    <section className="org-policy-intake" aria-labelledby="org-policy-intake-heading">
-      <h2 id="org-policy-intake-heading">Org policy intake (guided)</h2>
-      <p className="hint">
+    <section className={panelClass()} aria-labelledby="org-policy-intake-heading">
+      <div className={wsStep}>Policy intake</div>
+      <h2 id="org-policy-intake-heading" className="text-base font-semibold text-foreground">
+        Org policy intake (guided)
+      </h2>
+      <p className="mt-2 text-sm text-muted-foreground">
         Describe your business process in plain language. The control plane proposes policy tags and challenges; after you resolve them,
-        org policies become retrievable evidence for Policy Guardian (LLM-managed summaries, human activation).
+        org policies become retrievable evidence for Policy Guardian.
       </p>
-      <label>
+      <label className={wsFieldLabel}>
         Process narrative
         <textarea
+          className={wsFieldControl}
           value={narrative}
           onChange={e => setNarrative(e.target.value)}
           rows={4}
           disabled={disabled || busy}
         />
       </label>
-      <label>
+      <label className={wsFieldLabel}>
         Constraints (optional)
         <textarea
+          className={wsFieldControl}
           value={constraints}
           onChange={e => setConstraints(e.target.value)}
           rows={2}
@@ -111,53 +126,64 @@ export function OrgPolicyIntakePanel({scenario, disabled}: Props) {
           placeholder="e.g. no cross-project memory, English docs only"
         />
       </label>
-      <div className="row">
-        <button type="button" onClick={analyze} disabled={disabled || busy || !scenario || narrative.length < 20}>
-          Analyze workflow
-        </button>
-      </div>
-      {error && <p className="error" role="alert">{error}</p>}
-      {message && <p className="success">{message}</p>}
+      <Button onClick={analyze} disabled={disabled || busy || !scenario || narrative.length < 20} className="mt-2">
+        Analyze workflow
+      </Button>
+      {error && (
+        <p className={`${wsAlertError} mt-3`} role="alert">
+          {error}
+        </p>
+      )}
+      {message && <p className="mt-3 text-sm text-emerald-400">{message}</p>}
       {session && (
-        <div className="intake-results">
-          <h3>Requirements digest</h3>
-          <ul>{session.requirements_digest.map(line => <li key={line}>{line}</li>)}</ul>
-          <h3>Candidate policies</h3>
-          <ul>
-            {session.candidate_policies.map(c => (
-              <li key={c.candidate_id}>
-                <strong>{c.title}</strong> — <code>{c.policy_tag}</code> ({c.source}, risk {c.risk})
-              </li>
-            ))}
-          </ul>
+        <div className="mt-4 space-y-4 text-sm">
+          <div>
+            <h3 className="font-medium text-foreground">Requirements digest</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+              {session.requirements_digest.map(line => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-medium text-foreground">Candidate policies</h3>
+            <ul className="mt-2 space-y-2 text-muted-foreground">
+              {session.candidate_policies.map(c => (
+                <li key={c.candidate_id}>
+                  <strong className="text-foreground">{c.title}</strong> — <code>{c.policy_tag}</code> ({c.source}, risk {c.risk})
+                </li>
+              ))}
+            </ul>
+          </div>
           {pendingChallenge ? (
-            <div className="challenge-card">
-              <h3>Challenge ({pendingChallenge.type})</h3>
-              <p>{pendingChallenge.summary}</p>
-              <div className="challenge-options">
+            <div className="rounded-lg border border-border bg-background p-3">
+              <h3 className="font-medium">Challenge ({pendingChallenge.type})</h3>
+              <p className="mt-1 text-muted-foreground">{pendingChallenge.summary}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
                 {pendingChallenge.options.map(opt => (
-                  <button
+                  <Button
                     key={opt.option_id}
-                    type="button"
+                    variant="outline"
+                    size="sm"
                     disabled={busy}
                     onClick={() => resolveChallenge(pendingChallenge, opt.option_id)}
                   >
                     {opt.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
           ) : (
-            <button type="button" className="primary" disabled={busy} onClick={activateSelected}>
+            <Button disabled={busy} onClick={activateSelected}>
               Activate adopted policies
-            </button>
+            </Button>
           )}
         </div>
       )}
       {activePolicies.length > 0 && (
-        <div className="active-org-policies">
-          <h3>Active org policies</h3>
-          <ul>
+        <div className="mt-4">
+          <h3 className="text-sm font-medium text-foreground">Active org policies</h3>
+          <ul className={`${wsMeta} mt-2 space-y-1`}>
             {activePolicies.map(p => (
               <li key={p.evidence_id}>
                 <code>{p.evidence_id}</code> — {p.title} (<code>{p.policy_tag}</code>)
@@ -165,6 +191,9 @@ export function OrgPolicyIntakePanel({scenario, disabled}: Props) {
             ))}
           </ul>
         </div>
+      )}
+      {!session && !error && narrative.length < 20 && (
+        <div className={`${wsEmpty} mt-4`}>Enter at least 20 characters to analyze.</div>
       )}
     </section>
   );

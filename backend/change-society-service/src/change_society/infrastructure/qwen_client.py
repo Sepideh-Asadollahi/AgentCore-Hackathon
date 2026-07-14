@@ -181,6 +181,14 @@ class QwenCloudClient:
                 raise DependencyError("qwen_timeout", "Qwen Cloud request timed out.", True) from exc
         raise DependencyError("qwen_provider_unavailable", "Qwen Cloud is unavailable.", True)
 
+    def apply_connection(self, *, api_key: str | None = None, base_url: str | None = None, model: str | None = None) -> None:
+        if api_key is not None and api_key.strip():
+            self._api_key = api_key.strip()
+        if base_url is not None and base_url.strip():
+            self._base_url = base_url.strip().rstrip("/")
+        if model is not None and model.strip():
+            self._model = model.strip()
+
     def health(self) -> dict[str, Any]:
         configured = bool(self._api_key and self._model and self._base_url)
         return {
@@ -188,6 +196,7 @@ class QwenCloudClient:
             "configured": configured,
             "production_ready": configured,
             "model": self._model,
+            "base_url": self._base_url,
             "role_tools_enabled": self._enable_tools,
             "max_tool_rounds": self._max_tool_rounds,
         }

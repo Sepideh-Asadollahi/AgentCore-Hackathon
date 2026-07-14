@@ -16,7 +16,7 @@ Deploy the existing production-shaped Compose stack on an entrant-owned Alibaba 
 - **Runtime**: `hackathon/deployments/compose.yaml` services `change-society-api`, `change-society-web`, and `postgres`.
 - **Model**: Qwen Cloud via OpenAI-compatible HTTP API (`QWEN_API_KEY` injected at runtime).
 - **Persistence**: PostgreSQL 16 with migrations `0001_change_society.sql` and `0002_agent_control_plane.sql`.
-- **Ingress**: HTTPS reverse proxy or security-group rules exposing configurable non-default ports `32500` (API) and `32501` (web demo).
+- **Ingress**: HTTPS reverse proxy or security-group rules exposing configurable ports `32500` (API) and `3000` (web demo).
 - **Proof**: `hackathon/deployments/alibaba/deploy-ecs.sh` uses the official Alibaba Cloud CLI to verify ECS access and documents the deployment channel.
 
 ## Consequences

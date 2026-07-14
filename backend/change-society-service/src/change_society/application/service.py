@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from copy import deepcopy
 from typing import Any
 
@@ -10,6 +11,7 @@ from ..domain.models import (
     AgentMessage, ApprovalDecision, ConflictError, Evidence, RiskLevel, Role, RunState, Scope, SocietyRun, ValidationError,
 )
 from ..domain.policies import detect_scenario_negotiation_gate, detect_specialist_conflict, requires_human_approval, stable_digest
+from .demo_policy import DEMO_AUTO_APPROVE_REASON, DEMO_AUTO_APPROVER_ACTOR
 from .ablation import aggregate_benchmark_rows, compute_ablation_variants, merge_specialist_outputs
 from .evaluation import run_single_agent_baseline, score_output
 from .run_token_budget import BudgetEnforcingModelClient
@@ -19,6 +21,8 @@ from .frontend_delivery import (
     analyze_frontend_signals,
     build_frontend_delivery_user_prompt,
 )
+
+logger = logging.getLogger("change_society.service")
 
 
 CAPABILITIES = {
@@ -92,7 +96,8 @@ SCENARIO_ROLE_GUIDANCE: dict[tuple[str, Role], str] = {
 
 class ChangeSocietyService:
     def __init__(self, repository: RunRepository, model: ModelClient, evidence: EvidenceProvider, clock: Clock,
-                 ids: IdGenerator, control_plane: AgentControlPlane, context_token_budget: int = 1800):
+                 ids: IdGenerator, control_plane: AgentControlPlane, context_token_budget: int = 1800,
+                 *, demo_auto_approve: bool = True):
         self.repository = repository
         self.model = model
         self.evidence = evidence
@@ -100,6 +105,7 @@ class ChangeSocietyService:
         self.ids = ids
         self.control_plane = control_plane
         self.context_token_budget = context_token_budget
+        self.demo_auto_approve = demo_auto_approve
 
     def list_scenarios(self) -> list[dict[str, Any]]:
         return [item.public() for item in self.evidence.list_scenarios()]
@@ -114,14 +120,23 @@ class ChangeSocietyService:
         fingerprint = stable_digest({"scenario_id": scenario_id, "request_text": effective_request})
         prior = self.repository.find_idempotent(scope, "create_society_run", idempotency_key, fingerprint)
         if prior:
+            logger.info("create_run idempotent replay run_id=%s scenario=%s cid=%s", prior, scenario_id, correlation_id)
             return self.repository.get(scope, prior)
         at = self.clock.now()
         run = SocietyRun(self.ids.new("run"), scope, actor_id, correlation_id, effective_request, scenario_id, RunState.ACCEPTED, at, at)
+        logger.info("create_run start run_id=%s scenario=%s actor=%s cid=%s", run.run_id, scenario_id, actor_id, correlation_id)
         self.repository.save(run)
         self.repository.remember_idempotent(scope, "create_society_run", idempotency_key, fingerprint, run.run_id)
         try:
             self._execute(run)
         except Exception as exc:
+            logger.exception(
+                "create_run failed run_id=%s scenario=%s cid=%s exc_type=%s",
+                run.run_id,
+                scenario_id,
+                correlation_id,
+                type(exc).__name__,
+            )
             if isinstance(exc, (ValidationError, ConflictError)):
                 raise
             run.error = {"error_code": getattr(exc, "code", "unexpected_error"), "message": getattr(exc, "message", "Society execution failed.")}
@@ -129,6 +144,7 @@ class ChangeSocietyService:
                 run.transition(RunState.FAILED, self.clock.now())
             self.repository.save(run)
             raise
+        logger.info("create_run done run_id=%s state=%s cid=%s", run.run_id, run.state.value, correlation_id)
         return run
 
     def _allowed(self, run: SocietyRun) -> set[RunState]:
@@ -138,23 +154,32 @@ class ChangeSocietyService:
     def _execute(self, run: SocietyRun) -> None:
         if isinstance(self.model, BudgetEnforcingModelClient):
             self.model.reset_budget()
+            logger.debug("run execute token budget reset run_id=%s", run.run_id)
         scenario = self.evidence.get_scenario(run.scenario_id)
         run.transition(RunState.GATHERING_CONTEXT, self.clock.now())
         included, excluded = self.evidence.retrieve(run.scope, run.scenario_id, run.request_text, self.context_token_budget)
-        # Completed runs are durable semantic memory when PostgreSQL is selected. This keeps
-        # cross-session recall available after process restart without reading another service's tables.
+        memory_count = 0
         for prior in self.repository.list_runs(run.scope):
             if prior.run_id != run.run_id and prior.scenario_id == run.scenario_id and prior.state == RunState.COMPLETED and prior.final_result:
+                memory_count += 1
                 included.append(Evidence(
                     f"memory_{prior.run_id}", "decision", "Prior approved society decision", str(prior.final_result),
                     tags=("approved", "cross-session", "current"),
                 ))
         run.excluded_evidence = excluded
+        logger.info(
+            "run phase=gathering_context run_id=%s evidence_in=%s evidence_excluded=%s prior_memory=%s",
+            run.run_id,
+            len(included),
+            len(excluded),
+            memory_count,
+        )
         evidence_text = "\n".join(f"[{e.evidence_id}] {e.title}: {e.content}" for e in included if not e.restricted)
         context_result, context_ticket = self._call_role(Role.CONTEXT_SCOUT, run, f"REQUEST:\n{run.request_text}\nCANDIDATE EVIDENCE:\n{evidence_text}", ContextOutput)
         self._append_result(run, Role.CONTEXT_SCOUT, context_ticket.ticket_id, context_result)
         run.transition(RunState.DECOMPOSING, self.clock.now())
         run.transition(RunState.ANALYZING, self.clock.now())
+        logger.info("run phase=analyzing run_id=%s", run.run_id)
         change, change_ticket = self._call_role(Role.CHANGE_ANALYST, run, self._analysis_input(run, evidence_text), RoleOutput)
         change_msg = self._append_result(run, Role.CHANGE_ANALYST, change_ticket.ticket_id, change)
         impact, impact_ticket = self._call_role(Role.IMPACT_ANALYST, run, self._analysis_input(run, evidence_text, change.payload), RoleOutput)
@@ -171,10 +196,20 @@ class ChangeSocietyService:
                 scenario.required_policies,
                 scenario.requires_negotiation,
             )
+        if conflict:
+            logger.info(
+                "run conflict detected run_id=%s conflict_id=%s topic=%s",
+                run.run_id,
+                conflict.conflict_id,
+                conflict.topic,
+            )
+        else:
+            logger.info("run reconcile clean run_id=%s (no conflict)", run.run_id)
         judge_payload: dict[str, Any] | None = None
         unresolved = False
         if conflict:
             run.conflicts.append(conflict)
+            logger.info("run phase=negotiation run_id=%s conflict_id=%s", run.run_id, conflict.conflict_id)
             change_rebuttal = self._rebut(run, Role.CHANGE_ANALYST, change_msg, policy_msg)
             policy_rebuttal = self._rebut(run, Role.POLICY_GUARDIAN, policy_msg, change_msg)
             conflict.rebuttal_message_ids.extend([change_rebuttal.message_id, policy_rebuttal.message_id])
@@ -186,21 +221,62 @@ class ChangeSocietyService:
             conflict.rationale = judge.payload["rationale"]
             conflict.evidence_refs = sorted(set(conflict.evidence_refs + judge_msg.evidence_refs))
             unresolved = judge.payload["verdict"] == "escalate"
+            logger.info(
+                "run judge verdict run_id=%s verdict=%s final_risk=%s unresolved=%s",
+                run.run_id,
+                judge.payload.get("verdict"),
+                judge.payload.get("final_risk_level"),
+                unresolved,
+            )
         final_risk = RiskLevel((judge_payload or policy.payload)["final_risk_level"] if judge_payload else policy.payload["risk_level"])
         policies = list(policy.payload.get("policies", []))
         run.metrics = self._society_metrics(run, scenario, change.payload, impact.payload, policy.payload)
+        logger.info(
+            "run phase=metrics run_id=%s final_risk=%s policies=%s message_count=%s model_ms=%s",
+            run.run_id,
+            final_risk.value,
+            policies,
+            len(run.messages),
+            run.metrics.get("model_duration_ms", 0),
+        )
         self._dispatch_frontend_delivery(run, scenario.scenario_id, change.payload, impact.payload, policy.payload)
         if requires_human_approval(final_risk, unresolved, policies):
+            logger.info("run awaiting human approval run_id=%s risk=%s unresolved=%s", run.run_id, final_risk.value, unresolved)
             run.approval = ApprovalDecision(
                 self.ids.new("approval"), run.version + 1, "pending", self.clock.now(),
                 stable_digest({"messages": [m.message_id for m in run.messages], "conflicts": [c.public() for c in run.conflicts]}),
             )
             run.transition(RunState.AWAITING_APPROVAL, self.clock.now())
             self._append_system_message(run, "approval_requested", RiskLevel.HIGH, {"required_approvers": (judge_payload or {}).get("required_approvers", ["product", "finance"])})
+            if self.demo_auto_approve:
+                self._apply_demo_auto_approve(run)
         else:
+            logger.info("run auto-complete run_id=%s risk=%s", run.run_id, final_risk.value)
             run.transition(RunState.FINALIZING, self.clock.now())
             self._complete(run, "auto_completed_low_risk")
         self.repository.save(run)
+
+    def _apply_demo_auto_approve(self, run: SocietyRun) -> None:
+        if run.approval is None or run.state != RunState.AWAITING_APPROVAL:
+            return
+        logger.info("demo_auto_approve run_id=%s (display-only gate bypass)", run.run_id)
+        run.approval.status = "approve"
+        run.approval.decided_at = self.clock.now()
+        run.approval.decided_by = DEMO_AUTO_APPROVER_ACTOR
+        run.approval.reason = DEMO_AUTO_APPROVE_REASON
+        self._append_system_message(
+            run,
+            "approval_decided",
+            RiskLevel.HIGH,
+            {
+                "action": "approve",
+                "reason": DEMO_AUTO_APPROVE_REASON,
+                "decided_by": DEMO_AUTO_APPROVER_ACTOR,
+                "demo_only": True,
+            },
+        )
+        run.transition(RunState.FINALIZING, self.clock.now())
+        self._complete(run, "demo_auto_approved")
 
     def _analysis_input(self, run: SocietyRun, evidence_text: str, prior: Any = None) -> str:
         return f"REQUEST:\n{run.request_text}\nEVIDENCE:\n{evidence_text}\nPRIOR STRUCTURED FINDINGS:\n{prior or {}}"
@@ -218,7 +294,26 @@ class ChangeSocietyService:
             {"intent": "structured_analysis", "schema": schema.__name__}, "agentcore-coordinator", run.correlation_id,
         )
         self._append_assignment(run, role, ticket.ticket_id, ticket.assigned_agent_id)
-        return self.control_plane.execute_ticket(ticket, system, user, schema), ticket
+        logger.info(
+            "run role dispatch run_id=%s role=%s ticket_id=%s rebuttal=%s schema=%s",
+            run.run_id,
+            role.value,
+            ticket.ticket_id,
+            rebuttal,
+            schema.__name__,
+        )
+        result = self.control_plane.execute_ticket(ticket, system, user, schema)
+        payload = result.payload
+        logger.info(
+            "run role result run_id=%s role=%s risk=%s confidence=%s evidence_refs=%s duration_ms=%s",
+            run.run_id,
+            role.value,
+            payload.get("risk_level", payload.get("final_risk_level")),
+            payload.get("confidence"),
+            len(payload.get("evidence_refs", [])),
+            result.duration_ms,
+        )
+        return result, ticket
 
     def _append_assignment(self, run: SocietyRun, role: Role, ticket_id: str, agent_id: str | None) -> AgentMessage:
         return self._new_message(run, "task_assignment", Role.COORDINATOR, role, CAPABILITIES[role], ticket_id,
@@ -305,7 +400,9 @@ class ChangeSocietyService:
             evidence_refs=evidence_refs,
         )
         if not signals["frontend_work_required"]:
+            logger.info("run frontend delivery skipped run_id=%s scenario=%s", run.run_id, scenario_id)
             return
+        logger.info("run frontend delivery dispatch run_id=%s scenario=%s signals=%s", run.run_id, scenario_id, signals)
         system = (
             "You are the Frontend Delivery Coordinator managed by AgentCore. "
             "Backend or platform teams may have already changed APIs or behavior without notifying frontend. "
@@ -353,6 +450,7 @@ class ChangeSocietyService:
         run.metrics["frontend_work_required"] = True
         run.metrics["frontend_handoff_message_id"] = msg.message_id
         run.metrics["model_duration_ms"] = run.metrics.get("model_duration_ms", 0) + result.duration_ms
+        logger.info("run frontend delivery done run_id=%s handoff_msg=%s", run.run_id, msg.message_id)
 
     def get_frontend_delivery(self, scope: Scope, run_id: str) -> dict[str, Any]:
         run = self.repository.get(scope, run_id)
@@ -407,6 +505,7 @@ class ChangeSocietyService:
             raise ConflictError("approval targets a stale run version", {"current_version": run.version})
         if not reason.strip():
             raise ValidationError("decision reason is required")
+        logger.info("decide run_id=%s action=%s actor=%s cid=%s", run_id, action, actor_id, correlation_id)
         run.approval.status = action
         run.approval.decided_at = self.clock.now()
         run.approval.decided_by = actor_id
@@ -445,6 +544,13 @@ class ChangeSocietyService:
         run.final_result["memory_ref"] = memory_ref
         run.transition(RunState.COMPLETED, self.clock.now())
         self._append_system_message(run, "run_completed", RiskLevel.LOW, run.final_result)
+        logger.info(
+            "run completed run_id=%s resolution=%s impacts=%s tasks=%s",
+            run.run_id,
+            resolution,
+            len(run.final_result.get("impacts", [])),
+            len(run.final_result.get("tasks", [])),
+        )
 
     def _append_system_message(self, run: SocietyRun, message_type: str, risk: RiskLevel, payload: dict[str, Any]) -> AgentMessage:
         return self._new_message(run, message_type, Role.COORDINATOR, Role.COORDINATOR, CAPABILITIES[Role.COORDINATOR], message_type, payload, list(payload.get("evidence_refs", [])), 1.0, risk, "none")
@@ -468,7 +574,12 @@ class ChangeSocietyService:
             "ablation": compute_ablation_variants(run, scenario, metrics),
             "caveat": "This fixed-scenario comparison is demonstrative and not statistically significant.",
         }
+        run.metrics = {**run.metrics, "baseline_evaluation": comparison}
+        self.repository.save(run)
         return comparison
+
+    def latest_run_for_scenario(self, scope: Scope, scenario_id: str) -> SocietyRun | None:
+        return self.repository.latest_for_scenario(scope, scenario_id)
 
     def evaluate_all_scenarios(self, scope: Scope, actor_id: str, correlation_prefix: str) -> dict[str, Any]:
         rows = []

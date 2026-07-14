@@ -43,7 +43,7 @@ def start_docker_postgres(pack: Path, *, dry_run: bool) -> None:
         return
     env = os.environ.copy()
     env.setdefault("AGENTCORE_POSTGRES_PASSWORD", "change-society-dev-local")
-    print("Starting optional PostgreSQL (Docker) for local development…")
+    print("Starting PostgreSQL (Docker) for persisted society runs…")
     print("  Example connect: postgresql://agentcore:change-society-dev-local@127.0.0.1:32232/agentcore")
     env_path = pack / ".env"
     env_file_args: tuple[str, ...] = ()

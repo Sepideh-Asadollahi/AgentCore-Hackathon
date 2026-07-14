@@ -1,0 +1,72 @@
+# Change Society web UI — local and generated only (source under app/, components/, lib/)
+# Parent pack: hackathon/.gitignore (backend, evidence, secrets)
+
+# --- Dependencies ---
+node_modules/
+.pnp.*
+.pnp.js
+
+# --- Next.js ---
+.next/
+out/
+dist/
+build/
+.turbo/
+.vercel/
+
+# --- Test / coverage (Node; canonical suite lives in repo tests/frontend/) ---
+coverage/
+playwright-report/
+test-results/
+.nyc_output/
+
+# --- Env (never commit) ---
+.env
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- TypeScript / tooling ---
+next-env.d.ts
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+# --- Debug logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- OS / IDE ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Backend / pack spillover (must not live under frontend/) ---
+**/__pycache__/
+**/*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+backend/
+sdk/
+evidence/
+scripts/
+*.pem
+*.key
+secrets/
+.local-secrets/
+*.sqlite
+*.sqlite3
+*.log
+recordings/
+*.mp4
+*.mov
+*.webm

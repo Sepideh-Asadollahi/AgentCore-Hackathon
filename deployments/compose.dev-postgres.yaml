@@ -1,15 +1,15 @@
-# Optional dev PostgreSQL only (install.sh --with-postgres). Not required for demo profile.
+# Dev PostgreSQL for persisted society runs (install.sh demo profile).
 name: change-society-dev-postgres
 services:
   postgres:
-    image: pgvector/pgvector:0.8.2-pg18-trixie
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${AGENTCORE_POSTGRES_DATABASE:-agentcore}
       POSTGRES_USER: ${AGENTCORE_POSTGRES_USER:-agentcore}
       POSTGRES_PASSWORD: ${AGENTCORE_POSTGRES_PASSWORD:-change-society-dev-local}
     ports: ["${AGENTCORE_POSTGRES_PORT:-32232}:5432"]
     volumes:
-      - change-society-dev-postgres:/var/lib/postgresql
+      - change-society-dev-postgres:/var/lib/postgresql/data
       - ../backend/change-society-service/migrations/0001_change_society.sql:/docker-entrypoint-initdb.d/0010_change_society.sql:ro
       - ../backend/change-society-service/migrations/0002_agent_control_plane.sql:/docker-entrypoint-initdb.d/0020_agent_control_plane.sql:ro
     healthcheck:

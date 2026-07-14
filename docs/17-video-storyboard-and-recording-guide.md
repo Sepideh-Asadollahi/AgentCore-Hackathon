@@ -11,7 +11,7 @@ Target duration: **under 3:00** (aim **2:45** for upload buffer). English narrat
 | Item | Setting |
 |---|---|
 | Backend | Public Alibaba deployment **or** local with on-screen label “local deterministic demo” for rehearsal; **final submission video should show Alibaba + Qwen** when claiming live cloud |
-| Frontend | `http://localhost:32501` or `{{PUBLIC_DEMO_URL}}` |
+| Frontend | `http://localhost:3000` or `{{PUBLIC_DEMO_URL}}` |
 | Scenario | **`checkout-api-refactor`** — “Refactor checkout HTTP handler…” |
 | UI mode | **Cinematic demo** → **Run live test** → enable **Auto-play all stages** for rehearsal |
 | Browser | Clean profile; zoom 100%; dark UI readable |

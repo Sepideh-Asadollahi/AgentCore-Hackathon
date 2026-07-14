@@ -24,9 +24,18 @@ npm install
 npm run typecheck
 npm run build
 npm run dev
+npm test
+npm run test:live-runs   # Playwright: /runs loads scenarios via UI proxy (API must be up)
 ```
 
 Dev server: [http://localhost:32501](http://localhost:32501) (API default [http://localhost:32500](http://localhost:32500)).
+
+Stack smoke (API + Next proxy): from pack root run `scripts/check-stack.sh`.
+
+## UI shell
+
+Workspace layout, routing, and route-transition rules (avoid blank main column): [docs/ui-shell-layout.md](docs/ui-shell-layout.md).  
+Submission index: [docs/31-frontend-ui-shell.md](../docs/31-frontend-ui-shell.md).
 
 ## Demo flow
 

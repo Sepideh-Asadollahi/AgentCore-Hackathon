@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import logging
+import time
 from uuid import uuid4
 
 from fastapi import FastAPI, Header, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from ..infrastructure.model_client_resolve import resolve_qwen_client
 from ..application.service import ChangeSocietyService
 from ..application.judging_engineering_profile import build_judging_engineering_profile
 from ..application.submission_compliance import build_submission_compliance_report
@@ -17,6 +20,7 @@ from .schemas import (
     CreateSocietyRunRequest, CreateSocietyRunResponse, DemoScenarioListResponse, ErrorResponse, FrontendDeliveryResponse, HealthResponse,
     OrgPolicyActivateRequest, OrgPolicyActivateResponse, OrgPolicyChallengeResolveRequest, OrgPolicyIntakeAnalyzeRequest,
     OrgPolicyIntakeAnalyzeResponse, OrgPolicyIntakeSessionResponse, OrgPolicyListResponse,
+    HackathonLlmConnectionRequest, HackathonLlmConnectionResponse,
     SocietyRunListResponse, SocietyRunResponse,
 )
 
@@ -29,6 +33,8 @@ STATUS_BY_CATEGORY = {
 
 
 def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | None = None) -> FastAPI:
+    http_log = logging.getLogger("change_society.http")
+    app_log = logging.getLogger("change_society.api")
     allowed_origins = tuple(runtime_profile.get("allowed_origins", "").split(",")) if runtime_profile and runtime_profile.get("allowed_origins") else ()
     if runtime_profile and "allowed_origins_list" in runtime_profile:
         allowed_origins = tuple(runtime_profile["allowed_origins_list"])
@@ -39,12 +45,47 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
     if allowed_origins:
         app.add_middleware(CORSMiddleware, allow_origins=list(allowed_origins), allow_credentials=False, allow_methods=["GET", "POST"], allow_headers=["*"])
 
+    @app.middleware("http")
+    async def log_requests(request: Request, call_next):
+        cid = request.headers.get("X-Correlation-Id") or "-"
+        started = time.perf_counter()
+        try:
+            response = await call_next(request)
+            ms = (time.perf_counter() - started) * 1000
+            http_log.info(
+                "%s %s -> %s %.1fms cid=%s",
+                request.method,
+                request.url.path,
+                response.status_code,
+                ms,
+                cid,
+            )
+            return response
+        except Exception:
+            ms = (time.perf_counter() - started) * 1000
+            http_log.exception(
+                "%s %s failed after %.1fms cid=%s",
+                request.method,
+                request.url.path,
+                ms,
+                cid,
+            )
+            raise
+
     def correlation(request: Request) -> str:
         return request.headers.get("X-Correlation-Id") or f"corr_{uuid4().hex}"
 
     @app.exception_handler(SocietyError)
     async def society_error_handler(request: Request, exc: SocietyError):
         correlation_id = correlation(request)
+        app_log.warning(
+            "society_error code=%s category=%s path=%s cid=%s msg=%s",
+            exc.code,
+            exc.category,
+            request.url.path,
+            correlation_id,
+            exc.message,
+        )
         return JSONResponse(
             status_code=STATUS_BY_CATEGORY.get(exc.category, 500),
             content={"error": {"error_code": exc.code, "category": exc.category, "message": exc.message, "retryable": exc.retryable,
@@ -54,6 +95,7 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
     @app.exception_handler(Exception)
     async def unexpected_error_handler(request: Request, exc: Exception):
         correlation_id = correlation(request)
+        app_log.exception("unexpected_error path=%s cid=%s", request.url.path, correlation_id)
         return JSONResponse(status_code=500, content={"error": {"error_code": "internal_error", "category": "internal_error",
             "message": "An unexpected error occurred.", "retryable": False, "correlation_id": correlation_id, "details": {},
             "documentation_ref": "hackathon/errors/internal_error"}})
@@ -88,7 +130,7 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
             and bool(model.get("production_ready") or model.get("provider") == "qwen_cloud")
             and model.get("provider") == "qwen_cloud"
         )
-        return {"status": "ok" if ready and production_ready else ("degraded" if ready else "not_ready"), "service": "change-society-service", "checks": {"store": store, "model": model}}
+        return {"status": "ok" if ready and production_ready else ("degraded" if ready else "not_ready"), "service": "change-society-service", "checks": {"store": store, "model": model, "demo": {"demo_auto_approve": service.demo_auto_approve}}}
 
     @app.get("/api/v1/projects/{project_id}/demo-scenarios", response_model=DemoScenarioListResponse, operation_id="change_society_list_demo_scenarios", tags=["change-society"])
     async def list_scenarios(request: Request, project_id: str, x_tenant_id: str = Header(alias="X-Tenant-Id"), x_workspace_id: str = Header(alias="X-Workspace-Id"), page_size: int = Query(20, ge=1, le=50), page_token: str | None = None):
@@ -222,7 +264,54 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
 
     @app.post("/api/v1/projects/{project_id}/society-runs", response_model=CreateSocietyRunResponse, responses=errors, operation_id="change_society_create_society_run", tags=["change-society"])
     async def create_run(request: Request, project_id: str, body: CreateSocietyRunRequest, x_tenant_id: str = Header(alias="X-Tenant-Id"), x_workspace_id: str = Header(alias="X-Workspace-Id"), x_actor_id: str = Header(alias="X-Actor-Id"), idempotency_key: str = Header(alias="Idempotency-Key")):
-        run = service.create_run(scope(project_id, x_tenant_id, x_workspace_id), x_actor_id, correlation(request), idempotency_key, body.scenario_id, body.request_text)
+        corr = correlation(request)
+        app_log.info(
+            "create_society_run request project=%s scenario=%s actor=%s idempotency=%s correlation=%s request_len=%s",
+            project_id,
+            body.scenario_id,
+            x_actor_id,
+            idempotency_key[:16] if idempotency_key else "",
+            corr,
+            len(body.request_text or ""),
+        )
+        try:
+            run = service.create_run(scope(project_id, x_tenant_id, x_workspace_id), x_actor_id, corr, idempotency_key, body.scenario_id, body.request_text)
+        except SocietyError as exc:
+            app_log.warning(
+                "create_society_run failed project=%s scenario=%s correlation=%s category=%s message=%s",
+                project_id,
+                body.scenario_id,
+                corr,
+                exc.category,
+                exc.message,
+            )
+            raise
+        app_log.info(
+            "create_society_run ok project=%s run_id=%s state=%s correlation=%s",
+            project_id,
+            run.run_id,
+            run.state.value if hasattr(run.state, "value") else run.state,
+            corr,
+        )
+        return {"society_run": run.public(), "correlation_id": corr}
+
+    @app.get(
+        "/api/v1/projects/{project_id}/demo-scenarios/{scenario_id}/latest-society-run",
+        response_model=SocietyRunResponse,
+        responses=errors,
+        operation_id="change_society_get_latest_society_run_for_scenario",
+        tags=["change-society"],
+    )
+    async def latest_run_for_scenario(
+        request: Request,
+        project_id: str,
+        scenario_id: str,
+        x_tenant_id: str = Header(alias="X-Tenant-Id"),
+        x_workspace_id: str = Header(alias="X-Workspace-Id"),
+    ):
+        run = service.latest_run_for_scenario(scope(project_id, x_tenant_id, x_workspace_id), scenario_id)
+        if run is None:
+            raise NotFoundError()
         return {"society_run": run.public(), "correlation_id": correlation(request)}
 
     @app.get("/api/v1/projects/{project_id}/society-runs", response_model=SocietyRunListResponse, operation_id="change_society_list_society_runs", tags=["change-society"])
@@ -310,6 +399,37 @@ def create_api(service: ChangeSocietyService, runtime_profile: dict[str, str] | 
     async def judging_engineering_profile(request: Request):
         profile = build_judging_engineering_profile(model_health=service.model.health())
         return {"profile": profile, "correlation_id": correlation(request)}
+
+    @app.post(
+        "/api/v1/hackathon/dev/llm-connection",
+        response_model=HackathonLlmConnectionResponse,
+        responses=errors,
+        operation_id="change_society_apply_dev_llm_connection",
+        tags=["operations"],
+    )
+    async def apply_dev_llm_connection(request: Request, body: HackathonLlmConnectionRequest):
+        environment = (runtime_profile or {}).get("environment", "production")
+        if environment != "development":
+            raise ValidationError("dev_llm_connection requires CHANGE_SOCIETY_ENVIRONMENT=development")
+        client = resolve_qwen_client(service.model)
+        if client is None:
+            raise ValidationError(
+                "API is not using the Qwen model client. Set CHANGE_SOCIETY_MODEL_PROVIDER=qwen in hackathon/.env and restart the API process."
+            )
+        if not body.api_key.strip() and not client.health().get("configured"):
+            raise ValidationError("api_key is required when the Qwen client is not already configured")
+        client.apply_connection(
+            api_key=body.api_key or None,
+            base_url=body.base_url or None,
+            model=body.model or None,
+        )
+        health = client.health()
+        return {
+            "applied": True,
+            "model_health": health,
+            "message": "Qwen connection updated for this API process (development only).",
+            "correlation_id": correlation(request),
+        }
 
     @app.post("/api/v1/projects/{project_id}/society-runs:evaluate-all-scenarios", operation_id="change_society_evaluate_all_scenarios", tags=["evaluation"])
     async def evaluate_all_scenarios(

@@ -44,7 +44,7 @@ flowchart TB
   end
 
   subgraph clients [Clients]
-    UI[Next.js demo UI :32501]
+    UI[Next.js demo UI :3000]
     SDK[Python / browser SDK]
   end
 

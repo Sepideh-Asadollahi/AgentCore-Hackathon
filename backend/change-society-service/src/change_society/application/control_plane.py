@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Any
+
+logger = logging.getLogger("change_society.control_plane")
 
 from ..contracts.agent_adapter import AgentExecutionRequest
 from ..domain.control_plane import AgentState, AgentTicket, ManagedAgent, TicketState
@@ -112,6 +115,14 @@ class AgentControlPlane:
         ticket.transition(TicketState.ASSIGNED, "agentcore-router", self.clock.now(), self.ids.new("event"),
                           {"routing_reason": "capability_match_lowest_active_load", "agent_id": selected.agent_id})
         self.repository.save_ticket(ticket, persisted_version)
+        logger.info(
+            "ticket created ticket_id=%s run_id=%s capability=%s agent_id=%s cid=%s",
+            ticket.ticket_id,
+            run_id,
+            capability,
+            selected.agent_id,
+            correlation_id,
+        )
         return ticket
 
     def execute_ticket(self, ticket: AgentTicket, system_prompt: str, user_prompt: str, output_schema: type[Any]) -> ModelResult:
@@ -131,12 +142,31 @@ class AgentControlPlane:
         agent.version += 1
         agent.updated_at = self.clock.now()
         self.repository.save_agent(agent, persisted_agent_version)
+        logger.info(
+            "ticket execute start ticket_id=%s run_id=%s capability=%s agent_id=%s adapter=%s schema=%s cid=%s",
+            ticket.ticket_id,
+            ticket.run_id,
+            ticket.capability,
+            agent.agent_id,
+            agent.adapter_type,
+            getattr(output_schema, "__name__", str(output_schema)),
+            ticket.correlation_id,
+        )
         try:
             adapter = self.adapters.get(agent.adapter_type)
             result = adapter.execute(agent, AgentExecutionRequest(
                 ticket.ticket_id, agent.agent_id, agent.role or agent.name, system_prompt, user_prompt,
                 output_schema, ticket.correlation_id,
             ))
+            logger.info(
+                "ticket execute ok ticket_id=%s run_id=%s duration_ms=%s in_tokens=%s out_tokens=%s runtime=%s",
+                ticket.ticket_id,
+                ticket.run_id,
+                result.duration_ms,
+                result.input_tokens,
+                result.output_tokens,
+                result.runtime,
+            )
             ticket.output_payload = result.payload
             ticket.execution_metrics = {"input_tokens": result.input_tokens, "output_tokens": result.output_tokens,
                                         "duration_ms": result.duration_ms, "runtime": result.runtime,
@@ -147,6 +177,13 @@ class AgentControlPlane:
             self.repository.save_ticket(ticket, persisted_ticket_version)
             return ModelResult(result.payload, result.input_tokens, result.output_tokens, result.duration_ms, result.runtime)
         except Exception as exc:
+            logger.warning(
+                "ticket execute failed ticket_id=%s run_id=%s error_code=%s message=%s",
+                ticket.ticket_id,
+                ticket.run_id,
+                getattr(exc, "code", "agent_execution_failed"),
+                getattr(exc, "message", str(exc)),
+            )
             ticket.error = {"error_code": getattr(exc, "code", "agent_execution_failed"), "message": getattr(exc, "message", "Agent execution failed.")}
             if ticket.state == TicketState.IN_PROGRESS:
                 ticket.transition(TicketState.FAILED, "agentcore-dispatcher", self.clock.now(), self.ids.new("event"))

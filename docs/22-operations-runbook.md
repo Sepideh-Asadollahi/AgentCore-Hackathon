@@ -9,7 +9,7 @@ See [../deployments/alibaba/ADR-001-minimum-topology.md](../deployments/alibaba/
 | Component | Default port | Health |
 |---|---|---|
 | Change Society API | 32500 | `GET /health`, `GET /ready` |
-| Change Society Web | 32501 | Browser load |
+| Change Society Web | 3000 | Browser load |
 | PostgreSQL | 5432 (internal) | via `/ready` checks.store |
 
 ## Configuration Profiles

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./glass.css";
-import "./cinematic.css";
 
 export const metadata: Metadata = {
   title: "AgentCore Change Society",
@@ -9,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className="glass-ui">{children}</body></html>;
+  return (
+    <html lang="en" className="dark">
+      <body className="min-h-svh bg-background text-foreground">{children}</body>
+    </html>
+  );
 }

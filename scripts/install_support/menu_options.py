@@ -28,7 +28,7 @@ RUNTIME_OPTIONS: tuple[ChoiceOption, ...] = (
         "PYTHONPATH=backend/change-society-service/src "
         ".venv/bin/python -m uvicorn change_society.main:app --host 127.0.0.1 --port 32500\n"
         "Terminal 2: cd frontend && npm run dev\n"
-        "Browser: http://localhost:32501",
+        "Browser: http://localhost:3000",
     ),
     ChoiceOption(
         "systemd",

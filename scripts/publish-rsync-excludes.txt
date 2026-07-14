@@ -5,9 +5,13 @@
 .env
 .env.local
 .env.*.local
+pass.txt
+**/pass.txt
 scripts/push-github-hackathon.local.sh
 scripts/push-github-hackathon.local.env
+scripts/secret_scan_publish_tree.sh
 scripts/judge-deploy-public-server.local.sh
+judge-deploy-status.log
 push-github-hackathon.local.env
 
 # Local workspace mirrors (duplicate of parent hackathon docs)

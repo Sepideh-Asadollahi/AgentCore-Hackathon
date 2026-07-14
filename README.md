@@ -12,7 +12,8 @@ Agent control plane for governed multi-agent work. This repository includes the 
 |--------------|---------|
 | **What to click in the demo UI** (pages, run tabs, Settings, progress dialog) | **[frontend/docs/web-interface-guide.md](frontend/docs/web-interface-guide.md)** |
 | **Full submission checklist & doc map** | [docs/14-submission-pack-index.md](docs/14-submission-pack-index.md) |
-| **Executed live / real test proof** (commands + artifacts) | [docs/27-judge-live-and-real-test-evidence.md](docs/27-judge-live-and-real-test-evidence.md) · [docs/29-langgraph-sdk-live-seven-scenarios.md](docs/29-langgraph-sdk-live-seven-scenarios.md) |
+| **Executed live / real test proof** (commands + artifacts) | [docs/27-judge-live-and-real-test-evidence.md](docs/27-judge-live-and-real-test-evidence.md) · [docs/29-langgraph-sdk-live-seven-scenarios.md](docs/29-langgraph-sdk-live-seven-scenarios.md) · **Judge host scripts** below |
+| **API key & Settings (no browser storage)** | [frontend/docs/web-interface-guide.md](frontend/docs/web-interface-guide.md) — key in **PostgreSQL** + server `.env` via `judge-runtime-apply` |
 | **Install & public URL / systemd ports** | This README (Install + Run locally) · [docs/01-quickstart.md](docs/01-quickstart.md) |
 | **Architecture & Qwen integration** | [docs/02-architecture.md](docs/02-architecture.md) · [docs/03-qwen-cloud-integration.md](docs/03-qwen-cloud-integration.md) |
 | **Claims → evidence mapping** | [docs/16-claim-evidence-mapping.md](docs/16-claim-evidence-mapping.md) |
@@ -77,7 +78,11 @@ bash install.sh
 bash install.sh --profile verify   # + live Qwen society smoke (one scenario)
 ```
 
-Copy **`.env.example`** → **`.env`** for live Qwen (`QWEN_API_KEY`). **`install.sh` syncs a minimum boot `.env` from `.env.example` on every run** (preserves a non-empty `QWEN_API_KEY` and Postgres password). **`CHANGE_SOCIETY_STORE=postgresql`** — install starts **PostgreSQL 16 in Docker** and applies SQL migrations.
+Copy **`.env.example`** → **`.env`** for live Qwen (`QWEN_API_KEY`, optional **`QWEN_MODEL`**). **`install.sh` syncs a minimum boot `.env` from `.env.example` on every run** (preserves a non-empty `QWEN_API_KEY` and Postgres password). **`CHANGE_SOCIETY_STORE=postgresql`** — install starts **PostgreSQL 16 in Docker** and applies SQL migrations.
+
+**Live judge proof model (tested on public judge hosts):** set **`QWEN_MODEL=qwen3-coder-480b-a35b-instruct`** in `.env` before running the seven-scenario integrator suite (see [Judge machine — live seven scenarios](#judge-machine--live-seven-scenarios)).
+
+**Never commit** `QWEN_API_KEY`. The demo UI does **not** store the key in browser localStorage — use **Settings → Save key & restart worker** (or `POST /api/v1/hackathon/dev/judge-runtime-apply`) so the key is written to **`change_society_runtime_secrets`** and the pack **`.env`**, then the LangGraph worker restarts.
 
 Details: [docs/01-quickstart.md](docs/01-quickstart.md).
 
@@ -151,7 +156,7 @@ Open [http://localhost:32501](http://localhost:32501) (or `npm run dev` default 
 ### Public server (systemd, judges / internet)
 
 1. Install with **`bash install.sh --non-interactive --install-os-deps --systemd`**.
-2. Set **`QWEN_API_KEY`** in **`.env`** for live LangGraph agents.
+2. Set **`QWEN_API_KEY`** and **`QWEN_MODEL`** (recommended: **`qwen3-coder-480b-a35b-instruct`**) in **`.env`**, or apply via **Settings** on the UI (server-side storage only).
 3. **`bash scripts/configure-public-demo-host.sh YOUR_PUBLIC_IP`**
 4. **`bash scripts/ensure-systemd-stack.sh`** — enables units and **`loginctl enable-linger`** so services stay up after SSH logout.
 5. Firewall / cloud security group: allow **32501** (UI), **32500** (API). Worker **32510** is optional (health checks only).
@@ -179,6 +184,34 @@ curl -sS http://127.0.0.1:32500/health
 curl -sS http://127.0.0.1:32500/ready
 curl -sS http://127.0.0.1:32500/api/v1/hackathon/submission-compliance | jq .
 ```
+
+### Long society runs (async create + UI proxy)
+
+With **`CHANGE_SOCIETY_ASYNC_RUN_CREATE=1`** (default on PostgreSQL demos), **`POST /society-runs`** returns while the pipeline runs in the background; the UI polls via same-origin **`/change-society-api`**. Tune timeouts in `.env`: **`CHANGE_SOCIETY_PROXY_TIMEOUT_MS`**, **`NEXT_PUBLIC_SOCIETY_RUN_POLL_MS`**.
+
+## Judge machine — live seven scenarios
+
+For a **systemd judge VM** with a valid **`QWEN_API_KEY`** and integrator managed agents:
+
+| Step | Command |
+|------|---------|
+| Model smoke (one Qwen HTTP call) | `python scripts/qwen_hello_smoke.py` |
+| Seven LangGraph + Qwen scenarios | `bash scripts/judge-final-live-seven.sh` |
+| Full QA gate (7 scenarios + async + proxy; **purges key if all green**) | `bash scripts/judge-public-full-qa-and-purge.sh` |
+| Manual credential purge (after QA) | `bash scripts/purge-judge-qwen-credentials.sh` |
+
+**`.env` hints for integrator live proof:**
+
+```bash
+QWEN_MODEL=qwen3-coder-480b-a35b-instruct
+CHANGE_SOCIETY_MANAGED_AGENTS_CONFIG=backend/change-society-service/config/managed-agents.integrator-live-all.example.json
+WORKER_LIVE_MODE=1
+WORKER_USE_LLM=1
+```
+
+Artifacts land under **`evidence/live/`** (gitignored — keep on the judge machine or export separately for submission). Committed redacted reports remain under **`evidence/real/`**.
+
+Machine-local SSH deploy helpers (**`scripts/judge-deploy-public-server.local.sh`**, **`scripts/push-github-hackathon.local.sh`**) are **gitignored** — see **`scripts/push-github-hackathon.local.env.example`**.
 
 ## Repository layout
 
@@ -247,6 +280,26 @@ bash ../tests/frontend/change-society/run-frontend-tests.sh
 ```
 
 See [docs/06-testing-and-evaluation.md](docs/06-testing-and-evaluation.md) and [evidence/README.md](evidence/README.md).
+
+## Secrets — never in Git or GitHub
+
+| Never commit | Where secrets belong |
+|--------------|----------------------|
+| **`hackathon/.env`**, **`pass.txt`**, **`push-github-hackathon.local.env`** | Local disk only (listed in **`.gitignore`**) |
+| **`QWEN_API_KEY`** | PostgreSQL `change_society_runtime_secrets` + server `.env` via **Settings / judge-runtime-apply** — not browser localStorage |
+| **`evidence/live/`**, **`evidence/private/`** | Judge-machine artifacts (gitignored); publish only redacted **`evidence/real/`** |
+
+**Public sync** (`scripts/push-github-hackathon.local.sh`, gitignored): rsync uses **`scripts/publish-rsync-excludes.txt`**, blocks **`.env`**, runs **`scripts/secret_scan_publish_tree.sh`** (also gitignored, local-only) before commit, and refuses DashScope **`sk-ws-…`** patterns in the publish tree.
+
+Before pushing, scan the pack (skips gitignored **`.env`** on disk; still flags **`pass.txt`** or **`sk-ws-…`** in tracked files):
+
+```bash
+bash scripts/secret_scan_publish_tree.sh .
+```
+
+**`push-github-hackathon.local.sh`** also scans the rsynced clone (no **`.env`**) immediately before **`git commit`**.
+
+Placeholders in docs/tests use `sk-...` or `sk-test-not-real` only — not your real key.
 
 ## License
 

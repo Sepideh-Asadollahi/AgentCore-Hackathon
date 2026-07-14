@@ -180,6 +180,11 @@ def main() -> int:
     agents = client.list_managed_agents()
     run = client.create_run(args.scenario, run_request, idempotency_key=f"live-create-{args.scenario}-{uuid4()}")
     run = wait_for_run_settled(client, run["run_id"], max(60.0, client_timeout - 30.0))
+    if run["state"] == "failed":
+        err = run.get("error") or {}
+        raise RuntimeError(
+            f"run {run['run_id']} failed: {err.get('error_code') or 'unknown'} — {err.get('message') or 'no message'}"
+        )
     tickets = client.list_agent_tickets(run["run_id"])
     messages = client.list_messages(run["run_id"])
     roles = {item["sender_role"] for item in messages}

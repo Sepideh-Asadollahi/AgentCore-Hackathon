@@ -28,7 +28,7 @@ VERIFY = Path(__file__).resolve().parent / "verify_society_run.py"
 SCENARIO_CATALOG = {item.scenario_id: item for item in SCENARIOS}
 
 
-def manifest_path(path: Path) -> str:
+def pack_relative_path(path: Path) -> str:
     try:
         return str(path.relative_to(PACK))
     except ValueError:
@@ -114,8 +114,8 @@ def main() -> int:
                 "scenario_id": scenario_id,
                 "domain": SCENARIO_CATALOG[scenario_id].domain,
                 "run_id": run_id,
-                "report_path": manifest_path(report_path),
-                "interaction_trace_path": manifest_path(trace_path),
+                "report_path": pack_relative_path(report_path),
+                "interaction_trace_path": pack_relative_path(trace_path),
                 "langgraph_integrator": report.get("langgraph_integrator"),
                 "rebuttal_response_count": report.get("rebuttal_response_count"),
                 "final_state": report.get("final_state"),
@@ -136,9 +136,9 @@ def main() -> int:
         "readiness": readiness,
         "secrets_included": False,
     }
-    manifest_path = output_dir / "manifest.json"
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({"status": "passed", "manifest": str(manifest_path), "scenarios": len(rows)}, indent=2))
+    manifest_file = output_dir / "manifest.json"
+    manifest_file.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(json.dumps({"status": "passed", "manifest": str(manifest_file), "scenarios": len(rows)}, indent=2))
     client.close()
     return 0
 

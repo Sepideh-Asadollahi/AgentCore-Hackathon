@@ -60,7 +60,7 @@ export function RunProgressDialog() {
 
   return (
     <Dialog open={ws.runLaunchOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-lg" showCloseButton={!busy}>
+      <DialogContent className="sm:max-w-lg" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
@@ -138,11 +138,6 @@ export function RunProgressDialog() {
                 </Button>
               )}
             </>
-          )}
-          {errored && !ws.runLaunchTargetRunId && (
-            <Button type="button" variant="outline" onClick={() => ws.dismissRunLaunch()}>
-              Close
-            </Button>
           )}
         </DialogFooter>
       </DialogContent>

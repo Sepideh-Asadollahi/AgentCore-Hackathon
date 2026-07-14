@@ -8,7 +8,22 @@ API="${BASE_URL:-http://127.0.0.1:32500}"
 SCENARIO="${SCENARIO_ID:-password-migration}"
 IDK="verify-async-$(date +%s)"
 
-ready=$(curl -sS "$API/ready" || echo "{}")
+for attempt in $(seq 1 30); do
+  if curl -sf "$API/ready" -o /tmp/cs-ready.json; then
+    async_flag=$(python3 - <<'PY'
+import json
+d=json.load(open("/tmp/cs-ready.json"))
+print(d.get("checks", {}).get("demo", {}).get("async_run_create"))
+PY
+)
+    if [[ "$async_flag" == "True" ]]; then
+      break
+    fi
+  fi
+  sleep 2
+done
+
+ready=$(cat /tmp/cs-ready.json 2>/dev/null || echo "{}")
 async_flag=$(python3 - <<PY
 import json
 try:
@@ -19,6 +34,7 @@ print(d.get("checks",{}).get("demo",{}).get("async_run_create"))
 PY
 )
 echo "NOTE /ready async_run_create=$async_flag"
+[[ "$async_flag" == "True" ]] || { echo "FAIL API not reporting async_run_create (restart change-society-api.service)" >&2; exit 1; }
 
 started=$(date +%s)
 code=$(curl -sS -o /tmp/async-create.json -w '%{http_code}' --max-time 20 \

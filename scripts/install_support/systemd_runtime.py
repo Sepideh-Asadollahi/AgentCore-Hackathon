@@ -141,6 +141,17 @@ def install_systemd_user_units(pack: Path, *, dry_run: bool) -> None:
         )
 
     if not dry_run:
+        import time
+
+        detail("Reloading API process so Python changes take effect…")
+        run_subprocess(
+            ["systemctl", "--user", "restart", "change-society-api.service"],
+            dry_run=False,
+            label="systemctl --user restart change-society-api",
+        )
+        time.sleep(4)
+
+    if not dry_run:
         try:
             subprocess.run(
                 ["loginctl", "enable-linger", os.environ.get("USER", "")],

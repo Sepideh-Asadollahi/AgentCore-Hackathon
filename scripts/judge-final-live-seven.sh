@@ -51,6 +51,10 @@ set -a
 source .env
 set +a
 
+API_PORT="${CHANGE_SOCIETY_API_PORT:-32500}"
+WORKER_PORT="${WORKER_PORT:-32510}"
+BASE="http://127.0.0.1:${API_PORT}"
+
 status "restart LangGraph worker with live mode env"
 systemctl --user restart change-society-langgraph-worker.service
 sleep 3
@@ -78,10 +82,6 @@ for u in change-society-langgraph-worker change-society-api change-society-web; 
     exit 1
   }
 done
-
-API_PORT="${CHANGE_SOCIETY_API_PORT:-32500}"
-WORKER_PORT="${WORKER_PORT:-32510}"
-BASE="http://127.0.0.1:${API_PORT}"
 
 status "curl worker ready :${WORKER_PORT}"
 curl -sf "http://127.0.0.1:${WORKER_PORT}/ready" | head -c 400

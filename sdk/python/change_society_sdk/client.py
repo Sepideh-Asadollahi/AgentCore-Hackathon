@@ -30,7 +30,14 @@ class ChangeSocietyClient:
             "X-Actor-Id": self.scope.actor_id, "X-Correlation-Id": f"corr_{uuid4().hex}"}
         if idempotency_key: headers["Idempotency-Key"] = idempotency_key
         response = self._client.request(method, path, headers=headers, json=json)
-        data = response.json()
+        try:
+            data = response.json()
+        except ValueError as exc:
+            raise ChangeSocietySdkError(
+                "invalid_response",
+                f"API returned non-JSON HTTP {response.status_code} for {path}.",
+                response.status_code >= 500,
+            ) from exc
         if response.is_error:
             error = data.get("error", {})
             raise ChangeSocietySdkError(error.get("error_code", "http_error"), error.get("message", "Request failed."), error.get("retryable", False))

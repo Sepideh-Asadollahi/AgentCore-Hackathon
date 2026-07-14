@@ -57,7 +57,18 @@ sleep 3
 
 status "restart API with integrator-live-all managed agents config"
 systemctl --user restart change-society-api.service
-sleep 8
+status "wait for API to accept connections"
+for _ in $(seq 1 45); do
+  if curl -sf "${BASE}/health" >/dev/null 2>&1; then
+    break
+  fi
+  sleep 1
+done
+curl -sf "${BASE}/health" >/dev/null || {
+  echo "FAIL: API did not become reachable on ${BASE}/health" >&2
+  exit 1
+}
+sleep 2
 
 status "checking systemd user services"
 for u in change-society-langgraph-worker change-society-api change-society-web; do

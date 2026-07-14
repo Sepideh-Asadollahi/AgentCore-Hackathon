@@ -43,10 +43,12 @@ post_apply() {
     "$url/api/v1/hackathon/dev/judge-runtime-apply"
 }
 
-for LABEL URL in "direct" "$API" "proxy" "$PROXY"; do
+for pair in "direct:${API}" "proxy:${PROXY}"; do
+  LABEL="${pair%%:*}"
+  URL="${pair#*:}"
   code=$(post_apply "$URL")
   echo "$LABEL HTTP $code"
-  cat /tmp/judge-runtime.json | head -c 400
+  head -c 400 /tmp/judge-runtime.json
   echo ""
   [[ "$code" == "200" ]] || { echo "FAIL $LABEL" >&2; exit 1; }
 done

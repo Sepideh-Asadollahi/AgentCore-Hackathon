@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .types import ChoiceOption, RuntimeMode
 from .banner import BANNER, print_banner
 from .cmd import run_cmd
 from .docker_runtime import (

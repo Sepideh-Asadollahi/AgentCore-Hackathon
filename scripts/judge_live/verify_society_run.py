@@ -77,6 +77,23 @@ def wait_ready(base_url: str, timeout: int) -> dict:
     raise RuntimeError(f"API readiness timed out: {last_error}")
 
 
+_ACTIVE_RUN_STATES = frozenset(
+    {"accepted", "gathering_context", "decomposing", "analyzing", "reconciling", "finalizing"},
+)
+_SETTLED_RUN_STATES = frozenset({"awaiting_approval", "completed", "failed", "rejected", "canceled"})
+
+
+def wait_for_run_settled(client: ChangeSocietyClient, run_id: str, timeout: float) -> dict:
+    deadline = time.monotonic() + timeout
+    run = client.get_run(run_id)
+    while run["state"] in _ACTIVE_RUN_STATES and time.monotonic() < deadline:
+        time.sleep(2.0)
+        run = client.get_run(run_id)
+    if run["state"] not in _SETTLED_RUN_STATES:
+        raise RuntimeError(f"run {run_id} did not settle within {timeout}s (state={run['state']})")
+    return run
+
+
 def _assert_ticket_lifecycle(tickets: list[dict]) -> None:
     expected_lifecycle = {"assigned", "claimed", "in_progress", "review", "completed"}
     assert all(item["state"] == "completed" for item in tickets), "every dispatched agent ticket must complete"
@@ -160,8 +177,9 @@ def main() -> int:
     run_request: str | None = None
     if args.profile == "judge-live":
         run_request = SCENARIO_CATALOG[args.scenario].effective_judge_request()
-    run = client.create_run(args.scenario, run_request, idempotency_key=f"live-create-{args.scenario}-{uuid4()}")
     agents = client.list_managed_agents()
+    run = client.create_run(args.scenario, run_request, idempotency_key=f"live-create-{args.scenario}-{uuid4()}")
+    run = wait_for_run_settled(client, run["run_id"], max(60.0, client_timeout - 30.0))
     tickets = client.list_agent_tickets(run["run_id"])
     messages = client.list_messages(run["run_id"])
     roles = {item["sender_role"] for item in messages}

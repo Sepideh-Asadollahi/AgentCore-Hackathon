@@ -57,7 +57,7 @@ sleep 3
 
 status "restart API with integrator-live-all managed agents config"
 systemctl --user restart change-society-api.service
-sleep 4
+sleep 8
 
 status "checking systemd user services"
 for u in change-society-langgraph-worker change-society-api change-society-web; do

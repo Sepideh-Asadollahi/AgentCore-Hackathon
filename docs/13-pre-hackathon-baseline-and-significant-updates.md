@@ -22,7 +22,7 @@ All items below are implemented under `hackathon/` unless noted:
 | Product slice | Change Society control-plane demo service | `hackathon/backend/change-society-service/` |
 | Protocol | Universal Agent JSON v1 role contracts and translator SDK | `hackathon/sdk/python/`, service contracts |
 | Qwen integration | OpenAI-compatible adapter, bounded retry, schema validation | `infrastructure/qwen_client.py`, adapter tests |
-| Agent society | Five managed agents, seven-ticket lifecycle, one rebuttal round | society integration tests, `verify_society_run.py` |
+| Agent society | Five managed agents, seven-ticket lifecycle, one rebuttal round | society integration tests, `tests/e2e/change-society/verify_society_run.py` |
 | Memory | Scoped evidence catalog, deprecated/restricted filtering, cross-session recall | evidence catalog + memory test |
 | Evaluation | Three versioned scenarios and baseline metrics | `evaluation-scenarios.json`, Phase 7 tests |
 | Demo UX | Four-state UI with protocol timeline and approval boundary | `hackathon/frontend/` |

@@ -52,10 +52,10 @@ Set `CHANGE_SOCIETY_MODEL_PROVIDER=qwen`, `QWEN_API_KEY`, `CHANGE_SOCIETY_STORE=
 ## Verification
 
 ```bash
-bash scripts/run-pytest.sh -q
+bash ../tests/backend/change-society-service/run-pytest.sh -q
 cd frontend && npm run typecheck
 node --experimental-strip-types --test tests/frontend/change-society/demo-state.test.mjs
-bash scripts/run-real-test.sh
+bash ../tests/e2e/change-society/run-real-test.sh
 ```
 
 Evidence files: [19-evidence-artifact-index.md](19-evidence-artifact-index.md).

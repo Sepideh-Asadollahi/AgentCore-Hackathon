@@ -8,7 +8,7 @@ import {WorkspaceSelect} from "@/components/workspace/WorkspaceSelect";
 import {WorkspaceAlerts} from "@/components/workspace/WorkspaceOverlays";
 import {shouldPollSocietyRun} from "@/lib/demo-state";
 import {useRunWorkspace} from "@/lib/run-workspace";
-import {panelClass, wsActions, wsFieldControl, wsFieldLabel, wsGridSingle, wsMeta, wsStep} from "@/lib/workspace-ui";
+import {panelClass, wsFieldControl, wsFieldLabel, wsGridSingle, wsMeta, wsStep} from "@/lib/workspace-ui";
 import {RunsJudgeIntroPanel} from "./RunsJudgeIntro";
 import {ScenarioRunPicker} from "@/components/workspace/ScenarioRunPicker";
 
@@ -26,11 +26,6 @@ export function RunsPageClient() {
 
   const scenariosReady = ws.scenarios.length > 0;
   const scenarioSelectDisabled = ws.busy || (ws.scenariosLoading && !scenariosReady);
-
-  const runNewDisabled =
-    ws.busy || runInProgress || ws.viewState === "degraded" || (ws.scenariosLoading && !scenariosReady);
-
-  const loadLatestDisabled = ws.busy || runInProgress || (ws.scenariosLoading && !scenariosReady);
 
   useEffect(() => {
     runsLog.debug("run form scenario state", {
@@ -96,34 +91,19 @@ export function RunsPageClient() {
             disabled={ws.busy || (ws.scenariosLoading && !scenariosReady)}
             onSelectSource={source => ws.setRunViewSource(source)}
           />
-          <div className="mt-4">
-            <p className={wsStep}>Demo actions</p>
-            <div className={wsActions}>
-              <Button
-                type="button"
-                variant="secondary"
-                className="min-h-10 min-w-[10.5rem] border border-border/90 shadow-sm"
-                onClick={() => void ws.loadLatestDemo()}
-                disabled={loadLatestDisabled || (!ws.scenarioRunAvailability.snapshot && !ws.scenarioRunAvailability.live)}
-              >
-                {ws.busy ? "Working…" : "Open in Work queue"}
+          {ws.run && (
+            <div className="mt-4">
+              <Button type="button" variant="ghost" size="sm" onClick={() => ws.setResetRunDialogOpen(true)}>
+                Clear session
               </Button>
-              <Button type="button" className="min-h-10 min-w-[10.5rem]" onClick={() => void ws.start()} disabled={runNewDisabled}>
-                {ws.busy ? "Working…" : runInProgress ? "Run in progress…" : "Run new demo"}
-              </Button>
-              {ws.run && (
-                <Button type="button" variant="ghost" onClick={() => ws.setResetRunDialogOpen(true)}>
-                  Clear session
-                </Button>
-              )}
             </div>
-          </div>
+          )}
           <p className={`${wsMeta} mt-2 max-w-none`}>
             Choose <strong className="font-medium text-foreground">Latest in database</strong> or{" "}
-            <strong className="font-medium text-foreground">Active session run</strong> above, then{" "}
-            <strong className="font-medium text-foreground">Open in Work queue</strong> for that scenario.{" "}
-            <strong className="font-medium text-foreground">Run new demo</strong> starts a fresh live run for the
-            selected scenario.
+            <strong className="font-medium text-foreground">Active session run</strong> above, then use{" "}
+            <strong className="font-medium text-foreground">Load</strong> in the header for that scenario.{" "}
+            <strong className="font-medium text-foreground">Run</strong> starts a fresh live run for the selected
+            scenario.
           </p>
           {runInProgress && (
             <p className={`${wsMeta} mt-3`}>

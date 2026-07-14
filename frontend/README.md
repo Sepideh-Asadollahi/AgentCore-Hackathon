@@ -30,7 +30,7 @@ npm run test:live-runs   # Playwright: /runs loads scenarios via UI proxy (API m
 
 Dev server: [http://localhost:32501](http://localhost:32501) (API default [http://localhost:32500](http://localhost:32500)).
 
-Stack smoke (API + Next proxy): from pack root run `scripts/check-stack.sh`.
+Stack smoke (API + Next proxy): from pack root run `../tests/e2e/change-society/check-stack.sh`.
 
 ## UI shell
 

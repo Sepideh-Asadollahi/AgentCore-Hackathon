@@ -9,14 +9,14 @@ English one-pager for **Track 3 judges**: prove all benchmark domains work again
 From repository root (requires `QWEN_API_KEY` in `hackathon/.env`):
 
 ```bash
-bash hackathon/scripts/run-qwen-judge-seven-scenarios.sh
+bash tests/live/change-society/run-qwen-judge-seven-scenarios.sh
 ```
 
 ## What it does
 
 ```mermaid
 flowchart LR
-  SH[run-qwen-judge-seven-scenarios.sh]
+  SH[tests/live/change-society/run-qwen-judge-seven-scenarios.sh]
   API[change-society-service + QwenCloudClient]
   QW[Qwen compatible-mode API]
   EV[judge-seven-scenarios/]
@@ -70,4 +70,4 @@ Also updates `evidence/live/society-live-test.json` from checkout scenario.
 - [29-langgraph-sdk-live-seven-scenarios.md](29-langgraph-sdk-live-seven-scenarios.md) — **LangGraph + SDK**, seven scenarios, external worker (integrator demo)
 - [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md)
 - [03-qwen-cloud-integration.md](03-qwen-cloud-integration.md)
-- Deterministic regression: `bash hackathon/scripts/run-real-test-suite.sh` (no API key)
+- Deterministic regression: `bash tests/e2e/change-society/run-real-test-suite.sh` (no API key)

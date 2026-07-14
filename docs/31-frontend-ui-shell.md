@@ -22,7 +22,7 @@ Regression of this contract caused an empty main area with a visible sidebar (do
 
 ```bash
 cd frontend && npm run typecheck && npm run build
-bash scripts/run-frontend-tests.sh
+bash ../tests/frontend/change-society/run-frontend-tests.sh
 ```
 
 Manual smoke: open `/overview` and confirm dashboard cards render in the main column after hard refresh.

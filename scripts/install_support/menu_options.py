@@ -46,6 +46,6 @@ RUNTIME_OPTIONS: tuple[ChoiceOption, ...] = (
     ChoiceOption(
         "none",
         "Install dependencies only; do not start any runtime",
-        "bash scripts/run-real-test.sh   # when you are ready",
+        "bash ../tests/e2e/change-society/run-real-test.sh   # when you are ready",
     ),
 )

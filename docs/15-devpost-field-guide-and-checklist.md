@@ -36,7 +36,7 @@ Use sections in this order (see [25-pitch-and-demo-focus.md](25-pitch-and-demo-f
 7. **Architecture & Alibaba** — ECS + Docker Compose stack; link `deploy-ecs.sh` and `{{PUBLIC_DEMO_URL}}`.
 8. **Metrics** — Seven fixed scenarios; link `evaluation-scenarios.json`, `benchmark-summary.json`, and [24-baseline-ablation-and-efficiency.md](24-baseline-ablation-and-efficiency.md) (include ablation table).
 9. **Significant updates after May 26, 2026** — Copy from [13-pre-hackathon-baseline-and-significant-updates.md](13-pre-hackathon-baseline-and-significant-updates.md).
-10. **Try it** — Quickstart commands from [01-quickstart.md](01-quickstart.md); judges can run `run-real-test-suite.sh` without keys.
+10. **Try it** — Quickstart commands from [01-quickstart.md](01-quickstart.md); judges can run `tests/e2e/change-society/run-real-test-suite.sh` without keys.
 11. **Limitations** — No production code mutation; deterministic local demo vs live Qwen; expand sample size for statistical claims.
 
 ## Pre-Submit Checklist
@@ -52,10 +52,10 @@ Use sections in this order (see [25-pitch-and-demo-focus.md](25-pitch-and-demo-f
 
 ### Technical proof
 
-- [ ] `bash scripts/run-real-test.sh` passes from clean clone
+- [ ] `bash ../tests/e2e/change-society/run-real-test.sh` passes from clean clone
 - [ ] `pytest tests/backend/change-society-service` passes
 - [ ] Frontend `npm run typecheck` and `npm run build` pass
-- [ ] Live path: `run-live-test.sh` passed once before claiming Alibaba/Qwen production demo (entrant)
+- [ ] Live path: `tests/live/change-society/run-live-test.sh` passed once before claiming Alibaba/Qwen production demo (entrant)
 - [ ] `/ready` on public API shows production-ready when using qwen + postgresql (entrant)
 
 ### Links (P9-08)

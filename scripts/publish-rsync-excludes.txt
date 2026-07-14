@@ -4,7 +4,8 @@
 # Secrets and local publish config
 .env
 .env.*
-push-github-hackathon.local.sh
+scripts/push-github-hackathon.local.sh
+scripts/push-github-hackathon.local.env
 push-github-hackathon.local.env
 
 # Local workspace mirrors (duplicate of parent hackathon docs)

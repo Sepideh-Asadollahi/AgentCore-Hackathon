@@ -82,7 +82,7 @@ npm test             # repo tests/frontend/change-society/*.test.mjs
 From hackathon pack root:
 
 ```bash
-bash scripts/run-frontend-tests.sh
+bash ../tests/frontend/change-society/run-frontend-tests.sh
 ```
 
 ## Related docs

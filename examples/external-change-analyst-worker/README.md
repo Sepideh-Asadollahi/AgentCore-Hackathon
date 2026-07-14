@@ -2,7 +2,7 @@
 
 Reference worker for AgentCore integrators. Implements signed **`/api/v1/agent-tickets:execute`** for `WebhookAgentAdapter`, with LangGraph pipelines for society roles when `WORKER_LIVE_MODE=1`.
 
-**Seven-scenario live proof:** [docs/29-langgraph-sdk-live-seven-scenarios.md](../../docs/29-langgraph-sdk-live-seven-scenarios.md) — `bash scripts/run-langgraph-sdk-live-seven-scenarios.sh`
+**Seven-scenario live proof:** [docs/29-langgraph-sdk-live-seven-scenarios.md](../../docs/29-langgraph-sdk-live-seven-scenarios.md) — `bash ../tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh`
 
 ## What you get
 
@@ -89,9 +89,9 @@ See `.env.example`.
 Use `managed-agents.integrator-live-all.example.json` and:
 
 ```bash
-bash scripts/run-langgraph-sdk-live-seven-scenarios.sh
-bash scripts/run-integrator-live-test.sh
-bash scripts/run-integrator-e2e.sh
+bash ../tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh
+bash ../tests/live/change-society/run-integrator-live-test.sh
+bash ../tests/e2e/change-society/run-integrator-e2e.sh
 ```
 
 ## In-process alternative

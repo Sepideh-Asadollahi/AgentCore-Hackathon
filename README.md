@@ -84,7 +84,8 @@ flowchart LR
     be["backend/change-society-service/"]
     fe["frontend/"]
     sdk["sdk/python/"]
-    scripts["scripts/"]
+    scripts["scripts/ (install)"]
+    testsRef["../tests/ (monorepo)"]
     deploy["deployments/"]
     ev["evidence/real/"]
   end
@@ -94,6 +95,7 @@ flowchart LR
   fe --> be
   sdk --> be
   scripts --> be
+  testsRef --> be
   docs --> be
 ```
 
@@ -125,16 +127,16 @@ Full index: [docs/README.md](docs/README.md).
 ## Tests and evidence
 
 ```bash
-bash scripts/run-pytest.sh -q
-bash scripts/run-frontend-tests.sh
-bash scripts/run-real-test.sh
-bash scripts/run-real-test-suite.sh
+bash ../tests/backend/change-society-service/run-pytest.sh -q
+bash ../tests/frontend/change-society/run-frontend-tests.sh
+bash ../tests/e2e/change-society/run-real-test.sh
+bash ../tests/e2e/change-society/run-real-test-suite.sh
 ```
 
 UI helpers (when a `tests/frontend/change-society/` tree exists in your checkout):
 
 ```bash
-bash scripts/run-frontend-tests.sh
+bash ../tests/frontend/change-society/run-frontend-tests.sh
 # or: cd frontend && npm test
 ```
 

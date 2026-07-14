@@ -66,11 +66,11 @@ Central navigation for Qwen Cloud hackathon **Track 3** submission readiness for
 From repository root:
 
 ```bash
-bash scripts/run-real-test-suite.sh
-bash scripts/run-real-test.sh
-bash scripts/run-real-qwen-suite.sh   # live Qwen → evidence/live/
-bash scripts/run-qwen-judge-seven-scenarios.sh   # 7 scenarios, in-process Qwen
-bash scripts/run-langgraph-sdk-live-seven-scenarios.sh   # 7 scenarios, LangGraph worker + SDK
+bash ../tests/e2e/change-society/run-real-test-suite.sh
+bash ../tests/e2e/change-society/run-real-test.sh
+bash ../tests/live/change-society/run-real-qwen-suite.sh   # live Qwen → evidence/live/
+bash ../tests/live/change-society/run-qwen-judge-seven-scenarios.sh   # 7 scenarios, in-process Qwen
+bash ../tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh   # 7 scenarios, LangGraph worker + SDK
 ```
 
 See [19-evidence-artifact-index.md](19-evidence-artifact-index.md) and [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md).

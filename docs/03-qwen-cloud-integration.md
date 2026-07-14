@@ -68,11 +68,11 @@ Non-retryable: schema validation failures after repair budget exhausted (fail cl
 
 1. Set `CHANGE_SOCIETY_MODEL_PROVIDER=qwen` and credentials.
 2. `GET /ready` — model configured; store ready.
-3. **Free API smoke (minimal tokens):** `bash hackathon/scripts/smoke-qwen-free-api.sh` → `evidence/live/qwen-free-api-smoke.json`
-4. Run `checkout-api-refactor` via UI or `hackathon/scripts/run-live-test.sh`.
+3. **Free API smoke (minimal tokens):** `bash tests/live/change-society/smoke-qwen-free-api.sh` → `evidence/live/qwen-free-api-smoke.json`
+4. Run `checkout-api-refactor` via UI or `tests/live/change-society/run-live-test.sh`.
 5. Preserve redacted report: model id, tokens, latency, run id, correlation id—no raw secrets.
 
-Commands: `smoke-qwen-free-api.sh`, `run-live-test.sh`, `run-real-qwen-suite.sh` (multi-scenario live suite).
+Commands: `tests/live/change-society/smoke-qwen-free-api.sh`, `tests/live/change-society/run-live-test.sh`, `tests/live/change-society/run-real-qwen-suite.sh` (multi-scenario live suite).
 
 ## MCP / custom skills
 

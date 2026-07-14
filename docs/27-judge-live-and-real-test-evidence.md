@@ -17,21 +17,21 @@ flowchart TB
   end
 
   subgraph det [Deterministic real E2E — tracked in Git]
-    RTS["run-real-test-suite.sh"]
-    RT["run-real-test.sh golden pricing-refactor"]
-    EVAL["generate_evaluation_evidence.py"]
+    RTS["tests/e2e/change-society/run-real-test-suite.sh"]
+    RT["tests/e2e/change-society/run-real-test.sh golden pricing-refactor"]
+    EVAL["tests/e2e/change-society/generate_evaluation_evidence.py"]
   end
 
   subgraph live [Live LLM E2E — Qwen API key required]
-    RQS["run-real-qwen-suite.sh"]
+    RQS["tests/live/change-society/run-real-qwen-suite.sh"]
     QL["test_qwen_live.py with QWEN_API_KEY"]
-    RLT["run-live-test.sh remote|compose"]
+    RLT["tests/live/change-society/run-live-test.sh remote|compose"]
   end
 
   subgraph integ [Integrator E2E — LangGraph + SDK worker]
-    IEU["run-integrator-unit-tests.sh"]
-    IEE["run-integrator-e2e.sh"]
-    LG7["run-langgraph-sdk-live-seven-scenarios.sh"]
+    IEU["tests/backend/change-society-service/run-integrator-unit-tests.sh"]
+    IEE["tests/e2e/change-society/run-integrator-e2e.sh"]
+    LG7["tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh"]
   end
 
   unit --> det
@@ -58,7 +58,7 @@ flowchart TB
 sequenceDiagram
   participant SH as Shell harness
   participant API as change-society-service
-  participant V as verify_society_run.py
+  participant V as tests/e2e/change-society/verify_society_run.py
   participant SDK as change_society_sdk
   participant EV as evidence/*.json
 
@@ -80,7 +80,7 @@ Assertions include: multi-role tickets, **exactly one** rebuttal round where app
 
 ## Executed: deterministic real suite (seven domains)
 
-**Command:** `bash hackathon/scripts/run-real-test-suite.sh`  
+**Command:** `bash tests/e2e/change-society/run-real-test-suite.sh`  
 **Profile:** `verification_profile: deterministic`, `test_family: real_deterministic`  
 **Last indexed run (manifest):** `2026-07-12T09:03:39Z`  
 **Index file:** [../evidence/real/suite/manifest.json](../evidence/real/suite/manifest.json)
@@ -120,7 +120,7 @@ flowchart LR
 
 ## Executed: live Qwen multi-domain suite (four scenarios)
 
-**Command:** `bash hackathon/scripts/run-real-qwen-suite.sh` (requires `QWEN_API_KEY` in `hackathon/.env`)  
+**Command:** `bash tests/live/change-society/run-real-qwen-suite.sh` (requires `QWEN_API_KEY` in `hackathon/.env`)  
 **Profile:** `verification_profile: live-qwen`  
 **Model (readiness snapshot):** `qwen-flash`, `provider: qwen_cloud`, role tools enabled  
 **Last indexed run (manifest):** `2026-07-12T08:47:55Z`  
@@ -128,7 +128,7 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
-  participant H as run-real-qwen-suite.sh
+  participant H as tests/live/change-society/run-real-qwen-suite.sh
   participant Q as Qwen Cloud API
   participant A as change-society-service
   participant R as Managed agents per role
@@ -205,7 +205,7 @@ flowchart TB
 
 ## Benchmark and ablation (deterministic, seven scenarios)
 
-**Producer:** `python hackathon/scripts/generate_evaluation_evidence.py`  
+**Producer:** `python tests/e2e/change-society/generate_evaluation_evidence.py`  
 **Artifacts:**
 
 - [../evidence/real/evaluation-scenarios.json](../evidence/real/evaluation-scenarios.json) — per-scenario society vs baseline + **four ablation variants**
@@ -234,11 +234,11 @@ pie title Aggregate critical impact recall (deterministic, n=7)
 
 | Test | Command | Proves |
 |------|---------|--------|
-| Unit | `bash hackathon/scripts/run-integrator-unit-tests.sh` | Graph, HMAC webhook, adapter bridge, registry JSON, all-role LangGraph registry |
-| E2E | `bash hackathon/scripts/run-integrator-e2e.sh` | Worker :32510 + API + `checkout-api-refactor` with external change analyst |
-| **Real society verify** | `bash hackathon/scripts/run-integrator-real-test.sh` | Deterministic in-process roles + LangGraph change analyst only |
-| **Live all roles** | `bash hackathon/scripts/run-integrator-live-test.sh` | One or seven scenarios; all six webhook agents → worker |
-| **Live seven scenarios (recommended)** | `bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh` | Same as live-all + `langgraph-sdk-judge-summary.json` + `--require-external-worker-all-roles` |
+| Unit | `bash tests/backend/change-society-service/run-integrator-unit-tests.sh` | Graph, HMAC webhook, adapter bridge, registry JSON, all-role LangGraph registry |
+| E2E | `bash tests/e2e/change-society/run-integrator-e2e.sh` | Worker :32510 + API + `checkout-api-refactor` with external change analyst |
+| **Real society verify** | `bash tests/e2e/change-society/run-integrator-real-test.sh` | Deterministic in-process roles + LangGraph change analyst only |
+| **Live all roles** | `bash tests/live/change-society/run-integrator-live-test.sh` | One or seven scenarios; all six webhook agents → worker |
+| **Live seven scenarios (recommended)** | `bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh` | Same as live-all + `langgraph-sdk-judge-summary.json` + `--require-external-worker-all-roles` |
 
 Registry: `config/managed-agents.integrator-live-all.example.json` (every role → `http://localhost:32510`).
 
@@ -246,21 +246,21 @@ Registry: `config/managed-agents.integrator-live-all.example.json` (every role �
 
 ```bash
 # Recommended one-liner for judges (QWEN_API_KEY in hackathon/.env)
-bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh
+bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh
 
 # Single scenario (faster)
 INTEGRATOR_LIVE_SUITE=0 INTEGRATOR_REAL_SCENARIO=checkout-api-refactor \
-  bash hackathon/scripts/run-integrator-live-test.sh
+  bash tests/live/change-society/run-integrator-live-test.sh
 ```
 
 Worker env: `WORKER_LIVE_MODE=1`, `WORKER_RUNTIME_NAME=langgraph-sdk-society-worker`, `AGENTCORE_WEBHOOK_SHARED_SECRET` aligned with society service.
 
-**In-process live Qwen (no external worker):** `bash hackathon/scripts/run-qwen-judge-seven-scenarios.sh` — see [28-judge-seven-scenario-live-qwen-smoke.md](28-judge-seven-scenario-live-qwen-smoke.md).
+**In-process live Qwen (no external worker):** `bash tests/live/change-society/run-qwen-judge-seven-scenarios.sh` — see [28-judge-seven-scenario-live-qwen-smoke.md](28-judge-seven-scenario-live-qwen-smoke.md).
 
 ```bash
-bash hackathon/scripts/run-integrator-real-test.sh
+bash tests/e2e/change-society/run-integrator-real-test.sh
 # Optional: Qwen for non-webhook roles
-INTEGRATOR_REAL_MODEL=qwen bash hackathon/scripts/run-integrator-real-test.sh
+INTEGRATOR_REAL_MODEL=qwen bash tests/e2e/change-society/run-integrator-real-test.sh
 ```
 
 ```mermaid
@@ -312,19 +312,19 @@ Include `test_qwen_live.py` when `QWEN_API_KEY` is set for live provider proof.
 
 ```bash
 bash install.sh --profile verify
-bash hackathon/scripts/run-real-test-suite.sh
-.venv/bin/python hackathon/scripts/generate_evaluation_evidence.py
+bash tests/e2e/change-society/run-real-test-suite.sh
+.venv/bin/python tests/e2e/change-society/generate_evaluation_evidence.py
 ```
 
 Live (entrant machine only):
 
 ```bash
 # Local Qwen suite → evidence/live/
-bash hackathon/scripts/run-real-qwen-suite.sh
+bash tests/live/change-society/run-real-qwen-suite.sh
 
 # Or against deployed API
 export CHANGE_SOCIETY_LIVE_API_URL=https://your-public-api
-bash hackathon/scripts/run-live-test.sh remote
+bash tests/live/change-society/run-live-test.sh remote
 ```
 
 ---

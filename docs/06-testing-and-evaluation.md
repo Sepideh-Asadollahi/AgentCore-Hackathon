@@ -10,7 +10,7 @@ bash install.sh --profile verify   # install + deterministic society proof
 PYTHONPATH=backend/change-society-service/src:sdk/python .venv/bin/python -m pytest tests/backend/change-society-service -q
 PYTHONPATH=backend/change-society-service/src:sdk/python .venv/bin/python -m pytest tests/backend/change-society-service/test_org_policy_intake.py -q
 cd frontend && npm run typecheck && npm run build
-bash scripts/run-frontend-tests.sh
+bash ../tests/frontend/change-society/run-frontend-tests.sh
 # or: cd frontend && npm test
 ```
 
@@ -34,7 +34,7 @@ Design reference: [30-org-policy-intake-slice.md](30-org-policy-intake-slice.md)
 
 | Command / artifact | Purpose |
 |---|---|
-| `python scripts/generate_evaluation_evidence.py` | Writes `evidence/real/evaluation-scenarios.json` and `benchmark-summary.json` |
+| `python ../tests/e2e/change-society/generate_evaluation_evidence.py` | Writes `evidence/real/evaluation-scenarios.json` and `benchmark-summary.json` |
 | `POST .../society-runs:evaluate-all-scenarios` | Same metrics via API + `aggregate` block |
 | `POST .../society-runs/{id}:evaluate-baseline` | Per-run comparison + `ablation` |
 
@@ -46,7 +46,7 @@ Report raw impact/policy/task recall, unsupported claims, tokens, and latency. T
 
 **Seven scenarios, live Qwen in-process (society service):** [28-judge-seven-scenario-live-qwen-smoke.md](28-judge-seven-scenario-live-qwen-smoke.md).
 
-**Seven scenarios, LangGraph + SDK external worker (integrator demo):** [29-langgraph-sdk-live-seven-scenarios.md](29-langgraph-sdk-live-seven-scenarios.md) — `bash scripts/run-langgraph-sdk-live-seven-scenarios.sh`.
+**Seven scenarios, LangGraph + SDK external worker (integrator demo):** [29-langgraph-sdk-live-seven-scenarios.md](29-langgraph-sdk-live-seven-scenarios.md) — `bash ../tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh`.
 
 ## External agent integrator (LangGraph / webhook)
 
@@ -54,16 +54,16 @@ Reference worker: [../examples/external-change-analyst-worker/README.md](../exam
 
 | Command | Scope |
 |---------|--------|
-| `bash scripts/run-integrator-unit-tests.sh` | Graph, executor, HTTP, webhook bridge, registry JSON (`pytest -k integrator`) |
+| `bash ../tests/backend/change-society-service/run-integrator-unit-tests.sh` | Graph, executor, HTTP, webhook bridge, registry JSON (`pytest -k integrator`) |
 | `bash examples/external-change-analyst-worker/scripts/smoke_worker.sh` | Worker package contract tests only |
-| `bash scripts/run-integrator-e2e.sh` | Worker + society API + `checkout-api-refactor` |
-| `bash scripts/run-integrator-live-test.sh` | Live Qwen on external worker (one or seven scenarios) |
-| `bash scripts/run-langgraph-sdk-live-seven-scenarios.sh` | **Seven scenarios**, all roles webhook, judge summary JSON |
+| `bash ../tests/e2e/change-society/run-integrator-e2e.sh` | Worker + society API + `checkout-api-refactor` |
+| `bash ../tests/live/change-society/run-integrator-live-test.sh` | Live Qwen on external worker (one or seven scenarios) |
+| `bash ../tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh` | **Seven scenarios**, all roles webhook, judge summary JSON |
 
 Unit tests live under `tests/backend/change-society-service/test_integrator_*.py` and import the example worker via `integrator_worker_support.py` (no duplicate business logic).
 
 ## Combined Evidence Scripts
 
-Run `scripts/run-real-test-suite.sh` for deterministic multi-domain proof. Run `scripts/run-live-test.sh remote` against Alibaba, or `compose` for a local production-shaped Qwen/PostgreSQL stack.
+Run `../tests/e2e/change-society/run-real-test-suite.sh` for deterministic multi-domain proof. Run `../tests/live/change-society/run-live-test.sh remote` against Alibaba, or `compose` for a local production-shaped Qwen/PostgreSQL stack.
 
 Artifact index: [19-evidence-artifact-index.md](19-evidence-artifact-index.md). Release gate: [21-release-candidate-and-smoke-checklist.md](21-release-candidate-and-smoke-checklist.md). Demo focus: [25-pitch-and-demo-focus.md](25-pitch-and-demo-focus.md).

@@ -28,7 +28,7 @@ Environment template: `hackathon/.env.example`, `config/change-society.example.e
 3. Inject secrets via host env (never Git): `QWEN_API_KEY`, `CHANGE_SOCIETY_DATABASE_URL`, `AGENTCORE_POSTGRES_PASSWORD`.
 4. `docker compose -f hackathon/deployments/compose.yaml up -d --build`
 5. Apply migrations if not automated: `0001_change_society.sql`, `0002_agent_control_plane.sql`.
-6. Run `bash hackathon/scripts/run-live-test.sh remote`.
+6. Run `bash tests/live/change-society/run-live-test.sh remote`.
 
 ## Rollback
 

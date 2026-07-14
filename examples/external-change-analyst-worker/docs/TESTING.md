@@ -11,7 +11,7 @@ This document describes **unit** and **end-to-end** tests for the LangGraph refe
 | **HTTP webhook** | HMAC, `/ready`, runtime/duration on response | Main suite + local `tests/` |
 | **Webhook bridge** | `WebhookAgentAdapter` → worker app (same contract as production) | Main suite |
 | **Registry JSON** | `managed-agents.integrator.example.json` shape + endpoint sync | Main suite |
-| **Live all roles** | Worker + society + live Qwen on every ticket | `run-integrator-live-test.sh` or `run-langgraph-sdk-live-seven-scenarios.sh` |
+| **Live all roles** | Worker + society + live Qwen on every ticket | `tests/live/change-society/run-integrator-live-test.sh` or `tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh` |
 | **LangGraph registry** | Six roles compile / invoke | `test_integrator_langgraph_roles.py` |
 
 ## Main repository unit tests (canonical)
@@ -19,7 +19,7 @@ This document describes **unit** and **end-to-end** tests for the LangGraph refe
 From repository root:
 
 ```bash
-bash hackathon/scripts/run-integrator-unit-tests.sh
+bash tests/backend/change-society-service/run-integrator-unit-tests.sh
 ```
 
 Or explicitly:
@@ -66,7 +66,7 @@ Prefer the **main suite** for CI and submission evidence — it imports the same
 Requires `QWEN_API_KEY` in `hackathon/.env`:
 
 ```bash
-bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh
+bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh
 ```
 
 Evidence: `hackathon/evidence/live/integrator-langgraph-qwen/langgraph-sdk-judge-summary.json`.  
@@ -77,7 +77,7 @@ Unit tests for live-all registry: `test_integrator_live_all_registry.py`.
 ## End-to-end integrator smoke (change analyst only)
 
 ```bash
-bash hackathon/scripts/run-integrator-e2e.sh
+bash tests/e2e/change-society/run-integrator-e2e.sh
 ```
 
 Requires free ports **32500** (society API) and **32510** (worker). Confirms change-analyst tickets complete with `runtime: langgraph-change-analyst`.

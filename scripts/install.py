@@ -12,7 +12,7 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 if str(_SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIR))
 
-from pack_paths import pack_root, venv_base  # noqa: E402
+from pack_paths import pack_root, venv_base, e2e_change_society_dir  # noqa: E402
 
 from install_support import (  # noqa: E402
     RuntimeMode,
@@ -147,7 +147,14 @@ def ensure_demo_env(env_path: Path, dry_run: bool) -> None:
 
 
 def run_verify(pack: Path, dry_run: bool) -> None:
-    script = pack / "scripts" / "run-real-test.sh"
+    e2e = e2e_change_society_dir(pack)
+    if e2e is None:
+        print("Skipping verify: tests/e2e/change-society not found (expected monorepo layout).", file=sys.stderr)
+        return
+    script = e2e / "tests/e2e/change-society/run-real-test.sh"
+    if not script.is_file():
+        print(f"Skipping verify: missing {script}", file=sys.stderr)
+        return
     if dry_run:
         print(f"Would run {script}")
         return
@@ -173,7 +180,7 @@ Interactive (default on a TTY): numbered menus with examples for profile, OS pac
         "--profile",
         choices=("demo", "verify", "production"),
         default=None,
-        help="demo (default): venv + deps + demo .env; verify: + run-real-test; production: hints only",
+        help="demo (default): venv + deps + demo .env; verify: + tests/e2e/change-society/run-real-test.sh; production: hints only",
     )
     parser.add_argument(
         "--runtime",

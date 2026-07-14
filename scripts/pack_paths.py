@@ -86,6 +86,26 @@ def pytest_dir(pack: Path) -> Path | None:
     return None
 
 
+def e2e_change_society_dir(pack: Path) -> Path | None:
+    for candidate in (
+        pack.parent / "tests" / "e2e" / "change-society",
+        pack / "tests" / "e2e" / "change-society",
+    ):
+        if candidate.is_dir():
+            return candidate
+    return None
+
+
+def live_change_society_dir(pack: Path) -> Path | None:
+    for candidate in (
+        pack.parent / "tests" / "live" / "change-society",
+        pack / "tests" / "live" / "change-society",
+    ):
+        if candidate.is_dir():
+            return candidate
+    return None
+
+
 if __name__ == "__main__":
     _pack = pack_root()
     assert (_pack / "install.sh").is_file()

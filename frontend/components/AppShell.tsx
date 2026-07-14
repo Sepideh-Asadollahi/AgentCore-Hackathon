@@ -17,6 +17,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/animate-ui/components/radix/sidebar";
+import {RunsHeaderActions} from "@/app/(app)/runs/RunsHeaderActions";
 import {RouteTransition} from "@/components/app-shell/RouteTransition";
 import {RunActivityBanner} from "@/components/workspace/RunActivityBanner";
 import {DemoAutoApproveBanner} from "@/components/workspace/DemoAutoApproveBanner";
@@ -91,6 +92,7 @@ export function AppShell({children}: {children: React.ReactNode}) {
             <h1 className="truncate text-base font-semibold tracking-tight text-foreground">{route.label}</h1>
             <p className="truncate text-xs leading-snug text-muted-foreground">{route.description}</p>
           </div>
+          {route.id === "run" && <RunsHeaderActions />}
           {viewState !== "ready" && (
             <div
               className="flex items-center gap-2 rounded-full border border-border/80 bg-card/80 px-3 py-1.5 text-xs capitalize text-muted-foreground"

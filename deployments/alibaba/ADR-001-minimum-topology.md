@@ -23,7 +23,7 @@ Deploy the existing production-shaped Compose stack on an entrant-owned Alibaba 
 
 - No ACK Kubernetes, RDS, or additional managed services are required for the MVP gate, reducing setup time and cost.
 - Secrets never enter Git; they are injected through the entrant-approved Alibaba secret mechanism on the ECS host.
-- Local development continues to use memory/fake profiles; production readiness is validated through `/ready` and `run-live-test.sh`.
+- Local development continues to use memory/fake profiles; production readiness is validated through `/ready` and `tests/live/change-society/run-live-test.sh`.
 - Post-hackathon promotion can migrate the same containers to ACK or managed PostgreSQL without changing domain/application contracts.
 
 ## Alternatives Considered

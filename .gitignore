@@ -7,9 +7,14 @@
 .env
 .env.*
 !.env.example
-push-github-hackathon.local.env
+
+# --- Local publish to public GitHub (machine-local; never commit) ---
+# Sync with publish-rsync-excludes.txt and AgentCore root .gitignore
 scripts/push-github-hackathon.local.sh
 scripts/push-github-hackathon.local.env
+push-github-hackathon.local.env
+# Tracked template: scripts/push-github-hackathon.local.env.example
+
 *.pem
 *.key
 *.crt

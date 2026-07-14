@@ -21,7 +21,7 @@ Regenerate deterministic evidence:
 
 ```bash
 PYTHONPATH=hackathon/backend/change-society-service/src \
-  .venv/bin/python hackathon/scripts/generate_evaluation_evidence.py
+  .venv/bin/python tests/e2e/change-society/generate_evaluation_evidence.py
 ```
 
 ## Methodology (fair comparison)
@@ -58,7 +58,7 @@ Recall alone is not efficiency. Report:
 
 ## Aggregate table (deterministic profile)
 
-After `generate_evaluation_evidence.py`, use `benchmark-summary.json` (committed snapshot):
+After `tests/e2e/change-society/generate_evaluation_evidence.py`, use `benchmark-summary.json` (committed snapshot):
 
 | Metric | Single agent (avg) | Change Society (avg) | Raw impacts | Raw policies |
 |---:|---:|---:|---|---|

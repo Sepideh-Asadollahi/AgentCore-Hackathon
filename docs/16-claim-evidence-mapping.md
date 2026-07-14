@@ -12,8 +12,8 @@ Maps **public claims** to **reviewable proof**. Use only claims supported by the
 | Conflict resolution | Code + test | `ConflictRecord` resolved; judge `coordinator_decision` message | Risk disagreement changes outcome |
 | Persistent cross-session memory | Code + test | `test_approval_is_versioned_idempotent_and_creates_cross_session_memory` | `memory_*` in second run |
 | Measurable gain vs single agent | Data + test | `evidence/real/evaluation-scenarios.json`; `test_all_demo_domains.py`; `test_all_versioned_demo_scenarios_complete_and_beat_baseline` | Seven domains; not statistically significant |
-| End-to-end workflow + human checkpoint | E2E | `run-real-test-suite.sh` → `real/suite/*`; `run-real-test.sh` → `society-real-test.json`; UI approval | [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md) |
-| Real Qwen Cloud use | Live only | `test_qwen_live.py` with `QWEN_API_KEY`; `run-real-qwen-suite.sh`; `evidence/live/` | See [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md) |
+| End-to-end workflow + human checkpoint | E2E | `tests/e2e/change-society/run-real-test-suite.sh` → `real/suite/*`; `tests/e2e/change-society/run-real-test.sh` → `society-real-test.json`; UI approval | [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md) |
+| Real Qwen Cloud use | Live only | `test_qwen_live.py` with `QWEN_API_KEY`; `tests/live/change-society/run-real-qwen-suite.sh`; `evidence/live/` | See [27-judge-live-and-real-test-evidence.md](27-judge-live-and-real-test-evidence.md) |
 | Alibaba Cloud backend | Live + repo file | `deployments/alibaba/deploy-ecs.sh`; `infrastructure/alibaba_ecs.py` (Python `DescribeInstances`); ADR-001; public API URL | **Entrant must deploy** |
 | Repo self-check (Track 3 gates) | API | `GET /api/v1/hackathon/submission-compliance` | Lists requirements + local demo gate |
 | Batch evaluation (7 scenarios) | API + artifact | `POST .../society-runs:evaluate-all-scenarios`; `evaluation-scenarios.json`; `benchmark-summary.json` | Includes `aggregate` and per-scenario `ablation` |

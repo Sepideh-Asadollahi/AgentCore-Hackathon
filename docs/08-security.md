@@ -15,4 +15,4 @@ Before release, scan Git history, logs, browser bundles, screenshots, and video 
 ## Version Control Boundaries
 
 - `hackathon/.gitignore` blocks `.env`, keys, `node_modules/`, `.next/`, build caches, local recordings, and **`evidence/live/`** (production-shaped test output).
-- Only redacted deterministic reports under `hackathon/evidence/real/` are intended for Git. Regenerate with `run-real-test.sh`; never commit raw Qwen prompts, API keys, or Alibaba internal hostnames.
+- Only redacted deterministic reports under `hackathon/evidence/real/` are intended for Git. Regenerate with `tests/e2e/change-society/run-real-test.sh`; never commit raw Qwen prompts, API keys, or Alibaba internal hostnames.

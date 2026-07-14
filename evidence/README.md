@@ -8,9 +8,9 @@ Redacted reports for judging and regression. **Do not** store API keys, raw prom
 
 | Path | Producer | Profile |
 |---|---|---|
-| `real/society-real-test.json` | `scripts/run-real-test.sh` | Deterministic golden `pricing-refactor` |
-| `real/suite/*` | `scripts/run-real-test-suite.sh` | Seven domains + interaction traces |
-| `real/evaluation-scenarios.json` | `scripts/generate_evaluation_evidence.py` | Baseline + ablation |
+| `real/society-real-test.json` | `../tests/e2e/change-society/run-real-test.sh` | Deterministic golden `pricing-refactor` |
+| `real/suite/*` | `../tests/e2e/change-society/run-real-test-suite.sh` | Seven domains + interaction traces |
+| `real/evaluation-scenarios.json` | `../tests/e2e/change-society/generate_evaluation_evidence.py` | Baseline + ablation |
 | `real/benchmark-summary.json` | same | Aggregate table |
 | `live/*` | live Qwen / integrator scripts | Requires `QWEN_API_KEY` in `.env` |
 
@@ -19,18 +19,18 @@ Field reference: [docs/19-evidence-artifact-index.md](../docs/19-evidence-artifa
 ## Regenerate (repository root)
 
 ```bash
-bash scripts/run-real-test-suite.sh
-bash scripts/run-real-test.sh
+bash ../tests/e2e/change-society/run-real-test-suite.sh
+bash ../tests/e2e/change-society/run-real-test.sh
 ```
 
 Live Qwen (optional):
 
 ```bash
-bash scripts/run-real-qwen-suite.sh
-bash scripts/run-qwen-judge-seven-scenarios.sh
-bash scripts/run-langgraph-sdk-live-seven-scenarios.sh
+bash ../tests/live/change-society/run-real-qwen-suite.sh
+bash ../tests/live/change-society/run-qwen-judge-seven-scenarios.sh
+bash ../tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh
 export CHANGE_SOCIETY_LIVE_API_URL=https://your-api.example
-bash scripts/run-live-test.sh remote
+bash ../tests/live/change-society/run-live-test.sh remote
 ```
 
 ## Git policy

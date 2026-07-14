@@ -60,10 +60,10 @@ Every arrow is a **durable ticket** with lifecycle states (`assigned` → `claim
 
 ```bash
 # Deterministic: all seven domains + interaction traces (tracked under evidence/real/suite/)
-bash hackathon/scripts/run-real-test-suite.sh
+bash tests/e2e/change-society/run-real-test-suite.sh
 
 # Live Qwen: real LLM agents (requires hackathon/.env with QWEN_API_KEY)
-bash hackathon/scripts/run-real-qwen-suite.sh
+bash tests/live/change-society/run-real-qwen-suite.sh
 ```
 
 Set `CHANGE_SOCIETY_QWEN_SUITE_TOKEN_BUDGET=80000` (default in the script) if runs hit `qwen_budget_exceeded` during schema repair retries.
@@ -71,8 +71,8 @@ Set `CHANGE_SOCIETY_QWEN_SUITE_TOKEN_BUDGET=80000` (default in the script) if ru
 Single-scenario harness (backward compatible):
 
 ```bash
-bash hackathon/scripts/run-real-test.sh
-bash hackathon/scripts/run-live-test.sh remote   # deployed API
+bash tests/e2e/change-society/run-real-test.sh
+bash tests/live/change-society/run-live-test.sh remote   # deployed API
 ```
 
 ## Evidence artifacts
@@ -92,7 +92,7 @@ Field reference: [19-evidence-artifact-index.md](19-evidence-artifact-index.md).
 1. Show `manifest.json` scenario table (four domains).
 2. Open one **coding** trace: `checkout-api-refactor-interaction-trace.json` — point at Change vs Policy messages and rebuttal steps.
 3. Show managed agents list from any `<scenario>.json` (`managed_agents`, seven tickets).
-4. For live proof, run `run-real-qwen-suite.sh` and show the same trace shape with `verification_profile: live-qwen`.
+4. For live proof, run `tests/live/change-society/run-real-qwen-suite.sh` and show the same trace shape with `verification_profile: live-qwen`.
 
 ## Frontend team auto-ticketing
 

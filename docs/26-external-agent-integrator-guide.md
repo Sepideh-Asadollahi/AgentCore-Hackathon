@@ -185,7 +185,7 @@ Use when you want the **strongest integrator demo**: every specialist ticket is 
 | Registry | `config/managed-agents.integrator-live-all.example.json` |
 | Worker | [../examples/external-change-analyst-worker/](../examples/external-change-analyst-worker/) with `WORKER_LIVE_MODE=1` |
 | Runtime string | `langgraph-sdk-society-worker` (set via `WORKER_RUNTIME_NAME`) |
-| Seven-scenario proof | `bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh` |
+| Seven-scenario proof | `bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh` |
 | Full documentation | [29-langgraph-sdk-live-seven-scenarios.md](29-langgraph-sdk-live-seven-scenarios.md) |
 
 Contrast with [28-judge-seven-scenario-live-qwen-smoke.md](28-judge-seven-scenario-live-qwen-smoke.md): that path uses **in-process** `ModelAgentAdapter` + Qwen on the society service — no external LangGraph worker per ticket.
@@ -339,22 +339,22 @@ Do not bypass schema validation — invalid JSON fails the ticket (`FAILED` stat
 
 ```bash
 # All integrator unit tests (recommended for CI / judges)
-bash hackathon/scripts/run-integrator-unit-tests.sh
+bash tests/backend/change-society-service/run-integrator-unit-tests.sh
 
 # Worker contract only (no society API)
 bash hackathon/examples/external-change-analyst-worker/scripts/smoke_worker.sh
 
 # Full stack: worker + society API + checkout-api-refactor run
-bash hackathon/scripts/run-integrator-e2e.sh
+bash tests/e2e/change-society/run-integrator-e2e.sh
 
 # Full society verify + redacted evidence (recommended real integrator proof)
-bash hackathon/scripts/run-integrator-real-test.sh
+bash tests/e2e/change-society/run-integrator-real-test.sh
 
 # Live: all roles via external LangGraph+Qwen worker (requires QWEN_API_KEY)
-bash hackathon/scripts/run-integrator-live-test.sh
+bash tests/live/change-society/run-integrator-live-test.sh
 
 # Live: seven benchmark scenarios, all tickets on LangGraph worker (recommended judge demo)
-bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh
+bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh
 ```
 
 ---
@@ -461,7 +461,7 @@ Successful worker response:
 3. **Expose HTTP** — `GET /ready`, `POST /api/v1/agent-tickets:execute` with `SignedWebhookWorker` from `agentcore_agent_sdk`.
 4. **Register agent** — JSON entry with matching `role`, `capabilities`, `adapter_type: webhook`, `endpoint` URL (host reachable from the society service container/process).
 5. **Align secrets** — `CHANGE_SOCIETY_WEBHOOK_AGENT_SECRET` = `AGENTCORE_WEBHOOK_SHARED_SECRET`.
-6. **Verify** — `smoke_worker.sh`, then `run-integrator-e2e.sh`.
+6. **Verify** — `smoke_worker.sh`, then `tests/e2e/change-society/run-integrator-e2e.sh`.
 7. **Optional LLM** — keep graph deterministic for demos; set `WORKER_USE_LLM=1` only when Qwen credentials are available.
 
 Copy the reference layout:
@@ -497,7 +497,7 @@ Worker only:
 docker compose -f hackathon/examples/external-change-analyst-worker/docker-compose.integrator.yml up --build
 ```
 
-Society API with integrator registry (uncomment the `change-society` service block in that compose file, or run `run-integrator-e2e.sh` locally).
+Society API with integrator registry (uncomment the `change-society` service block in that compose file, or run `tests/e2e/change-society/run-integrator-e2e.sh` locally).
 
 Ensure `endpoint` in JSON uses a hostname the **society service** can resolve (`host.docker.internal`, service name on a shared network, or published host port).
 

@@ -15,10 +15,10 @@ Related: [26-external-agent-integrator-guide.md](26-external-agent-integrator-gu
 
 | Goal | Script | Agents | API |
 |------|--------|--------|-----|
-| **Real LangGraph + SDK (recommended for integrator demo)** | `run-langgraph-sdk-live-seven-scenarios.sh` | All 6 roles → external worker | Live Qwen in worker |
-| In-process Qwen only (no external worker) | `run-qwen-judge-seven-scenarios.sh` | Model adapter inside society | Live Qwen in API |
-| Deterministic CI / no key | `run-real-test-suite.sh` | In-process fake | None |
-| Single-role LangGraph smoke | `run-integrator-e2e.sh` | Change analyst webhook only | Fake other roles |
+| **Real LangGraph + SDK (recommended for integrator demo)** | `tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh` | All 6 roles → external worker | Live Qwen in worker |
+| In-process Qwen only (no external worker) | `tests/live/change-society/run-qwen-judge-seven-scenarios.sh` | Model adapter inside society | Live Qwen in API |
+| Deterministic CI / no key | `tests/e2e/change-society/run-real-test-suite.sh` | In-process fake | None |
+| Single-role LangGraph smoke | `tests/e2e/change-society/run-integrator-e2e.sh` | Change analyst webhook only | Fake other roles |
 
 For **“real agents with LangGraph + my SDK”**, use the **first row**.
 
@@ -154,14 +154,14 @@ export WORKER_RUNTIME_NAME=langgraph-sdk-society-worker
 From repository root (`hackathon/.env` must contain `QWEN_API_KEY`):
 
 ```bash
-bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh
+bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh
 ```
 
 What the script does:
 
 1. Starts **external worker** on port **32510** (`WORKER_LIVE_MODE=1`).
 2. Starts **Change Society API** on port **32503** with integrator-live-all registry.
-3. Runs **`run_integrator_live_suite.py`** for all **seven** benchmark scenario IDs.
+3. Runs **`tests/live/change-society/run_integrator_live_suite.py`** for all **seven** benchmark scenario IDs.
 4. For each scenario: full verify (tickets, negotiation when applicable, approval, baseline).
 5. Asserts **`--require-external-worker-all-roles`** — every completed ticket has `runtime: langgraph-sdk-society-worker`.
 6. Writes **`langgraph-sdk-judge-summary.json`**.
@@ -170,14 +170,14 @@ Single scenario (faster):
 
 ```bash
 INTEGRATOR_LIVE_SUITE=0 INTEGRATOR_REAL_SCENARIO=checkout-api-refactor \
-  bash hackathon/scripts/run-integrator-live-test.sh
+  bash tests/live/change-society/run-integrator-live-test.sh
 ```
 
 Free-tier friendly model:
 
 ```bash
 export QWEN_JUDGE_MODEL=qwen-flash   # or set QWEN_MODEL in hackathon/.env
-bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh
+bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh
 ```
 
 ---
@@ -235,8 +235,8 @@ Example proof fields on each ticket row in the report:
 | Change analyst specialist graph | `graph/change_analyst_graph.py`, `graph/nodes.py` |
 | Live Qwen + normalizer | `qwen_client.py` → `complete_structured()` |
 | Society webhook adapter | `infrastructure/agent_adapters.py` → `WebhookAgentAdapter` |
-| Suite driver | `scripts/run_integrator_live_suite.py` |
-| Verify harness | `scripts/verify_society_run.py` |
+| Suite driver | `tests/live/change-society/run_integrator_live_suite.py` |
+| Verify harness | `tests/e2e/change-society/verify_society_run.py` |
 
 ---
 
@@ -247,8 +247,8 @@ Example proof fields on each ticket row in the report:
 | SDK + webhook unit | `tests/backend/change-society-service/test_agent_runtime_sdk.py` |
 | Worker HTTP contract | `bash hackathon/examples/external-change-analyst-worker/scripts/smoke_worker.sh` |
 | LangGraph role registry | `tests/backend/change-society-service/test_integrator_langgraph_roles.py` |
-| Integrator unit (all) | `bash hackathon/scripts/run-integrator-unit-tests.sh` |
-| **Live seven scenarios** | `bash hackathon/scripts/run-langgraph-sdk-live-seven-scenarios.sh` |
+| Integrator unit (all) | `bash tests/backend/change-society-service/run-integrator-unit-tests.sh` |
+| **Live seven scenarios** | `bash tests/live/change-society/run-langgraph-sdk-live-seven-scenarios.sh` |
 
 Worker testing detail: [../examples/external-change-analyst-worker/docs/TESTING.md](../examples/external-change-analyst-worker/docs/TESTING.md).
 
@@ -267,7 +267,7 @@ Worker testing detail: [../examples/external-change-analyst-worker/docs/TESTING.
 Debug one role:
 
 ```bash
-python hackathon/scripts/debug_worker_roles.py
+python tests/e2e/change-society/debug_worker_roles.py
 ```
 
 ---

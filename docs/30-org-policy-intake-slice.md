@@ -83,7 +83,7 @@ Recommended judge path:
 Run the dedicated suite:
 
 ```bash
-bash scripts/run-pytest.sh tests/backend/change-society-service/test_org_policy_intake.py -q
+bash ../tests/backend/change-society-service/run-pytest.sh ../tests/backend/change-society-service/test_org_policy_intake.py -q
 node --experimental-strip-types --test tests/frontend/change-society/org-policy-intake.test.mjs
 ```
 

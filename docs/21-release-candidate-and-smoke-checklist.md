@@ -22,7 +22,7 @@ bash install.sh --profile verify
 **Full 100% local smoke** (install paths + RC automated gates + Docker smoke compose + systemd):
 
 ```bash
-bash scripts/run-full-install-smoke.sh
+bash ../tests/e2e/change-society/run-full-install-smoke.sh
 ```
 
 See [../scripts/README.md](../scripts/README.md).
@@ -39,14 +39,14 @@ cd frontend && npm ci || npm install
 
 | # | Check | Command | Pass? |
 |---:|---|---|---|
-| 1 | Backend unit/integration | `bash scripts/run-pytest.sh -q` | [x] |
-| 1b | Org policy intake slice | `bash scripts/run-pytest.sh tests/backend/change-society-service/test_org_policy_intake.py -q` | [x] |
+| 1 | Backend unit/integration | `bash ../tests/backend/change-society-service/run-pytest.sh -q` | [x] |
+| 1b | Org policy intake slice | `bash ../tests/backend/change-society-service/run-pytest.sh ../tests/backend/change-society-service/test_org_policy_intake.py -q` | [x] |
 | 2 | Optional live Qwen | `QWEN_API_KEY=... pytest tests/backend/change-society-service/test_qwen_live.py` | [ ] entrant |
 | 3 | Frontend types | `cd frontend && npm run typecheck` | [ ] |
 | 4 | Frontend production build | `cd frontend && npm run build` | [ ] |
 | 5 | Frontend unit tests | `node --experimental-strip-types --test tests/frontend/change-society/*.test.mjs` | [ ] |
-| 6 | Deterministic society harness | `bash scripts/run-real-test.sh` | [x] |
-| 7 | Live production harness | `bash scripts/run-live-test.sh remote` | [ ] entrant |
+| 6 | Deterministic society harness | `bash ../tests/e2e/change-society/run-real-test.sh` | [x] |
+| 7 | Live production harness | `bash ../tests/live/change-society/run-live-test.sh remote` | [ ] entrant |
 
 ## Security Gates
 

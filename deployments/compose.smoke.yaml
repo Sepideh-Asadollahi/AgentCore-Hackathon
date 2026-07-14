@@ -1,4 +1,4 @@
-# Local full-stack smoke (no Qwen Cloud calls). Used by hackathon/scripts/run-full-install-smoke.sh
+# Local full-stack smoke (no Qwen Cloud calls). Used by tests/e2e/change-society/run-full-install-smoke.sh
 # and install --runtime docker when CHANGE_SOCIETY_COMPOSE_FILE points here.
 name: change-society-smoke
 services:

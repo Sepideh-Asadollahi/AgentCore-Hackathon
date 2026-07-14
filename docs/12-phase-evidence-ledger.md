@@ -11,7 +11,7 @@ This ledger satisfies Phase 0 task P0-08 and tracks exit-gate evidence for Chang
 | 4 | passed | evidence catalog, cross-session memory | `pytest tests/backend/change-society-service/test_change_society.py::test_approval_is_versioned_idempotent_and_creates_cross_session_memory` | Change Society team | |
 | 5 | passed | conflict, rebuttal, approval | `pytest tests/backend/change-society-service/test_change_society.py::test_agent_society_negotiates_and_blocks_for_approval` | Change Society team | |
 | 6 | passed | FastAPI + Next.js cinematic + inspector demo | `npm run typecheck && npm run build`; `node --experimental-strip-types --test tests/frontend/change-society/*.test.mjs` | Change Society team | CinematicDemo beats, resume, reduced-motion |
-| 7 | passed | three fixed scenarios + baseline | `pytest tests/backend/change-society-service/test_change_society.py::test_all_versioned_demo_scenarios_complete_and_beat_baseline`; `hackathon/scripts/generate_evaluation_evidence.py` | Change Society team | live Qwen comparison remains key-gated |
+| 7 | passed | three fixed scenarios + baseline | `pytest tests/backend/change-society-service/test_change_society.py::test_all_versioned_demo_scenarios_complete_and_beat_baseline`; `tests/e2e/change-society/generate_evaluation_evidence.py` | Change Society team | live Qwen comparison remains key-gated |
 | 8 | deferred | Compose + Alibaba CLI proof template | `hackathon/deployments/alibaba/ADR-001-minimum-topology.md`, `deploy-ecs.sh` | Entrant | requires Alibaba credentials and public ECS |
 | 9 | in_progress | submission pack (engineering complete; media/deploy pending) | `docs/14`–`docs/22`, [14-submission-pack-index.md](14-submission-pack-index.md), [21-release-candidate-and-smoke-checklist.md](21-release-candidate-and-smoke-checklist.md) | Team | **Repo/docs/UI/tests/install done**; video, Devpost URLs, live Alibaba, Qwen live evidence as applicable |
 
@@ -19,8 +19,8 @@ This ledger satisfies Phase 0 task P0-08 and tracks exit-gate evidence for Chang
 
 | Artifact | Path |
 |---|---|
-| Deterministic end-to-end society run | `hackathon/evidence/real/society-real-test.json` (from `run-real-test.sh`) |
-| Three-scenario evaluation table | `hackathon/evidence/real/evaluation-scenarios.json` (from `generate_evaluation_evidence.py`) |
-| Live production-shaped run | `hackathon/evidence/live/society-live-test.json` (from `run-live-test.sh`) |
+| Deterministic end-to-end society run | `hackathon/evidence/real/society-real-test.json` (from `tests/e2e/change-society/run-real-test.sh`) |
+| Three-scenario evaluation table | `hackathon/evidence/real/evaluation-scenarios.json` (from `tests/e2e/change-society/generate_evaluation_evidence.py`) |
+| Live production-shaped run | `hackathon/evidence/live/society-live-test.json` (from `tests/live/change-society/run-live-test.sh`) |
 
 Regenerate deterministic artifacts after material behavior changes.

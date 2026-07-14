@@ -20,7 +20,7 @@ Domain, application, infrastructure, interfaces, contracts, and bootstrap are se
 
 ## Tests
 
-When present in your checkout: `bash scripts/run-pytest.sh` (see repository `tests/backend/change-society-service/` in full development trees).
+When present in your checkout: `bash ../tests/backend/change-society-service/run-pytest.sh` (see repository `tests/backend/change-society-service/` in full development trees).
 
 ## Judges
 

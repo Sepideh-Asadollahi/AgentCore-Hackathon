@@ -11,7 +11,7 @@ Production profile (manual — not auto-configured):
   • Set CHANGE_SOCIETY_MODEL_PROVIDER=qwen and CHANGE_SOCIETY_STORE=postgresql.
   • Apply SQL migrations under backend/change-society-service/migrations/.
   • Use deployments/compose.yaml or deployments/alibaba/.
-  • Verify: bash scripts/run-live-test.sh compose|remote
+  • Verify: bash ../tests/live/change-society/run-live-test.sh compose|remote
   • Example full Docker install: bash install.sh --non-interactive --runtime docker --install-os-deps
 """
     )
@@ -36,7 +36,7 @@ After install (Docker Compose):
         return """
 Dependencies installed; no services were started.
   • Example manual API: see docs/01-quickstart.md
-  • Example proof:      bash scripts/run-real-test.sh
+  • Example proof:      bash ../tests/e2e/change-society/run-real-test.sh
 """
     return """
 After install — two terminals from the pack root (directory with install.sh):
@@ -51,5 +51,5 @@ After install — two terminals from the pack root (directory with install.sh):
     Open http://localhost:3000
 
   Automated proof (no browser):
-    bash scripts/run-real-test.sh
+    bash ../tests/e2e/change-society/run-real-test.sh
 """

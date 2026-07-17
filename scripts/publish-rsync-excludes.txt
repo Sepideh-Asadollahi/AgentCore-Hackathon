@@ -64,6 +64,12 @@ evidence/**/*.log
 evidence/integrator-*.txt
 evidence/**/*.tmp
 evidence/**/*.partial
+evidence/**/raw-*
+evidence/**/unredacted-*
+
+# Frontend E2E scratch
+playwright-report/
+test-results/
 
 # Media / recordings
 recordings/
@@ -72,13 +78,42 @@ screenshots/raw/
 *.mov
 *.webm
 
-# Keys
+# Keys / certs (keep in sync with hackathon/.gitignore)
 *.pem
 *.key
+*.crt
+*.p12
+*.pfx
+**/credentials.json
+**/service-account*.json
 secrets/
 .local-secrets/
+
+# Docker / terraform local state
+docker-compose.override.yaml
+docker-compose.override.yml
+*.override.yaml
+.docker-data/
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Local exports / diagnostics
+exports/
+diagnostics/
+reports/generated/
+artifacts/generated/
+coverage.xml
 
 # OS / editor
 .DS_Store
 Thumbs.db
 .idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+*.mkv
+*.avi

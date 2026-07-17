@@ -72,6 +72,8 @@ out/
 dist/
 build/
 coverage/
+playwright-report/
+test-results/
 .npm/
 .pnpm-store/
 .yarn/
@@ -94,7 +96,16 @@ next-env.d.ts
 # --- Local doc mirror / entrant workspace (not for public hackathon repo) ---
 project_docs/
 
-# --- Root-level planning copies (use docs/ for public narrative) ---
+# --- Root-level planning copies (use docs/ for public narrative; keep in sync with
+#     publish-rsync-excludes.txt and AgentCore root .gitignore) ---
+01-competition-rules-and-compliance.md
+02-idea-and-track-decision.md
+03-mvp-product-specification.md
+04-hackathon-architecture-hld.md
+05-delivery-and-scope-plan.md
+06-judging-demo-and-submission-plan.md
+08-risks-decisions-and-open-questions.md
+ENTRANT_SUBMISSION_URLS.example.md
 SUBMISSION.md
 phases/
 
@@ -155,6 +166,16 @@ docker-compose.override.yml
 # --- IDE (optional local; rules in repo stay tracked) ---
 .idea/
 *.iml
+.vscode/
+.vscode/settings.json
+.vscode/launch.json
+
+# --- Local exports / diagnostics (never publish) ---
+exports/
+diagnostics/
+reports/generated/
+artifacts/generated/
+coverage.xml
 
 # --- Media captures during recording (entrant-owned; do not commit) ---
 recordings/
@@ -162,3 +183,5 @@ screenshots/raw/
 *.mp4
 *.mov
 *.webm
+*.mkv
+*.avi

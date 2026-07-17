@@ -13,14 +13,20 @@ Agent control plane for governed multi-agent work. This repository includes the 
 | **What to click in the demo UI** (pages, run tabs, Settings, progress dialog) | **[frontend/docs/web-interface-guide.md](frontend/docs/web-interface-guide.md)** |
 | **Full submission checklist & doc map** | [docs/14-submission-pack-index.md](docs/14-submission-pack-index.md) |
 | **Executed live / real test proof** (commands + artifacts) | [docs/27-judge-live-and-real-test-evidence.md](docs/27-judge-live-and-real-test-evidence.md) · [docs/29-langgraph-sdk-live-seven-scenarios.md](docs/29-langgraph-sdk-live-seven-scenarios.md) · **Judge host scripts** below |
-| **API key & Settings (no browser storage)** | [frontend/docs/web-interface-guide.md](frontend/docs/web-interface-guide.md) — key in **PostgreSQL** + server `.env` via `judge-runtime-apply` |
+| **API key & Settings (no browser storage)** | **Required for correct live testing:** enter **your own** Qwen API key — [frontend/docs/web-interface-guide.md](frontend/docs/web-interface-guide.md) (key in **PostgreSQL** + server `.env` via `judge-runtime-apply`) |
+| **Which scenario to run in the UI** | **Password hashing migration compatibility** (`password-migration`) on the **Run** page — required for the intended demo evidence and Results comparison |
 | **Install & public URL / systemd ports** | This README (Install + Run locally) · [docs/01-quickstart.md](docs/01-quickstart.md) |
 | **Architecture & Qwen integration** | [docs/02-architecture.md](docs/02-architecture.md) · [docs/03-qwen-cloud-integration.md](docs/03-qwen-cloud-integration.md) |
 | **Claims → evidence mapping** | [docs/16-claim-evidence-mapping.md](docs/16-claim-evidence-mapping.md) |
 | **Machine-readable compliance** | `curl -sS http://<host>:32500/api/v1/hackathon/submission-compliance` |
 | **LangGraph external worker** | [docs/26-external-agent-integrator-guide.md](docs/26-external-agent-integrator-guide.md) · `examples/external-change-analyst-worker/` |
 
-**Suggested UI path for a 5-minute review:** open **Run** → start one scenario → when the progress dialog finishes, **Open Work queue** → tab **Guide** → **Agent Story** (Mermaid map) → **Work Queue** (tickets) → **Review** → **Results**.
+**Required for a correct live UI test (judges):**
+
+1. Enter **your own** Qwen Cloud **API key** in **Settings → Save key & restart worker** (or set `QWEN_API_KEY` in the server `.env`). Without a key, live agent answers are wrong or unavailable.
+2. On the **Run** page, select **Password hashing migration compatibility** (`password-migration`) and start that demo. Use this scenario so the run matches the submission walkthrough and you see the intended evidence, tickets, approval, and Results comparison.
+
+**Suggested UI path for a 5-minute review:** open **Run** → choose **Password hashing migration compatibility** → **Run new demo** (after your API key is saved) → when the progress dialog finishes, **Open Work queue** → tab **Guide** → **Agent Story** (Mermaid map) → **Work Queue** (tickets) → **Review** → **Results**.
 
 ## Install
 
